@@ -20,7 +20,7 @@ The dot cloud browser accepts HTTPS pages but disallows direct `file://` navigat
 
 - Physical Android Chrome and iPhone Safari; real-device memory limits, download UX, and gestures.
 - Safari, Firefox, and Edge-specific behavior.
-- The later milestones (quality metrics, ML, faces, eye state, high-volume optimization, split ZIPs, CSV/JSON, final release gates) are not implemented or validated. v0.2 grouping evidence is recorded separately below.
+- The later milestones (ML, faces, eye state, high-volume optimization, split ZIPs, CSV/JSON, final release gates) are not implemented or validated. v0.2 grouping and v0.3 technical-hint evidence are recorded separately below.
 - No claim of measured grouping accuracy, AI quality, large-collection throughput, or v1.0 readiness is made.
 
 ## Acceptance mapping
@@ -42,3 +42,17 @@ Core + grouping unit tests: 45 pass locally. Exact-byte/EXIF tests also pass in 
 The HTTPS preview was exercised in cloud Chrome with four project-generated images: one exact-duplicate pair and two singletons; Keep; split; merge and Undo with selection preserved; Japanese/English; repeated-copy export warning; edited ZIP filename and actual download. Independent Python verification confirms CRC, STORE and all three selected original byte sequences. Desktop Japanese/English grouping screenshots and narrow-screen Organize screenshots from actual CI rendering were visually reviewed. Physical-device checks and non-Chromium engines remain unperformed. A subsequent optional HTTPS comparison navigation hit a browser-transport timeout; that extra interaction is not claimed as verified.
 
  The 50 synthetic feature cases are logic coverage only; the supplied plan’s 50 human-labeled photographic cases and ≤1% photographic false-group release gate remain unverified. See [GROUPING.md](GROUPING.md).
+
+## v0.3 development status
+
+At `7e23022`, all 63 Node core/grouping/quality/build-wiring checks and 102 Chromium browser checks pass in [run 38872427557](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38872427557): 52 existing acceptance checks, 24 grouping checks and 26 technical-hint checks across both generated `file://` variants. Canonical Windows/Linux PowerShell syntax and repository checks pass. The local readable build is 168,819 bytes and the self-extracting build is 69,740 bytes, with no embedded runtime dependencies.
+
+Quality fixtures are project-owned synthetic pixels, including controlled smoothing, tie/order invariance, missing/sparse metrics, mixed compositions, monochrome, low light, line-art-like and noise-dominated inputs, transparency, and conflicting local detail. Browser checks cover cancellation/retry/reset, Keep/Undo, exact-copy ties, partial failures, group edits, additional input, original-byte export, Japanese/English and 320/390px short screens. The short preview preserves image space and visible controls while Undo is shown. Its height-limited hint region is keyboard-focusable and scrollable. Independent source and actual screenshot review found no remaining blocker after the identified metric-validation, short-screen layout and focus issues were fixed.
+
+The same-head [normal HTTPS preview run 38872427589](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38872427589) passes real Chromium navigation, exact served/build byte comparison, four synthetic inputs, duplicate groups, a technical candidate, two explicit Keep choices, edited ZIP filename, desktop Japanese/English and Japanese 320/390px layout. The measured served HTML SHA-256 is `9f235d551c7bc3b19706bb431626702c0f09b74e879c6e9b7bc466d5d9be69e9`. No page errors or HTTP(S) requests after the initial HTML navigation were recorded. The selected landscape and softened image match their original SHA-256 values in the downloaded ZIP; independent Python extraction also confirms names, CRC, STORE and exact bytes. The normal-preview desktop screenshots in `assets/` were visually reviewed, together with the file-mode narrow/short Japanese/English screenshots. Preview evidence is captured by CI Chromium because the shared cloud-browser target crashed during a separate attempted visit; no successful manual v0.3 browser session is claimed.
+
+The preview test operates only a user-owned PR-preview origin with project-owned synthetic fixtures. It adds verification after the existing automatic deployment, without changing deployment credentials, permissions or the publication mechanism.
+
+The user merged v0.2 as main `27546aa`. Its automatic Pages build/deploy succeeded in [run 38868664830](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38868664830). The served readable HTML exactly matches that run’s artifact (SHA-256 `48d6569efbaa5f94683e95c15b641f135dd0e0c0fb2cf96d3bcf9413fe59e184`), and cloud Chrome displayed v0.2.0. A further production grouping check was interrupted by a disappearing/crashed browser target after synthetic intake started; it is not counted as a completed grouping pass. The merged tree is identical to the PR2 head that passed 45 unit and 76 browser checks.
+
+The 50 human-labeled photographic grouping cases, real-photo recommendation/human-preference agreement, physical Android/iPhone and other browser engines remain **Not tested**. No accuracy or v1.0 release claim is made.

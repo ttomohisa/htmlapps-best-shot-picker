@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 — development
+
+- Added bounded, contrast-normalized detail and near-white/near-black measurements from oriented reduced previews.
+- Added group-relative comparison candidates and measured reasons, without selecting or reordering photos.
+- Abstained for ties, incomplete evidence, incomparable scenes, noise/line-art/transparency flags, and conflicting local detail.
+- Preserved selections, originals and editable groups through cancellation, additional input, reset and partial measurement failure.
+- Added bilingual explanations and synthetic heuristic/state regression coverage; real-photo recommendation accuracy remains unmeasured.
+
 ## 0.2.0 — development
 
 - Added bounded JPEG EXIF capture/digitized timestamps, with explicit timezone domains and file-modified fallback.
