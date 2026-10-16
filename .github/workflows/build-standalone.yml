@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - "src/**"
+      - "tests/**"
+      - "package*.json"
       - "scripts/**"
       - "app.config.json"
       - "dependencies.json"
@@ -50,4 +52,32 @@ jobs:
             dist/self-extract-manifest.json
             dist/.nojekyll
           if-no-files-found: error
+          retention-days: 14
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Build standalone files with the canonical PowerShell builder
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/bsp-bin"
+          ln -s "$(command -v tar)" "$RUNNER_TEMP/bsp-bin/tar.exe"
+          export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
+          pwsh -NoLogo -NoProfile -File scripts/check-powershell-syntax.ps1
+          pwsh -NoLogo -NoProfile -File scripts/check-repository.ps1
+      - run: npm run test:browser
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: browser-acceptance-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/
           retention-days: 14

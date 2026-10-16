@@ -119,7 +119,7 @@ if ($sourceText.Contains("__EMBEDDED_ASSET_BUNDLE_BASE64__")) { throw "Legacy do
 $iconPlaceholderCount = ([regex]::Matches($sourceText, [regex]::Escape("__APP_ICON_DATA_URI__"))).Count
 if ($iconPlaceholderCount -ne 2) { throw "src\index.template.html must use __APP_ICON_DATA_URI__ exactly twice: favicon and header icon." }
 if (-not $sourceText.Contains('id="appBrandIcon"')) { throw "src\index.template.html is missing the canonical header brand icon marker." }
-foreach ($token in @("bytesAsync", "blobUrlAsync", "outputFilename", "window.AppToast")) {
+foreach ($token in @("bytesAsync", "blobUrlAsync", "outputFilename")) {
   if (-not $sourceText.Contains($token)) { throw "src\index.template.html is missing required template behavior marker: $token" }
 }
 
@@ -299,3 +299,13 @@ if (-not $webrtcReadyText.Contains("options.requireReadyChannelOpen!==false&&(!r
   throw "WebRTC application-ready must wait for the designated DataChannel to open."
 }
 
+
+# App-specific source and regression tests are required.
+foreach ($relative in @("src/core.js", "src/app.js", "tests/core.test.cjs")) {
+  if (-not (Test-Path (Join-Path $Root $relative))) { throw "Missing app source/test: $relative" }
+}
+
+$appSourceText = Get-Content -Raw -Encoding UTF8 (Join-Path $Root "src/app.js")
+foreach ($token in @("window.AppToast", "outputFilename", "state.generation", "AbortController")) {
+  if (-not $appSourceText.Contains($token)) { throw "src/app.js is missing required behavior marker: $token" }
+}

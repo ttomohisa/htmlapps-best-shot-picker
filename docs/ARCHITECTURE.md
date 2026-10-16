@@ -111,3 +111,12 @@ Keep source in one HTML while it remains understandable. When an app grows subst
 - No runtime external resource.
 - Clear state ownership.
 - A build that fails on missing input.
+
+
+## Best Shot Picker source split
+
+The template retains the generic embedded asset loader. `src/core.js` contains the dependency-free byte-preserving ZIP and header utilities; `src/app.js` owns the temporary UI session, sequential thumbnail queue, explicit selections, and cancellation/generation guards. The canonical PowerShell builder injects both sources through separately counted placeholders before standalone verification. No external script files are needed at runtime.
+
+Browser-decoded `naturalWidth` / `naturalHeight` are the oriented display dimensions. Canvas thumbnails use those same dimensions and the browser-oriented image. Zoom uses those dimensions in CSS pixels; original File bytes never pass through canvas for export.
+
+The exporter snapshots selected File references before processing. Later selection changes affect the next export only. Reset invalidates import/export generations and releases thumbnails and full-preview Blob URLs. Only active comparison and large-preview originals have full-size Blob URLs; thumbnails remain until reset. Download URLs are released after a delay so a download can start safely.

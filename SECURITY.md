@@ -54,3 +54,10 @@ Before adding or upgrading a package:
 - Refresh the selected lock entry with the dependency scripts; never hand-edit a lock hash to bypass a mismatch.
 - Rebuild with a clean cache.
 - Test with the network disabled.
+
+
+## Best Shot Picker file boundary
+
+Only explicit JPEG/PNG/static WebP signatures are accepted. Header checks and browser decoding both gate a file before it enters the successful photo list. A 100-megapixel / 32,768-pixel-per-axis resource guard is checked wherever dimensions are available. This cannot guarantee immunity to all browser decoder failures.
+
+Original File objects remain immutable. ZIP export flattens and sanitizes names, normalizes Unicode, avoids case-insensitive collisions, checks ZIP32 limits, and copies original bytes without image rewriting. Export therefore preserves private EXIF/GPS metadata; the app warns users before sharing. No image, thumbnail, selection, or face data is persisted. Language preference is the only localStorage value.

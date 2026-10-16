@@ -353,13 +353,20 @@ $manifest = [ordered]@{
 Write-Step "Generating standalone HTML"
 $template = [System.IO.File]::ReadAllText($TemplatePath, [System.Text.Encoding]::UTF8)
 $assetBundleJson = ConvertTo-SafeJson $assetBundle 50
+$coreSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/core.js"), [System.Text.Encoding]::UTF8)
+$appSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/app.js"), [System.Text.Encoding]::UTF8)
+if ($coreSource -match '(?i)</script' -or $appSource -match '(?i)</script') { throw "App source must not contain closing script tags." }
 $replacements = [ordered]@{
+  "__BEST_SHOT_CORE_JS__" = $coreSource
+  "__BEST_SHOT_APP_JS__" = $appSource
   "__APP_CONFIG_JSON__" = ConvertTo-SafeJson $appConfig 20
   "__BUILD_MANIFEST_JSON__" = ConvertTo-SafeJson $manifest 40
   "__EMBEDDED_ASSET_BUNDLE_JSON__" = $assetBundleJson
   "__APP_ICON_DATA_URI__" = $appIconDataUri
 }
 $replacementExpectedCounts = @{
+  "__BEST_SHOT_CORE_JS__" = 1
+  "__BEST_SHOT_APP_JS__" = 1
   "__APP_CONFIG_JSON__" = 1
   "__BUILD_MANIFEST_JSON__" = 1
   "__EMBEDDED_ASSET_BUNDLE_JSON__" = 1
