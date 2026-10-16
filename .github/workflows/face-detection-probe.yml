@@ -1,0 +1,71 @@
+name: Isolated face-detection browser probe
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/face-detection/**'
+      - '.github/workflows/face-detection-probe.yml'
+      - 'src/index.template.html'
+      - 'scripts/build-self-extract.ps1'
+      - 'scripts/verify-self-extract.ps1'
+      - 'experiments/embedding/tfjs.dependencies.json'
+      - 'experiments/embedding/LICENSE.TensorFlow.js.txt'
+      - 'experiments/embedding/THIRD_PARTY.TFJS.txt'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-browser-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Validate PowerShell syntax before using the canonical wrapper
+        shell: pwsh
+        run: ./scripts/check-powershell-syntax.ps1
+      - name: Acquire exact official runtime, detector and model bytes only
+        run: node experiments/face-detection/acquire.cjs
+      - name: Build isolated readable probes with the exact product CSP
+        run: node experiments/face-detection/probe-build.cjs
+      - name: Verify acquisition safety, client lifecycle and packaged CSP
+        shell: bash
+        run: |
+          set -o pipefail
+          node --test experiments/face-detection/*.test.cjs | tee test-results/face-research/probe-unit-results.txt
+      - name: Build and verify canonical self-extract variants
+        shell: pwsh
+        run: |
+          foreach ($model in @('short', 'full')) {
+            $source = "test-results/face-research/probe-$model.html"
+            $output = "test-results/face-research/probe-$model.self-extract.html"
+            ./scripts/build-self-extract.ps1 -InputPath $source -OutputPath $output -AppName "Face technical probe" -AppNameJa "Face technical probe"
+            ./scripts/verify-self-extract.ps1 -Path $output -ExpectedSourcePath $source
+          }
+      - name: Install pinned Playwright Chromium from the official distribution
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Run file-only synthetic inference, lifecycle and separate CSP controls
+        run: node experiments/face-detection/probe-browser.cjs
+      - name: Upload reports only, never assets, HTML or fixture photos
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: face-technical-probe-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/face-research/probe-acquire-results.json
+            test-results/face-research/probe-build-results.json
+            test-results/face-research/probe-browser-*-results.json
+            test-results/face-research/probe-browser-results.json
+            test-results/face-research/probe-security-results.json
+            test-results/face-research/probe-unit-results.txt
+          if-no-files-found: warn
+          retention-days: 14

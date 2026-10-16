@@ -1,0 +1,43 @@
+Isolated face-detection technical probe
+
+This directory is development-only and is not imported by the product builder.
+Acquisition occurs before packaging. Generated probe HTML contains all runtime,
+model, license and notice bytes; inference has no network dependency.
+
+1. TensorFlow.js 4.22.0 (Apache-2.0)
+   https://github.com/tensorflow/tfjs/tree/tfjs-v4.22.0
+   Exact archive/runtime pins: ../embedding/tfjs.dependencies.json
+   The complete Apache text and THIRD_PARTY.TFJS.txt from that research directory
+   are embedded in every generated probe document.
+
+2. @tensorflow-models/face-detection 1.0.3 (Apache-2.0)
+   Copyright 2024 Google LLC. All Rights Reserved.
+   https://github.com/tensorflow/tfjs-models/tree/master/face-detection
+   Exact npm archive and asset pins: dependencies.json
+   The original Google Apache license header is preserved in the embedded bundle.
+   Bundled TypeScript helpers (tslib 2.4.0) have the notice below. The MediaPipe
+   runtime package is not installed or embedded: only runtime:'tfjs' is used.
+
+3. MediaPipe face-detection TFJS short/full, version 1 (Apache-2.0)
+   https://www.kaggle.com/models/mediapipe/face-detection/tfJs/short/1
+   https://www.kaggle.com/models/mediapipe/face-detection/tfJs/full/1
+   dependencies.json retains the reviewed exact Kaggle instance/version/license
+   evidence, archive digests, model JSON digests and weight digests separately.
+   No photograph, identity, label corpus or personal file is bundled.
+
+4. tslib 2.4.0 bundled helpers (0BSD)
+   https://github.com/microsoft/tslib/blob/main/LICENSE.txt
+   https://www.npmjs.com/package/tslib/v/2.4.0
+
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
