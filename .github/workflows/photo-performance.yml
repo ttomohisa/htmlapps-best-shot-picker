@@ -1,0 +1,50 @@
+name: Bounded photo-session performance
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/performance.browser.cjs'
+      - '.github/workflows/photo-performance.yml'
+      - 'build-standalone.ps1'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-session:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build the canonical app without changing its runtime
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/bsp-bin"
+          ln -s "$(command -v tar)" "$RUNNER_TEMP/bsp-bin/tar.exe"
+          export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
+          pwsh -NoLogo -NoProfile -File scripts/check-powershell-syntax.ps1
+          pwsh -NoLogo -NoProfile -File scripts/check-repository.ps1
+      - name: Measure bounded synthetic sessions
+        run: node tests/performance.browser.cjs
+        env:
+          BSP_PERF_LABEL: current
+          BSP_PERF_COUNTS: '100,500'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: photo-performance-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/photo-performance-*.json
+            test-results/photo-performance-*.png
+          if-no-files-found: warn
+          retention-days: 14
