@@ -1,6 +1,6 @@
 {
   "name": "best-shot-picker-tests",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "scripts": {
     "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs tests/similarity.test.cjs tests/similarity-integration.test.cjs tests/embedding-packaging.test.cjs tests/embedding-product-client.test.cjs",

@@ -2,6 +2,12 @@
 
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
+## 0.5.1 — development (2026-10-16)
+
+- Choose whole eligible groups for optional candidate search in larger photo sessions, with a 36-photo limit per search.
+- Show selected counts and unavailable oversized groups in a keyboard-accessible, mobile-sized dialog; keep small-session one-click search.
+- Bind proposals to the selected scope and preserve outside groups, Keep choices, originals, and deliberate Apply/Undo.
+
 ## 0.5.0 — development (2026-10-16)
 
 - Add an explicitly approved, experimental **Find similar-photo candidates** action; default grouping remains non-ML.

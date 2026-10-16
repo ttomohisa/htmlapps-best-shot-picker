@@ -122,9 +122,11 @@
       function showToast(message, options = {}) { $('#appToast').dataset.messageKey=options.messageKey||'selectionChanged';AppToast.show({ message, ...options }); }
   Object.assign(translations.en,{"qualityTitle":"Technical comparison hints","qualityNote":"Hints compare reduced previews within a group. They never choose photos for you.","qualityCandidate":"Comparison candidate","qualityNone":"No recommendation — compare and choose yourself.","qualityPending":"Technical hints are not available yet. Analyze again to try.","qualityIncomparable":"No recommendation: the images are not comparable enough.","qualityUncertain":"No recommendation: the measurements are uncertain.","qualityTie":"No recommendation: there is no clear technical difference.","qualitySingle":"A single photo needs no relative ranking.","qualityFailed":"Technical measurement unavailable; comparison and saving still work.","qualityCount":"groups with a comparison candidate","qualityCountSingle":"group with a comparison candidate","qualityMeasuring":"Measuring preview detail and light","qualityDetail":"Stronger detail signal in the reduced preview","qualityHighlight":"Fewer near-white pixels in the reduced preview","qualityHighlights":"Near-white pixels","qualityDarks":"Near-black pixels","helpQuality":"Technical hints compare reduced previews in the same group, using detail and near-white pixel measurements. A candidate is never kept automatically. Similar results, uncertain measurements, different scenes, and missing measurements may produce no recommendation. Noise, intentional background blur, line art, and lighting can mislead these measurements. Dark pixels are reported, not treated as a bad photo. Hints do not judge faces, expression, composition, or personal value. Always inspect the originals and choose for yourself."});
   Object.assign(translations.ja,{"qualityTitle":"技術的な比較のヒント","qualityNote":"同じ組の縮小画像を比べた参考情報です。残す写真は自動で選びません。","qualityCandidate":"比較の候補","qualityNone":"おすすめなし。見比べて選んでください。","qualityPending":"比較のヒントは未計測です。「再解析」で試せます。","qualityIncomparable":"おすすめなし。画像の条件が異なるため比較を控えています。","qualityUncertain":"おすすめなし。計測結果が不確かです。","qualityTie":"おすすめなし。技術的な差がはっきりしません。","qualitySingle":"1枚の写真には相対的な順位を付けません。","qualityFailed":"技術指標を計測できませんでした。比較・保存は利用できます。","qualityCount":"組に比較の候補","qualityCountSingle":"組に比較の候補","qualityMeasuring":"縮小画像の細部と明るさを計測中","qualityDetail":"縮小画像の細部指標が高め","qualityHighlight":"縮小画像の白に近い画素が少なめ","qualityHighlights":"白に近い画素","qualityDarks":"黒に近い画素","helpQuality":"同じ組の縮小画像について、細部の指標や白に近い画素の割合を比べて参考候補を示します。候補を自動で「残す」にすることはありません。差が小さい、不確か、別シーン、未計測の写真を含む場合などはおすすめを控えます。ノイズ、意図した背景ボケ、線画、光の条件によって指標は誤解を招くことがあります。黒に近い画素の割合は情報として示し、暗い写真という理由だけで低評価にしません。顔・表情・構図の好みや写真の価値は判定しません。元画像を見比べて選んでください。"});
-  Object.assign(translations.en,{"modelLicenses":"Software and model licenses", "similarityTitle": "Similar-photo candidates · Experimental", "similarityFind": "Find similar-photo candidates", "similarityNote": "Candidates can include unrelated photos. Compare them before applying. Your Keep choices stay yours.", "similarityLimit": "Optional search: up to 36 photos in automatic, unreviewed groups. Processing may be slow on some devices.", "similarityTooMany": "This optional search supports up to 36 eligible photos. Normal grouping, comparison and saving still work.", "similarityTooFew": "Search needs at least two automatic, unreviewed groups. Manual and reviewed groups are left alone.", "similarityLoading": "Preparing local model", "similarityFinding": "Finding candidates", "similarityApply": "Apply this grouping", "similarityDismiss": "Dismiss candidates", "similarityReady": "Review the photos, then apply one grouping if it looks right.", "similarityNone": "No additional candidates found. Existing groups are unchanged.", "similarityCancelled": "Search cancelled. Groups and Keep choices are unchanged.", "similarityFailed": "Search could not finish. Existing groups and Keep choices are safe; you can try again.", "similarityChanged": "Photos or groups changed. Search again for current candidates.", "similarityApplied": "Grouping applied. Keep choices are unchanged. Search again for more candidates.", "helpSimilarity": "Find similar-photo candidates runs an optional local model for up to 36 photos in automatic, unreviewed groups. Manual and reviewed groups are excluded. Results can include unrelated photos: open the thumbnails to compare, then apply a grouping yourself. Applying does not change Keep choices or originals; Undo reverses the grouping. Adding photos or editing groups clears pending candidates. Cancel leaves groups unchanged. Processing can be slow on some devices; normal comparison and saving remain available."});
-  Object.assign(translations.ja,{"modelLicenses":"ソフトウェアとモデルのライセンス", "similarityTitle": "似た写真の候補・試験的機能", "similarityFind": "似た写真の候補を探す", "similarityNote": "関係のない写真が候補に入ることがあります。適用前に見比べてください。「残す」の選択は変わりません。", "similarityLimit": "任意の検索：自動・未確認のグループ内の写真36枚まで。端末によって時間がかかることがあります。", "similarityTooMany": "この検索の対象は36枚までです。通常のグループ分け・比較・保存はそのまま使えます。", "similarityTooFew": "自動・未確認のグループが2組以上必要です。手動・確認済みのグループは対象にしません。", "similarityLoading": "端末内のモデルを準備中", "similarityFinding": "候補を検索中", "similarityApply": "この組み合わせを適用", "similarityDismiss": "候補を閉じる", "similarityReady": "写真を見比べ、よい組み合わせだけを適用してください。", "similarityNone": "追加の候補は見つかりませんでした。グループは変わりません。", "similarityCancelled": "検索を中止しました。グループと「残す」の選択は変わりません。", "similarityFailed": "検索を完了できませんでした。グループと選択は残っています。もう一度お試しください。", "similarityChanged": "写真またはグループが変わりました。もう一度検索してください。", "similarityApplied": "組み合わせを適用しました。「残す」の選択は変わりません。ほかの候補は再検索してください。", "helpSimilarity": "「似た写真の候補を探す」は、端末内のモデルを使う任意の機能です。自動・未確認のグループ内の写真36枚までを対象とし、手動・確認済みのグループには触れません。関係のない写真が候補に入ることもあるため、サムネイルを開いて見比べ、適用する組み合わせを自分で選んでください。適用しても「残す」の選択や元画像は変わりません。「元に戻す」でグループを戻せます。写真の追加やグループの編集で候補は消えます。中止してもグループは変わりません。端末によって処理に時間がかかりますが、通常の比較・保存は利用できます。"});
-  const state = { similarity:null, similarityProposals:[], similarityMessage:'', qualityResults: new Map(), groups: [], groupFilter: '', analysis: null, inputRevision: 0, groupingRevision: 0, analysisMessage: '', photos: [], failures: [], queue: [], generation: 0, nextId: 1, load: null, exporting: null, pair: [null,null], active: 0, previewId: null, previewIds: [], fullUrls: new Map(), downloadUrls: new Set() };
+  Object.assign(translations.en,{"modelLicenses":"Software and model licenses", "similarityTitle": "Similar-photo candidates · Experimental", "similarityFind": "Find similar-photo candidates", "similarityNote": "Candidates can include unrelated photos. Compare them before applying. Your Keep choices stay yours.", "similarityLimit": "Search 2 or more whole automatic, unreviewed groups, up to 36 photos at a time. Processing may be slow on some devices.", "similarityTooMany": "Choose which groups to search, up to 36 photos at a time. Normal comparison and saving remain available.", "similarityTooFew": "Search needs at least two automatic, unreviewed groups. Manual and reviewed groups are left alone.", "similarityLoading": "Preparing local model", "similarityFinding": "Finding candidates", "similarityApply": "Apply this grouping", "similarityDismiss": "Dismiss candidates", "similarityReady": "Review the photos, then apply one grouping if it looks right.", "similarityNone": "No additional candidates found. Existing groups are unchanged.", "similarityCancelled": "Search cancelled. Groups and Keep choices are unchanged.", "similarityFailed": "Search could not finish. Existing groups and Keep choices are safe; you can try again.", "similarityChanged": "Photos or groups changed. Search again for current candidates.", "similarityApplied": "Grouping applied. Keep choices are unchanged. Search again for more candidates.", "helpSimilarity": "Find similar-photo candidates runs an optional local model. Choose search groups to select 2 or more whole automatic, unreviewed groups, up to 36 photos per search. Larger sets open this chooser first. Groups over 36 photos cannot be searched; manual, reviewed and unanalyzed groups are excluded. Results can include unrelated photos: open the thumbnails to compare, then apply a grouping yourself. Applying does not change Keep choices or originals; Undo reverses the grouping. Adding photos, analyzing again or editing groups clears the search scope and candidates. Choose groups again for another batch. Cancel leaves groups unchanged. Processing can be slow on some devices; normal comparison and saving remain available."});
+  Object.assign(translations.ja,{"modelLicenses":"ソフトウェアとモデルのライセンス", "similarityTitle": "似た写真の候補・試験的機能", "similarityFind": "似た写真の候補を探す", "similarityNote": "関係のない写真が候補に入ることがあります。適用前に見比べてください。「残す」の選択は変わりません。", "similarityLimit": "自動・未確認のグループを2組以上、合計36枚以内で検索できます。端末によって時間がかかることがあります。", "similarityTooMany": "検索するグループを合計36枚以内で選んでください。通常の比較・保存はそのまま使えます。", "similarityTooFew": "自動・未確認のグループが2組以上必要です。手動・確認済みのグループは対象にしません。", "similarityLoading": "端末内のモデルを準備中", "similarityFinding": "候補を検索中", "similarityApply": "この組み合わせを適用", "similarityDismiss": "候補を閉じる", "similarityReady": "写真を見比べ、よい組み合わせだけを適用してください。", "similarityNone": "追加の候補は見つかりませんでした。グループは変わりません。", "similarityCancelled": "検索を中止しました。グループと「残す」の選択は変わりません。", "similarityFailed": "検索を完了できませんでした。グループと選択は残っています。もう一度お試しください。", "similarityChanged": "写真またはグループが変わりました。もう一度検索してください。", "similarityApplied": "組み合わせを適用しました。「残す」の選択は変わりません。ほかの候補は再検索してください。", "helpSimilarity": "「似た写真の候補を探す」は、端末内のモデルを使う任意の機能です。「検索するグループを選ぶ」で、自動・未確認の組を丸ごと2組以上、合計36枚以内で選べます。対象が36枚を超えると、先に選択画面が開きます。1組だけで36枚を超える組、手動・確認済み・未解析の組は検索できません。関係のない写真が候補に入ることもあるため、サムネイルを開いて見比べ、適用する組み合わせを自分で選んでください。適用しても「残す」の選択や元画像は変わりません。「元に戻す」でグループを戻せます。写真の追加・再解析・グループの編集で検索範囲と候補は消えます。別の範囲はグループを選び直して検索してください。中止してもグループは変わりません。端末によって処理に時間がかかりますが、通常の比較・保存は利用できます。"});
+  Object.assign(translations.en,{similarityChooseGroups:'Choose search groups',similarityScopeHint:'Select at least 2 whole groups, up to 36 photos total. Manual, reviewed and unanalyzed groups are excluded.',similarityScopeSearch:'Search',similarityScopePhotos:'photos',similarityScopeGroups:'groups',similarityScopeSelected:'Search scope',similarityScopeTooLarge:'Over 36 photos in this group. Compare and save as usual.',similarityScopeNeedGroups:'Select at least 2 groups.',similarityScopeOverLimit:'Select no more than 36 photos.',similarityScopeEmpty:'No eligible groups to search.'});
+  Object.assign(translations.ja,{similarityChooseGroups:'検索するグループを選ぶ',similarityScopeHint:'グループを丸ごと2組以上、合計36枚以内で選んでください。手動・確認済み・未解析の組は対象外です。',similarityScopeSearch:'検索する',similarityScopePhotos:'枚',similarityScopeGroups:'組',similarityScopeSelected:'検索範囲',similarityScopeTooLarge:'1組で36枚を超えています。通常の比較・保存は利用できます。',similarityScopeNeedGroups:'2組以上を選んでください。',similarityScopeOverLimit:'合計36枚以内で選んでください。',similarityScopeEmpty:'検索できるグループがありません。'});
+  const state = { similarity:null, similarityScope:null, similarityScopeDraft:null, similarityProposals:[], similarityMessage:'', qualityResults: new Map(), groups: [], groupFilter: '', analysis: null, inputRevision: 0, groupingRevision: 0, analysisMessage: '', photos: [], failures: [], queue: [], generation: 0, nextId: 1, load: null, exporting: null, pair: [null,null], active: 0, previewId: null, previewIds: [], fullUrls: new Map(), downloadUrls: new Set() };
   const outputFilename = $('#outputFilename');
   const defaultZipName = () => `best-shot-picker-${new Date().toLocaleDateString('sv-SE').replaceAll('-','')}`;
   outputFilename.value = defaultZipName();
@@ -146,7 +148,7 @@
     const exportMessage = $('#exportResult').dataset.messageKey;
     if(exportMessage)$('#exportResult').textContent=translate(exportMessage);
     if($('#appToast').classList.contains('show')&&!$('#appToastAction').hidden){$('#appToastMessage').textContent=translate($('#appToast').dataset.messageKey||'selectionChanged');$('#appToastAction').textContent=translate('undo');}
-    render();
+    render();if($('#similarityScopeDialog').open)renderSimilarityScope();
   }
   function revealToast(){const action=$('#appToastAction');(action.hidden?$('#appToast'):action).scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});}
   function selectPhoto(photo, source = 'compare') {
@@ -275,17 +277,62 @@
   $('#analyzeButton').addEventListener('click',()=>void analyzePhotos());$('#cancelAnalysisButton').addEventListener('click',()=>{stopAnalysis();state.analysisMessage='analysisCancelled';render();});
   $('#regroupButton').addEventListener('click',async()=>{if(await AppConfirm.ask({title:translate('regroupTitle'),message:translate('regroupMessage'),confirmLabel:translate('analyze'),cancelLabel:translate('cancel')})){state.groupingRevision++;void analyzePhotos(true);}});
   $('#groupDialog').addEventListener('click',event=>{if(event.target!==event.currentTarget)return;const r=event.currentTarget.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)event.currentTarget.close();});
-  function invalidateSimilarity(message='similarityChanged'){
+  function invalidateSimilarity(message='similarityChanged',{preserveScope=false}={}){
     const hadWork=!!state.similarity||state.similarityProposals.length>0;
     const job=state.similarity;state.similarity=null;
     if(job){clearTimeout(job.timer);job.controller.abort();job.client?.dispose();}
     state.similarityProposals=[];
+    if(!preserveScope)state.similarityScope=null;
+    closeSimilarityScope();
     if(hadWork)state.similarityMessage=message;
   }
-  function renderSimilarity(){
+  function closeSimilarityScope(){
+    const draft=state.similarityScopeDraft;state.similarityScopeDraft=null;
+    const dialog=$('#similarityScopeDialog');if(dialog.open)dialog.close();
+    if(draft){const opener=draft.opener?.isConnected&&!draft.opener.disabled?draft.opener:$('#chooseSimilarityGroupsButton');opener.focus({preventScroll:true});}
+  }
+  function openSimilarityScope(opener=$('#chooseSimilarityGroupsButton')){
+    if(state.load||state.analysis||$('#groupDialog').open)return;
     const eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id));
+    invalidateSimilarity('',{preserveScope:true});state.similarityMessage='';
+    // Drafting a scope never starts the model or silently takes the first batch.
+    state.similarityScopeDraft={groupIds:eligibility.photoCount<=Similarity.CONFIG.maxPhotos?[...eligibility.eligibleGroupIds]:[],generation:state.generation,input:state.inputRevision,groups:state.groupingRevision,opener};
+    renderSimilarity();renderSimilarityScope();$('#similarityScopeDialog').showModal();$('#closeSimilarityScopeButton').focus({preventScroll:true});
+  }
+  function renderSimilarityScope(){
+    const draft=state.similarityScopeDraft;if(!draft)return;
+    const eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id)),eligibleIds=new Set(eligibility.eligibleGroupIds);
+    $('#similarityScopeList').replaceChildren(...state.groups.filter(group=>eligibleIds.has(group.id)).map(group=>{
+      const unavailable=group.ids.length>Similarity.CONFIG.maxPhotos,row=el('label','similarity-scope-option'+(unavailable?' is-unavailable':'')),checkbox=el('input');
+      checkbox.type='checkbox';checkbox.dataset.groupId=group.id;checkbox.checked=draft.groupIds.includes(group.id);checkbox.disabled=unavailable;
+      const image=el('img'),photo=byId(group.ids[0]);image.src=photo.thumbnailUrl;image.alt='';image.loading='lazy';
+      const text=el('span','similarity-scope-text');text.append(el('strong','',`${translate(group.ids.length===1?'single':'group')} ${state.groups.indexOf(group)+1} · ${group.ids.length} ${translate('similarityScopePhotos')}`));
+      const name=el('span','similarity-scope-name',photo.name);name.title=photo.name;text.append(name);
+      if(unavailable)text.append(el('span','similarity-scope-reason',translate('similarityScopeTooLarge')));
+      checkbox.addEventListener('change',()=>{if(state.similarityScopeDraft!==draft)return;draft.groupIds=checkbox.checked?[...draft.groupIds,group.id]:draft.groupIds.filter(id=>id!==group.id);renderSimilarityScopeCount();});
+      row.append(checkbox,image,text);return row;
+    }));
+    $('#similarityScopeEmpty').hidden=eligibility.groupCount>0;renderSimilarityScopeCount();
+  }
+  function renderSimilarityScopeCount(){
+    const draft=state.similarityScopeDraft;if(!draft)return;
+    const eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id),draft.groupIds);
+    $('#similarityScopeCount').textContent=`${eligibility.groupCount} ${translate('similarityScopeGroups')} · ${eligibility.photoCount} / ${Similarity.CONFIG.maxPhotos} ${translate('similarityScopePhotos')}`;
+    $('#similarityScopeValidation').textContent=eligibility.reason==='photo-limit'?translate('similarityScopeOverLimit'):eligibility.groupCount<2?translate('similarityScopeNeedGroups'):'';
+    $('#searchSimilarityScopeButton').disabled=!eligibility.ok;
+  }
+  function searchSimilarityScope(){
+    const draft=state.similarityScopeDraft;if(!draft||state.load||state.analysis)return;
+    if(draft.generation!==state.generation||draft.input!==state.inputRevision||draft.groups!==state.groupingRevision){invalidateSimilarity();renderSimilarity();return;}
+    const eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id),state.similarityScopeDraft.groupIds);if(!eligibility.ok)return;
+    state.similarityScope=[...eligibility.eligibleGroupIds];closeSimilarityScope();void findSimilarPhotos();
+  }
+  function renderSimilarity(){
+    const allEligible=Similarity.eligibility(state.groups,ready().map(p=>p.id)),eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id),state.similarityScope??undefined);
     $('#similarityTools').hidden=!ready().length;
-    $('#findSimilarButton').disabled=!!state.load||!!state.analysis||!!state.similarity||!eligibility.ok;
+    $('#findSimilarButton').disabled=!!state.load||!!state.analysis||!!state.similarity||(!eligibility.ok&&eligibility.reason!=='photo-limit');
+    $('#chooseSimilarityGroupsButton').disabled=!!state.load||!!state.analysis||!allEligible.groupCount;
+    $('#similarityScopeSummary').hidden=!state.similarityScope;$('#similarityScopeSummary').textContent=state.similarityScope?`${translate('similarityScopeSelected')}: ${eligibility.groupCount} ${translate('similarityScopeGroups')} · ${eligibility.photoCount} ${translate('similarityScopePhotos')}`:'';
     $('#similarityLimit').textContent=translate(eligibility.reason==='photo-limit'?'similarityTooMany':eligibility.reason==='too-few-groups'?'similarityTooFew':'similarityLimit');
     $('#similarityProgress').hidden=!state.similarity;
     $('#similarityStatus').textContent=state.similarity?`${translate(state.similarity.phase)} ${state.similarity.done} / ${state.similarity.total}`:'';
@@ -310,12 +357,13 @@
     }finally{image.removeAttribute('src');if(canvas)canvas.width=canvas.height=0;}
   }
   async function findSimilarPhotos(){
-    if(state.load||state.analysis||state.similarity||$('#groupDialog').open)return;
-    const eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id));if(!eligibility.ok)return;
-    invalidateSimilarity('');state.similarityMessage='';
-    const job={controller:new AbortController(),generation:state.generation,input:state.inputRevision,groups:state.groupingRevision,client:null,phase:'similarityLoading',done:0,total:eligibility.photoCount};state.similarity=job;
+    if(state.load||state.analysis||state.similarity||$('#groupDialog').open||$('#similarityScopeDialog').open)return;
+    const eligibility=Similarity.eligibility(state.groups,ready().map(p=>p.id),state.similarityScope??undefined);
+    if(eligibility.reason==='photo-limit'){openSimilarityScope($('#findSimilarButton'));return;}if(!eligibility.ok)return;
+    invalidateSimilarity('',{preserveScope:true});state.similarityMessage='';
+    const job={controller:new AbortController(),generation:state.generation,input:state.inputRevision,groups:state.groupingRevision,scopeGroupIds:[...eligibility.eligibleGroupIds],client:null,phase:'similarityLoading',done:0,total:eligibility.photoCount};state.similarity=job;
     const current=()=>state.similarity===job&&job.generation===state.generation&&job.input===state.inputRevision&&job.groups===state.groupingRevision&&!job.controller.signal.aborted;
-    job.timer=setTimeout(()=>{if(current()){invalidateSimilarity('similarityFailed');render();}},60000);renderSimilarity();
+    job.timer=setTimeout(()=>{if(current()){invalidateSimilarity('similarityFailed',{preserveScope:true});render();}},60000);renderSimilarity();
     try{
       const assets=window.StandaloneAssets;
       const [runtimeSource,workerSource,modelText,weights]=await Promise.all([assets.textAsync('tfjs','runtime'),assets.textAsync('embedding-worker','worker'),assets.textAsync('mobilenet-v1','model'),assets.bytesAsync('mobilenet-v1','weights')]);
@@ -331,7 +379,7 @@
           records.push({id,features:photo.features,embedding:Array.from(result.vector)});job.done++;renderSimilarity();await new Promise(resolve=>setTimeout(resolve,0));
         }
         await job.client.close();if(!current())return;
-        const result=Similarity.propose(state.groups,records);state.similarityProposals=result.proposals;state.similarityMessage=result.proposals.length?'similarityReady':'similarityNone';
+        const result=Similarity.propose(state.groups,records,{groupIds:job.scopeGroupIds});state.similarityProposals=result.proposals;state.similarityMessage=result.proposals.length?'similarityReady':'similarityNone';
       }finally{job.controller.signal.removeEventListener('abort',abort);}
     }catch(error){if(current())state.similarityMessage=error.name==='AbortError'?'similarityCancelled':'similarityFailed';}
     finally{clearTimeout(job.timer);job.client?.dispose();if(state.similarity===job){state.similarity=null;render();}}
@@ -345,9 +393,15 @@
       showToast(translate('groupChanged'),{messageKey:'groupChanged',actionLabel:translate('undo'),duration:7000,onRestoreFocus:()=>$('#organizeButton').focus({preventScroll:true}),onAction:()=>{if(state.generation!==generation)return;stopAnalysis();invalidateSimilarity();state.groupingRevision++;state.groups=Groups.undoEdit(state.groups,result.patch);render();$('#organizeButton').focus({preventScroll:true});}});revealToast();
     }catch{invalidateSimilarity('similarityChanged');render();}
   }
+  $('#chooseSimilarityGroupsButton').addEventListener('click',event=>openSimilarityScope(event.currentTarget));
+  $('#closeSimilarityScopeButton').addEventListener('click',()=>closeSimilarityScope());
+  $('#cancelSimilarityScopeButton').addEventListener('click',()=>closeSimilarityScope());
+  $('#searchSimilarityScopeButton').addEventListener('click',searchSimilarityScope);
+  $('#similarityScopeDialog').addEventListener('cancel',event=>{event.preventDefault();closeSimilarityScope();});
+  $('#similarityScopeDialog').addEventListener('click',event=>{if(event.target!==event.currentTarget)return;const r=event.currentTarget.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeSimilarityScope();});
   $('#findSimilarButton').addEventListener('click',()=>void findSimilarPhotos());
-  $('#cancelSimilarityButton').addEventListener('click',()=>{invalidateSimilarity('similarityCancelled');render();$('#findSimilarButton').focus({preventScroll:true});});
-  $('#dismissSimilarityButton').addEventListener('click',()=>{invalidateSimilarity('');state.similarityMessage='';render();$('#findSimilarButton').focus({preventScroll:true});});
+  $('#cancelSimilarityButton').addEventListener('click',()=>{invalidateSimilarity('similarityCancelled',{preserveScope:true});render();$('#findSimilarButton').focus({preventScroll:true});});
+  $('#dismissSimilarityButton').addEventListener('click',()=>{invalidateSimilarity('',{preserveScope:true});state.similarityMessage='';render();$('#findSimilarButton').focus({preventScroll:true});});
   window.addEventListener('pagehide',()=>invalidateSimilarity(''));
   window.addEventListener('pageshow',event=>{if(event.persisted)renderSimilarity();});
   $('#modelLicenses').addEventListener('toggle',async()=>{if(!$('#modelLicenses').open||$('#modelLicenseText').textContent)return;try{const [notice,license]=await Promise.all(['notices','license'].map(key=>window.StandaloneAssets.textAsync('mobilenet-v1',key)));$('#modelLicenseText').textContent=notice+'\n\n'+license;}catch{$('#modelLicenseText').textContent=translate('similarityFailed');}});
@@ -409,7 +463,7 @@
   ['A','B'].forEach((slot,index)=>{$(`#slot${slot}`).addEventListener('click',()=>{state.active=index;renderCompare();});$(`#select${slot}`).addEventListener('change',event=>{state.active=index;state.pair[index]=event.target.value;renderCompare();});$(`#keep${slot}`).addEventListener('click',()=>{state.active=index;selectPhoto(byId(state.pair[index]));});});$('#compareZoom').addEventListener('change',renderCompare);$('#previousButton').addEventListener('click',()=>movePhoto(-1));$('#nextButton').addEventListener('click',()=>movePhoto(1));$('#openPreviewButton').addEventListener('click',event=>openPreview(state.pair[state.active],event.currentTarget,comparisonPhotos()));$('#previewPrevious').addEventListener('click',()=>movePhoto(-1,true));$('#previewNext').addEventListener('click',()=>movePhoto(1,true));$('#previewKeep').addEventListener('click',()=>selectPhoto(byId(state.previewId)));$('#previewZoom').addEventListener('change',renderPreview);
   $('#languageButton').addEventListener('click',()=>{language=language==='ja'?'en':'ja';writeStorage(storageKeys.language,language);applyLanguage();});$('#helpButton').addEventListener('click',()=>$('#helpDialog').showModal());$('#closeHelpButton').addEventListener('click',()=>$('#helpDialog').close());$('#closePreviewButton').addEventListener('click',()=>$('#previewDialog').close());
   [$('#helpDialog'),$('#previewDialog')].forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}));$('#previewDialog').addEventListener('close',()=>{const hadPreview=!!state.previewId;state.previewId=null;$('#previewImage').removeAttribute('src');const toast=$('#appToast');(previewReturnHost.isConnected ? previewReturnHost : $('#toastHost')).append(toast);if(hadPreview&&toast.classList.contains('show'))revealToast();releaseUnusedFullUrls();if(previewSimilarityReturn){const button=[...document.querySelectorAll('.similarity-photo')].find(n=>n.dataset.similarityPhotoId===previewSimilarityReturn);(button||(!$('#findSimilarButton').disabled?$('#findSimilarButton'):$('#addButton'))).focus({preventScroll:true});previewSimilarityReturn=null;}});
-  document.addEventListener('keydown',event=>{if(event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;if(event.target.closest('input,textarea,select,[contenteditable="true"]'))return;if($('#helpDialog').open||$('#appConfirmDialog').open||$('#groupDialog').open)return;const preview=$('#previewDialog').open;if(!preview&&window.matchMedia('(max-width:600px)').matches&&mobile.currentPage()!=='compare')return;if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();movePhoto(event.key==='ArrowLeft'?-1:1,preview);}else if(event.key==='Enter'&&!event.target.closest('button,a')){event.preventDefault();selectPhoto(preview?byId(state.previewId):activePhoto());}});
+  document.addEventListener('keydown',event=>{if(event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;if(event.target.closest('input,textarea,select,[contenteditable="true"]'))return;if($('#helpDialog').open||$('#appConfirmDialog').open||$('#groupDialog').open||$('#similarityScopeDialog').open)return;const preview=$('#previewDialog').open;if(!preview&&window.matchMedia('(max-width:600px)').matches&&mobile.currentPage()!=='compare')return;if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();movePhoto(event.key==='ArrowLeft'?-1:1,preview);}else if(event.key==='Enter'&&!event.target.closest('button,a')){event.preventDefault();selectPhoto(preview?byId(state.previewId):activePhoto());}});
   window.addEventListener('beforeunload',event=>{if(state.photos.length||state.load||state.exporting){event.preventDefault();event.returnValue='';}});
   window.addEventListener('pagehide',event=>{if(event.persisted)return;stopAnalysis();state.load?.controller.abort();state.exporting?.controller.abort();state.photos.forEach(photo=>URL.revokeObjectURL(photo.thumbnailUrl));state.fullUrls.forEach(url=>URL.revokeObjectURL(url));state.downloadUrls.forEach(url=>URL.revokeObjectURL(url));});
   applyLanguage();

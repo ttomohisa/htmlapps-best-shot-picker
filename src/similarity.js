@@ -14,7 +14,7 @@ function validGroups(groups){
  }
  return true;
 }
-function eligibility(groups,photoIds){
+function eligibility(groups,photoIds,scopeGroupIds){
  const result={ok:false,reason:null,eligibleGroupIds:[],photoIds:[],photoCount:0,groupCount:0,limit:CONFIG.maxPhotos};
  if(!validGroups(groups))return{...result,reason:'invalid-groups'};
  let available=null;
@@ -22,8 +22,15 @@ function eligibility(groups,photoIds){
   if(!Array.isArray(photoIds)&&!(photoIds instanceof Set))return{...result,reason:'invalid-photo-ids'};
   available=new Set();for(const id of photoIds){if(!label(id)||available.has(id))return{...result,reason:'invalid-photo-ids'};available.add(id);}
  }
+ let scope=null;
+ if(scopeGroupIds!==undefined){
+  if(!Array.isArray(scopeGroupIds))return{...result,reason:'invalid-scope'};
+  scope=new Set();for(const id of scopeGroupIds){if(!label(id)||scope.has(id))return{...result,reason:'invalid-scope'};scope.add(id);}
+  const selected=groups.filter(group=>scope.has(group.id));
+  if(selected.length!==scope.size||selected.some(group=>group.manual||group.reviewed||group.pending||available&&!group.ids.every(id=>available.has(id))))return{...result,reason:'invalid-scope'};
+ }
  for(const group of groups){
-  if(group.manual||group.reviewed||group.pending||available&&!group.ids.every(id=>available.has(id)))continue;
+  if(scope&&!scope.has(group.id)||group.manual||group.reviewed||group.pending||available&&!group.ids.every(id=>available.has(id)))continue;
   result.eligibleGroupIds.push(group.id);for(const id of group.ids)result.photoIds.push(id);
  }
  result.photoCount=result.photoIds.length;result.groupCount=result.eligibleGroupIds.length;
@@ -55,8 +62,9 @@ function pairMatches(a,b){
 // A collision-free canonical snapshot covers the entire ordered partition and
 // every flag that can protect membership, including groups outside a proposal.
 const fingerprint=groups=>JSON.stringify(groups.map(g=>[g.id,g.ids,g.manual??null,g.reviewed??null,g.pending??null]));
-function propose(groups,records){
- const result={...eligibility(groups),proposals:[]};if(!result.ok||!Array.isArray(records))return result;
+const proposalId=(indices,scopeIndices)=>`similarity-${indices.join('-')}-scope-${scopeIndices.join('-')}`;
+function propose(groups,records,options={}){
+ const result={...eligibility(groups,undefined,object(options)?options.groupIds:null),proposals:[]};if(!result.ok||!Array.isArray(records))return result;
  const evidence=new Map(),eligibleIds=new Set(result.photoIds);
  for(const record of records){
   if(!object(record)||!eligibleIds.has(record.id))continue;
@@ -68,9 +76,10 @@ function propose(groups,records){
   const x=indices.get(a),y=indices.get(b),key=Math.min(x,y)*CONFIG.maxPhotos+Math.max(x,y);
   if(!pairs.has(key))pairs.set(key,pairMatches(evidence.get(a),evidence.get(b)));return pairs.get(key);
  };
- const eligibleGroups=new Set(result.eligibleGroupIds),bins=[];
+ const eligibleGroups=new Set(result.eligibleGroupIds),scopeIndices=[],bins=[];
  for(let index=0;index<groups.length;index++){
-  const group=groups[index];if(!eligibleGroups.has(group.id)||group.ids.some(id=>!evidence.get(id)))continue;
+  const group=groups[index];if(!eligibleGroups.has(group.id))continue;
+  scopeIndices.push(index);if(group.ids.some(id=>!evidence.get(id)))continue;
   // Existing groups are indivisible: never rescue just their matching members.
   let complete=true;for(let a=0;a<group.ids.length&&complete;a++)for(let b=a+1;b<group.ids.length;b++)if(!match(group.ids[a],group.ids[b])){complete=false;break;}
   if(!complete)continue;
@@ -78,20 +87,24 @@ function propose(groups,records){
   if(destination){destination.indices.push(index);destination.groupIds.push(group.id);destination.photoIds.push(...group.ids);}
   else bins.push({indices:[index],groupIds:[group.id],photoIds:[...group.ids]});
  }
- const snapshot=fingerprint(groups);
- result.proposals=bins.filter(bin=>bin.groupIds.length>=2).map(bin=>Object.freeze({id:`similarity-${bin.indices.join('-')}`,version:CONFIG.version,groupIds:Object.freeze(bin.groupIds),photoIds:Object.freeze(bin.photoIds),fingerprint:snapshot}));
+ const snapshot=fingerprint(groups),scopeGroupIds=Object.freeze([...result.eligibleGroupIds]);
+ result.proposals=bins.filter(bin=>bin.groupIds.length>=2).map(bin=>Object.freeze({id:proposalId(bin.indices,scopeIndices),version:CONFIG.version,groupIds:Object.freeze(bin.groupIds),photoIds:Object.freeze(bin.photoIds),scopeGroupIds,fingerprint:snapshot}));
  return result;
 }
 const clone=groups=>groups.map(group=>({...group,ids:[...group.ids]}));
 function apply(groups,proposal){
  if(!validGroups(groups))throw new TypeError('Invalid group partition');
- if(!object(proposal)||proposal.version!==CONFIG.version||typeof proposal.fingerprint!=='string'||!Array.isArray(proposal.groupIds)||proposal.groupIds.length<2||!Array.isArray(proposal.photoIds))throw new TypeError('Invalid similarity proposal');
+ if(!object(proposal)||proposal.version!==CONFIG.version||typeof proposal.fingerprint!=='string'||!Array.isArray(proposal.groupIds)||proposal.groupIds.length<2||!Array.isArray(proposal.photoIds)||!Array.isArray(proposal.scopeGroupIds))throw new TypeError('Invalid similarity proposal');
  if(proposal.fingerprint!==fingerprint(groups))throw new Error('Stale similarity proposal; search again');
+ const eligible=eligibility(groups,undefined,proposal.scopeGroupIds);
+ if(!eligible.ok||JSON.stringify(eligible.eligibleGroupIds)!==JSON.stringify(proposal.scopeGroupIds))throw new TypeError('Invalid similarity scope');
+ const scopeIds=new Set(eligible.eligibleGroupIds);
  const selectedIds=new Set();for(const id of proposal.groupIds){if(!label(id)||selectedIds.has(id))throw new TypeError('Invalid proposal group IDs');selectedIds.add(id);}
- const selected=groups.filter(group=>selectedIds.has(group.id)),eligible=eligibility(groups);
- if(!eligible.ok||selected.length!==selectedIds.size||selected.some(group=>group.manual||group.reviewed||group.pending))throw new Error('Proposal groups are no longer eligible');
- const ids=selected.flatMap(group=>group.ids),indices=[];for(let index=0;index<groups.length;index++)if(selectedIds.has(groups[index].id))indices.push(index);
- if(proposal.id!==`similarity-${indices.join('-')}`||JSON.stringify(selected.map(group=>group.id))!==JSON.stringify(proposal.groupIds)||JSON.stringify(ids)!==JSON.stringify(proposal.photoIds))throw new TypeError('Invalid whole-group proposal');
+ const selected=groups.filter(group=>selectedIds.has(group.id));
+ if(selected.length!==selectedIds.size||selected.some(group=>!scopeIds.has(group.id)))throw new Error('Proposal groups are no longer eligible');
+ const ids=selected.flatMap(group=>group.ids),indices=[],scopeIndices=[];for(let index=0;index<groups.length;index++){if(selectedIds.has(groups[index].id))indices.push(index);if(scopeIds.has(groups[index].id))scopeIndices.push(index);}
+ // Bind copied proposals to the exact searched scope as well as whole members.
+ if(proposal.id!==proposalId(indices,scopeIndices)||JSON.stringify(selected.map(group=>group.id))!==JSON.stringify(proposal.groupIds)||JSON.stringify(ids)!==JSON.stringify(proposal.photoIds))throw new TypeError('Invalid whole-group proposal');
  const merged={...selected[0],ids:[...ids],manual:true,reviewed:false,pending:false},next=[];
  for(const group of groups){if(group===selected[0])next.push(merged);else if(!selectedIds.has(group.id))next.push({...group,ids:[...group.ids]});}
  // This is the same reversible edit contract used by BestShotGrouping.undoEdit.
