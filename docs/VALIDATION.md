@@ -34,3 +34,7 @@ The header, Hero, and local-processing badge use the canonical htmlapps-template
 ## Local-processing label and mobile footer
 
 At a10cff89, canonical build and all 52 Chromium checks pass. The badge reads “完全ローカル処理” / “Fully local processing”, including initial HTML fallback. The informational footer is hidden at widths ≤600px, while desktop footer and mobile navigation remain present. Tests cover desktop and 320/360/390px visibility. Updated desktop screenshots were captured from the same-runtime HTTPS preview after loading four synthetic photos and keeping two.
+
+## v0.2 development status
+
+Core + grouping unit tests: 45 pass locally. Exact-byte/EXIF tests also pass in UTC, America/New_York and Asia/Tokyo. Canonical build passes. New group browser coverage and PR preview verification are pending. The 50 synthetic feature cases are logic coverage only; the supplied plan’s 50 human-labeled photographic cases and ≤1% photographic false-group release gate remain unverified. See [GROUPING.md](GROUPING.md).

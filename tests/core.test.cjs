@@ -60,7 +60,7 @@ function unzip(bytes) {
 test('exports the same browser API without requiring a module loader', () => {
   const context = { window: {}, TextEncoder, Blob, setTimeout, DOMException, Uint8Array, DataView, ArrayBuffer };
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../src/core.js'), 'utf8'), context);
-  for (const name of ['sanitizeFilename', 'zipFilename', 'uniqueNames', 'createZip', 'inspectImageHeader']) {
+  for (const name of ['sanitizeFilename', 'zipFilename', 'uniqueNames', 'createZip', 'inspectImageHeader', 'findExactDuplicates']) {
     assert.equal(typeof context.window.BestShotCore[name], 'function');
     assert.equal(typeof Core[name], 'function');
   }
@@ -185,11 +185,11 @@ test('ZIP32 count, size and aggregate boundary guards fail before reading, with 
 });
 
 test('header inspection identifies JPEG, transparent PNG, lossy and lossless static WebP', () => {
-  assert.deepEqual(Core.inspectImageHeader(fixture('landscape.jpg')), { format: 'jpeg', width: 320, height: 240, orientation: 1 });
-  assert.deepEqual(Core.inspectImageHeader(fixture('portrait-exif-6.jpg')), { format: 'jpeg', width: 320, height: 240, orientation: 6 });
-  assert.deepEqual(Core.inspectImageHeader(fixture('transparent.png')), { format: 'png', width: 100, height: 80, orientation: 1 });
-  assert.deepEqual(Core.inspectImageHeader(fixture('static.webp')), { format: 'webp', width: 320, height: 240, orientation: 1 });
-  assert.deepEqual(Core.inspectImageHeader(fixture('lossless.webp')), { format: 'webp', width: 100, height: 80, orientation: 1 });
+  assert.deepEqual(Core.inspectImageHeader(fixture('landscape.jpg')), { format: 'jpeg', width: 320, height: 240, orientation: 1, captureTime: null });
+  assert.deepEqual(Core.inspectImageHeader(fixture('portrait-exif-6.jpg')), { format: 'jpeg', width: 320, height: 240, orientation: 6, captureTime: null });
+  assert.deepEqual(Core.inspectImageHeader(fixture('transparent.png')), { format: 'png', width: 100, height: 80, orientation: 1, captureTime: null });
+  assert.deepEqual(Core.inspectImageHeader(fixture('static.webp')), { format: 'webp', width: 320, height: 240, orientation: 1, captureTime: null });
+  assert.deepEqual(Core.inspectImageHeader(fixture('lossless.webp')), { format: 'webp', width: 100, height: 80, orientation: 1, captureTime: null });
 });
 
 test('header inspection respects typed-array offsets and ArrayBuffer input', () => {
@@ -214,7 +214,7 @@ test('malformed EXIF offsets are ignored without unsafe reads or losing JPEG dim
   const exif = jpeg.indexOf(Buffer.from('Exif\0\0'));
   assert.ok(exif > 0);
   jpeg.fill(0xff, exif + 10, exif + 14);
-  assert.deepEqual(Core.inspectImageHeader(jpeg), { format: 'jpeg', width: 320, height: 240, orientation: 1 });
+  assert.deepEqual(Core.inspectImageHeader(jpeg), { format: 'jpeg', width: 320, height: 240, orientation: 1, captureTime: null });
 });
 
 test('later non-EXIF APP1 metadata does not reset an earlier orientation', () => {
@@ -258,5 +258,202 @@ test('unreasonable encoded dimensions fail before browser decoding', () => {
 test('JPEG prefix that ends in a large metadata block safely defers dimensions to the browser', () => {
   const prefix = Buffer.alloc(64);
   prefix.set([0xff, 0xd8, 0xff, 0xe1, 0xff, 0xff]);
-  assert.deepEqual(Core.inspectImageHeader(prefix), { format: 'jpeg', width: null, height: null, orientation: 1 });
+  assert.deepEqual(Core.inspectImageHeader(prefix), { format: 'jpeg', width: null, height: null, orientation: 1, captureTime: null });
+});
+
+// Minimal independently constructed TIFF/EXIF blocks; only synthetic metadata is used.
+function timedJpeg(tags, { little = true, orientation = 6 } = {}) {
+  const entries = Object.entries(tags).map(([tag, value]) => [Number(tag), Buffer.from(value + '\0', 'ascii')]);
+  const exifOffset = 38, dataOffset = exifOffset + 2 + entries.length * 12 + 4;
+  const tiff = Buffer.alloc(dataOffset + entries.reduce((n, [, value]) => n + (value.length > 4 ? value.length : 0), 0));
+  const u16 = (offset, value) => little ? tiff.writeUInt16LE(value, offset) : tiff.writeUInt16BE(value, offset);
+  const u32 = (offset, value) => little ? tiff.writeUInt32LE(value, offset) : tiff.writeUInt32BE(value, offset);
+  tiff.write(little ? 'II' : 'MM'); u16(2, 42); u32(4, 8); u16(8, 2);
+  u16(10, 0x112); u16(12, 3); u32(14, 1); u16(18, orientation);
+  u16(22, 0x8769); u16(24, 4); u32(26, 1); u32(30, exifOffset);
+  u16(exifOffset, entries.length);
+  let data = dataOffset;
+  entries.forEach(([tag, value], n) => {
+    const entry = exifOffset + 2 + n * 12;
+    u16(entry, tag); u16(entry + 2, 2); u32(entry + 4, value.length);
+    if (value.length <= 4) value.copy(tiff, entry + 8);
+    else { u32(entry + 8, data); value.copy(tiff, data); data += value.length; }
+  });
+  const payload = Buffer.concat([Buffer.from('Exif\0\0'), tiff]);
+  const marker = Buffer.from([0xff, 0xe1, 0, 0]); marker.writeUInt16BE(payload.length + 2, 2);
+  const jpeg = fixture('landscape.jpg');
+  return Buffer.concat([jpeg.subarray(0, 2), marker, payload, jpeg.subarray(2)]);
+}
+const capture = (tags, options) => Core.inspectImageHeader(timedJpeg(tags, options)).captureTime;
+
+test('EXIF original dates, offsets and subseconds support both endiannesses without losing orientation', () => {
+  for (const little of [true, false]) {
+    const jpeg = timedJpeg({ 0x9003: '2024:01:01 00:15:30', 0x9011: '+09:00', 0x9291: '123456', 0x9004: '2025:01:01 12:00:00' }, { little });
+    const header = Core.inspectImageHeader(jpeg);
+    assert.equal(header.orientation, 6);
+    assert.deepEqual(header.captureTime, { valueMs: Date.UTC(2023, 11, 31, 15, 15, 30, 123), domain: 'instant', source: 'exif-original', display: '2024-01-01 00:15:30.123456+09:00', offsetMinutes: 540 });
+  }
+});
+
+test('EXIF missing timezone stays a wall clock; digitized fallback uses only its own tags', () => {
+  assert.deepEqual(capture({ 0x9003: '2024:02:29 14:05:06', 0x9291: '7', 0x9012: '-05:00' }), { valueMs: Date.UTC(2024, 1, 29, 14, 5, 6, 700), domain: 'wall', source: 'exif-original', display: '2024-02-29 14:05:06.7' });
+  assert.deepEqual(capture({ 0x9003: '0000:00:00 00:00:00', 0x9004: '2024:12:31 23:30:00', 0x9012: '-02:00', 0x9292: '045', 0x9011: '+09:00' }), { valueMs: Date.UTC(2025, 0, 1, 1, 30, 0, 45), domain: 'instant', source: 'exif-digitized', display: '2024-12-31 23:30:00.045-02:00', offsetMinutes: -120 });
+  assert.equal(capture({ 0x0132: '2024:01:01 01:02:03' }), null, 'file modification EXIF tag is not capture time');
+  assert.equal(capture({}), null);
+});
+
+test('EXIF invalid dates are rejected instead of rolling over or guessing a timezone', () => {
+  for (const value of ['2023:02:29 00:00:00', '2024:04:31 00:00:00', '2024:13:01 00:00:00', '2024:01:00 00:00:00', '2024:01:01 24:00:00', '2024:01:01 00:60:00', '2024:01:01 00:00:60', '0000:01:01 00:00:00', '    :  :     :  :  ', '2024-01-01 00:00:00']) assert.equal(capture({ 0x9003: value }), null, value);
+  const early = capture({ 0x9003: '0099:01:01 00:00:00' });
+  assert.equal(new Date(early.valueMs).getUTCFullYear(), 99);
+  for (const offset of ['+24:00', '-01:60', '+9:00', '  :  ', 'abc']) assert.equal(capture({ 0x9003: '2024:01:01 00:00:00', 0x9011: offset }).domain, 'wall');
+  for (const subsec of ['abc', '-1', '12.3']) assert.equal(capture({ 0x9003: '2024:01:01 00:00:00', 0x9291: subsec }).valueMs, Date.UTC(2024, 0, 1));
+  assert.equal(capture({ 0x9003: '2024:01:01 00:00:00', 0x9011: '+00:00' }).domain, 'instant');
+});
+
+test('EXIF corrupt pointers, counts, types and nonterminated text fail closed without affecting dimensions', () => {
+  for (const mutate of [
+    b => b.writeUInt32LE(0xffffffff, 30), // Exif IFD offset
+    b => b.writeUInt32LE(8, 30), // self-reference: IFD0 is not an Exif date directory
+    b => b.writeUInt16LE(65535, 38),
+    b => b.writeUInt16LE(7, 42), // DateTimeOriginal type
+    b => b.writeUInt32LE(0xffffffff, 44), // count
+    b => b.writeUInt32LE(0xffffffff, 48), // data pointer
+    b => b.fill(65, 56) // missing string terminator
+  ]) {
+    const jpeg = timedJpeg({ 0x9003: '2024:01:01 00:00:00' }); const at = jpeg.indexOf(Buffer.from('Exif\0\0')) + 6;
+    const length = jpeg.readUInt16BE(at - 8) - 8; mutate(jpeg.subarray(at, at + length));
+    const value = Core.inspectImageHeader(jpeg); assert.equal(value.captureTime, null); assert.equal(value.width, 320); assert.equal(value.orientation, 6);
+  }
+});
+
+const records = (...contents) => contents.map((data, n) => Object.freeze({ id: `p${n}`, file: file(`photo-${n}.jpg`, data), size: new Blob([data]).size, kept: n % 2 === 0 }));
+const nativeDigest = (algorithm, bytes) => crypto.webcrypto.subtle.digest(algorithm, bytes);
+
+test('exact duplicates narrow by size, SHA-256 then original bytes, with stable sets and no input mutation', async () => {
+  const input = records('same', 'else', 'same', 'longer file', 'else', 'unique');
+  const original = input.map(p => ({ ...p })), hashed = [], progress = [];
+  const result = await Core.findExactDuplicates(input, { digest: async (algorithm, bytes) => { assert.equal(algorithm, 'SHA-256'); hashed.push(bytes.byteLength); return nativeDigest(algorithm, bytes); }, onProgress: p => progress.push(p) });
+  assert.deepEqual(result.sets, [['p0', 'p2'], ['p1', 'p4']]);
+  assert.deepEqual({ ...result.statuses }, { p0: 'duplicate', p1: 'duplicate', p2: 'duplicate', p3: 'unique-size', p4: 'duplicate', p5: 'unique-size' });
+  assert.deepEqual(hashed, [4, 4, 4, 4]); assert.deepEqual(input, original);
+  assert.equal(progress.at(-1).phase, 'complete'); assert.equal(progress.at(-1).completedFiles, input.length);
+  assert.equal(progress.at(-1).totalFiles, input.length);
+});
+
+test('digest collision never labels different bytes as exact duplicates', async () => {
+  const input = records('aaaa', 'bbbb', 'aaaa', 'cccc', 'bbbb');
+  const result = await Core.findExactDuplicates(input, { digest: async () => new Uint8Array(32).buffer });
+  assert.deepEqual(result.sets, [['p0', 'p2'], ['p1', 'p4']]); assert.equal(result.statuses.p3, 'checked');
+});
+
+test('exact duplicate verification compares bounded chunks and yields; hashing is sequential', async () => {
+  const input = records(new Uint8Array(2 * 1024 * 1024 + 9).fill(71), new Uint8Array(2 * 1024 * 1024 + 9).fill(71));
+  let active = 0, maximum = 0, timer = false; const slices = [];
+  for (const p of input) { const original = p.file.slice.bind(p.file); p.file.slice = (start, end) => { slices.push(end - start); return original(start, end); }; }
+  setTimeout(() => { timer = true; }, 0);
+  const result = await Core.findExactDuplicates(input, { digest: async (algorithm, bytes) => { active++; maximum = Math.max(maximum, active); await new Promise(resolve => setTimeout(resolve, 0)); const hash = await nativeDigest(algorithm, bytes); active--; return hash; } });
+  assert.deepEqual(result.sets, [['p0', 'p1']]); assert.equal(maximum, 1); assert.ok(timer);
+  assert.ok(slices.slice(2).length >= 6); assert.ok(slices.slice(2).every(length => length <= 1024 * 1024));
+});
+
+test('per-file hash budget and unavailable crypto are explicit and do not read skipped candidates', async () => {
+  const input = records('same', 'same', 'other size');
+  for (const p of input) p.file.slice = () => { throw new Error('must not read'); };
+  let result = await Core.findExactDuplicates(input, { maxHashBytes: 3 });
+  assert.deepEqual(result.sets, []); assert.equal(result.statuses.p0, 'skipped-large'); assert.equal(result.statuses.p1, 'skipped-large'); assert.equal(result.statuses.p2, 'unique-size');
+  result = await Core.findExactDuplicates(input, { digest: null });
+  assert.equal(result.statuses.p0, 'unavailable'); assert.equal(result.statuses.p1, 'unavailable'); assert.equal(result.statuses.p2, 'unique-size');
+  await assert.rejects(Core.findExactDuplicates(input, { maxHashBytes: -1 }), /maxHashBytes/);
+});
+
+test('duplicate analysis cancellation before/read/digest/compare/complete returns no stale result and can retry', async () => {
+  const input = records('same', 'same');
+  const before = new AbortController(); before.abort();
+  await assert.rejects(Core.findExactDuplicates(input, { signal: before.signal }), { name: 'AbortError' });
+  for (const phase of ['hashing', 'comparing', 'complete']) { const controller = new AbortController(); await assert.rejects(Core.findExactDuplicates(input, { signal: controller.signal, onProgress: p => { if (p.phase === phase) controller.abort(); } }), { name: 'AbortError' }); }
+  const controller = new AbortController(); let release, entered;
+  const started = new Promise(resolve => { entered = resolve; });
+  const pending = Core.findExactDuplicates(input, { signal: controller.signal, digest: async () => { entered(); await new Promise(resolve => { release = resolve; }); return new Uint8Array(32).buffer; } });
+  await started; controller.abort(); release(); await assert.rejects(pending, { name: 'AbortError' });
+  assert.deepEqual((await Core.findExactDuplicates(input)).sets, [['p0', 'p1']]);
+});
+
+test('hash and comparison read failures isolate affected records; retry can finish', async () => {
+  const input = records('same', 'same', 'same'); const original = input[0].file.slice.bind(input[0].file);
+  input[0].file.slice = () => { throw new Error('simulated read failure'); };
+  let result = await Core.findExactDuplicates(input); assert.equal(result.statuses.p0, 'failed'); assert.deepEqual(result.sets, [['p1', 'p2']]);
+  let calls = 0; input[0].file.slice = (start, end) => { if (++calls > 1) throw new Error('comparison failure'); return original(start, end); };
+  result = await Core.findExactDuplicates(input); assert.equal(result.statuses.p0, 'failed'); assert.deepEqual(result.sets, [['p1', 'p2']]);
+  input[0].file.slice = original; assert.deepEqual((await Core.findExactDuplicates(input)).sets, [['p0', 'p1', 'p2']]);
+  result = await Core.findExactDuplicates(input, { digest: async () => { throw new Error('digest failed'); } }); assert.equal(result.statuses.p0, 'failed'); assert.deepEqual(result.sets, []);
+});
+
+test('duplicate analysis handles empty files, prototype-like IDs, and invalid record identity safely', async () => {
+  const input = records('', ''); const safe = [{ ...input[0], id: '__proto__' }, { ...input[1], id: 'constructor' }];
+  const result = await Core.findExactDuplicates(safe); assert.deepEqual(result.sets, [['__proto__', 'constructor']]); assert.equal(result.statuses.__proto__, 'duplicate');
+  assert.deepEqual((await Core.findExactDuplicates([])).sets, []);
+  await assert.rejects(Core.findExactDuplicates([input[0], input[0]]), /unique.*id|duplicate.*id/i);
+  assert.equal((await Core.findExactDuplicates([{ ...input[0], size: 10 }])).statuses.p0, 'failed');
+});
+
+test('EXIF directory traversal excludes GPS and unrelated timestamps, and preserves original priority across APP1 blocks', () => {
+  const first = timedJpeg({ 0x9004: '2020:01:01 00:00:00' });
+  const second = timedJpeg({ 0x9003: '2024:02:29 12:00:00' });
+  const firstEnd = 4 + first.readUInt16BE(4), secondEnd = 4 + second.readUInt16BE(4);
+  const combined = Buffer.concat([first.subarray(0, firstEnd), second.subarray(2, secondEnd), first.subarray(firstEnd)]);
+  assert.equal(Core.inspectImageHeader(combined).captureTime.source, 'exif-original');
+  assert.equal(Core.inspectImageHeader(combined).captureTime.valueMs, Date.UTC(2024, 1, 29, 12));
+  const gps = Buffer.from(second); const tiff = gps.indexOf(Buffer.from('Exif\0\0')) + 6;
+  gps.writeUInt16LE(0x8825, tiff + 22); // Replace ExifIFD pointer with GPS pointer. Never traverse it.
+  assert.equal(Core.inspectImageHeader(gps).captureTime, null);
+  assert.equal(Core.inspectImageHeader(second.subarray(0, secondEnd - 1)).captureTime, null);
+  assert.equal(capture({ 0x9003: '2100:02:29 00:00:00' }), null);
+  assert.equal(capture({ 0x9003: '2000:02:29 00:00:00' }).domain, 'wall');
+});
+
+test('duplicate analysis defaults to unavailable when native crypto is missing', async () => {
+  const context = { window: {}, TextEncoder, Blob, setTimeout, DOMException, Uint8Array, DataView, ArrayBuffer };
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../src/core.js'), 'utf8'), context);
+  const input = records('same', 'same');
+  for (const p of input) p.file.slice = () => { throw new Error('must not read'); };
+  const result = await context.window.BestShotCore.findExactDuplicates(input);
+  assert.equal(result.statuses.p0, 'unavailable'); assert.equal(result.statuses.p1, 'unavailable'); assert.equal(result.sets.length, 0);
+});
+
+test('cancelling an in-flight file read or chunk comparison rejects after the pending read settles', async () => {
+  for (const holdAt of [1, 2]) {
+    const input = records('same', 'same'), controller = new AbortController();
+    let release, entered, count = 0;
+    const enteredRead = new Promise(resolve => { entered = resolve; });
+    const original = input[0].file.slice.bind(input[0].file);
+    input[0].file.slice = (start, end) => {
+      const part = original(start, end);
+      if (++count !== holdAt) return part;
+      return { arrayBuffer: async () => { entered(); await new Promise(resolve => { release = resolve; }); return part.arrayBuffer(); } };
+    };
+    const pending = Core.findExactDuplicates(input, { signal: controller.signal });
+    await enteredRead; controller.abort(); release(); await assert.rejects(pending, { name: 'AbortError' });
+    input[0].file.slice = original; assert.deepEqual((await Core.findExactDuplicates(input)).sets, [['p0', 'p1']]);
+  }
+});
+
+test('short reads and malformed digest output cannot create a duplicate claim', async () => {
+  const input = records('same', 'same', 'same');
+  input[0].file.slice = () => ({ arrayBuffer: async () => new ArrayBuffer(0) });
+  let result = await Core.findExactDuplicates(input); assert.equal(result.statuses.p0, 'failed'); assert.deepEqual(result.sets, [['p1', 'p2']]);
+  result = await Core.findExactDuplicates(input, { digest: async () => new ArrayBuffer(1) });
+  assert.deepEqual(result.sets, []); assert.equal(result.statuses.p1, 'failed');
+});
+
+test('seeded malformed EXIF mutations never cause an out-of-bounds exception', () => {
+  const valid = timedJpeg({ 0x9003: '2024:02:29 12:30:45', 0x9011: '+09:00', 0x9291: '123' });
+  const start = valid.indexOf(Buffer.from('Exif\0\0')) + 6, end = 4 + valid.readUInt16BE(4);
+  let seed = 0x4c617469;
+  for (let n = 0; n < 500; n++) {
+    const mutated = Buffer.from(valid);
+    for (let j = 0; j < 6; j++) { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; mutated[start + seed % (end - start)] = seed >>> 24; }
+    const header = Core.inspectImageHeader(mutated); assert.equal(header.width, 320); assert.equal(header.height, 240);
+    if (header.captureTime) assert.ok(Number.isFinite(header.captureTime.valueMs));
+  }
 });

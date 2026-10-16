@@ -120,3 +120,7 @@ The template retains the generic embedded asset loader. `src/core.js` contains t
 Browser-decoded `naturalWidth` / `naturalHeight` are the oriented display dimensions. Canvas thumbnails use those same dimensions and the browser-oriented image. Zoom uses those dimensions in CSS pixels; original File bytes never pass through canvas for export.
 
 The exporter snapshots selected File references before processing. Later selection changes affect the next export only. Reset invalidates import/export generations and releases thumbnails and full-preview Blob URLs. Only active comparison and large-preview originals have full-size Blob URLs; thumbnails remain until reset. Download URLs are released after a delay so a download can start safely.
+
+## Best Shot Picker analysis
+
+See [GROUPING.md](GROUPING.md) for the versioned pair predicate, ID-owned group state, EXIF domains, atomic async commits and evidence limits. The builder injects `__BEST_SHOT_GROUPING_JS__` exactly once between the core and app sources, rejecting closing script tags in every injected source.
