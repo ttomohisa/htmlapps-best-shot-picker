@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs",
+    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs",
     "test:browser": "node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs",
     "test:grouping": "node tests/grouping-evaluation.cjs",
     "experiment:embedding:build": "node experiments/embedding/build.cjs",
@@ -12,7 +12,9 @@
     "experiment:tfjs:test": "node experiments/embedding/tfjs-browser.cjs",
     "experiment:burst:acquire": "python experiments/embedding/burst-acquire.py",
     "experiment:burst:build": "node experiments/embedding/burst-build.cjs",
-    "experiment:burst:test": "node experiments/embedding/burst-browser.cjs"
+    "experiment:burst:test": "node experiments/embedding/burst-browser.cjs",
+    "experiment:worker:build": "node experiments/embedding/worker-build.cjs",
+    "experiment:worker:test": "node experiments/embedding/worker-browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.57.0"

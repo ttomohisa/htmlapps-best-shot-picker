@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — approved icon and isolated embedding worker
+
+- Replace the header icon and favicon with the owner-provided Best Shot Picker SVG, using the canonical shared asset.
+- Prototype a bounded CPU embedding worker with transferable inputs, cancellation, timeout and stale-result cleanup.
+- Compare the unchanged frozen corpus and main-thread timer responsiveness without adding a model to the app.
+
 ## Unreleased — frozen external burst validation
 
 - Add an independent, hash-pinned HDR+ burst corpus and a fixed-protocol evaluator that cannot tune on external labels.
