@@ -2,6 +2,13 @@
 
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
+## 0.6.1 — development (2026-10-16)
+
+- Reuse photo cards, group controls, comparison options and selected-photo rows instead of rebuilding unchanged DOM during import and Keep updates.
+- Use session-owned photo/group indexes while retaining sequential decoding, cancellation, manual grouping, Undo and original-byte ZIP export.
+- Add bounded tiny-image performance measurements and rendering identity/focus/reset regressions. These measure cloud Chromium behavior, not real-photo throughput or physical-phone speed.
+- Defer automatic eye-state inference because the reviewed evaluation data does not establish suitable rights and coverage for this product.
+
 ## 0.6.0 — development (2026-10-16)
 
 - Add optional face-position detection for the current two comparison photos, with independent face selection, original-image zoom and Whole image return.

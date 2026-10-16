@@ -1,0 +1,68 @@
+name: Bounded photo-session performance
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'tests/performance.browser.cjs'
+      - 'tests/rendering.browser.cjs'
+      - '.github/workflows/photo-performance.yml'
+      - 'build-standalone.ps1'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-session:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check out immutable pre-optimization baseline
+        uses: actions/checkout@v6
+        with:
+          ref: f6f4f0b0a951f92dd09ff2f3a1adc28aa125b88c
+          path: baseline-source
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build the canonical app without changing its runtime
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/bsp-bin"
+          ln -s "$(command -v tar)" "$RUNNER_TEMP/bsp-bin/tar.exe"
+          export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
+          pwsh -NoLogo -NoProfile -File scripts/check-powershell-syntax.ps1
+          pwsh -NoLogo -NoProfile -File scripts/check-repository.ps1
+      - name: Build the same canonical baseline
+        shell: bash
+        run: |
+          export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
+          pwsh -NoLogo -NoProfile -File baseline-source/scripts/check-repository.ps1
+      - name: Measure baseline with the current identical harness
+        run: node tests/performance.browser.cjs
+        env:
+          BSP_PERF_DIST_DIR: baseline-source/dist
+          BSP_PERF_LABEL: baseline
+          BSP_PERF_COUNTS: '100,500'
+      - name: Measure bounded synthetic sessions
+        run: node tests/performance.browser.cjs
+        env:
+          BSP_PERF_LABEL: current
+          BSP_PERF_COUNTS: '100,500'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: photo-performance-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/photo-performance-*.json
+            test-results/photo-performance-*.png
+          if-no-files-found: warn
+          retention-days: 14

@@ -212,6 +212,7 @@ jobs:
         shell: pwsh
         env:
           BSP_PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+          BSP_RENDERING_PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
         run: |
           node tests/preview.smoke.cjs
           if ($LASTEXITCODE -ne 0) { throw "Normal preview checks failed." }
@@ -219,6 +220,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Opt-in similarity preview checks failed." }
           node tests/face.browser.cjs
           if ($LASTEXITCODE -ne 0) { throw "Optional face zoom preview checks failed." }
+          node tests/rendering.browser.cjs
+          if ($LASTEXITCODE -ne 0) { throw "Incremental rendering preview checks failed." }
 
       - name: Upload normal preview browser evidence
         if: always() && steps.cloudflare.outputs.configured == 'true'
