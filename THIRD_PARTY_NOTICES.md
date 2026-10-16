@@ -1,15 +1,9 @@
-# Third-Party Notices
+# Third-party notices
 
-The default generated starter application contains no bundled third-party library code.
+Best Shot Picker v0.1.0 has no third-party runtime dependencies, model weights, or WASM assets. The original-byte ZIP writer and synthetic image fixtures are project code under the repository's MIT license.
 
-Browser APIs and system fonts are used directly. The GitHub Actions workflows reference their respective GitHub-maintained actions under the terms published by those projects.
+The app foundation comes from ttomohisa/htmlapps-template (MIT); its copyright and license remain in LICENSE.
 
-When adding a package to `dependencies.json`:
+Development-only browser tests use Playwright 1.57.0 (Apache-2.0), distributed through npm. Its source and license are at https://github.com/microsoft/playwright/tree/v1.57.0. Chromium installed for test execution is not embedded in or redistributed with the application.
 
-1. Add its name, exact version, license, and homepage to this file.
-2. Sync and commit the corresponding `dependencies.lock.json` entry.
-3. Include every copyright notice and license text required for redistribution.
-4. Update both README files when the dependency materially affects privacy, size, or capability.
-5. Commit the regenerated `dist/dependency-manifest.json` only if the repository policy chooses to track generated artifacts.
-
-Do not assume that a package being available from npm makes it compatible with MIT redistribution.
+The optional fixture regeneration script uses Pillow. Pillow is not a runtime or build dependency, and no Pillow code is embedded in the distributed HTML.

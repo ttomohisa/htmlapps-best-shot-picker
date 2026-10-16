@@ -1,128 +1,481 @@
-# APP_SPEC.md
+# Best Shot Picker — アプリ正式仕様書
 
-This file is the product contract for the application created from this template. Replace the starter specification below before asking an LLM to build a new product.
+- **文書種別:** Browser Kitty 新規アプリのプロダクト契約（実装用）
+- **仕様版:** 1.0（2026-10-16 策定）
+- **対象リリース:** v0.1.0 ～ v1.0.0
+- **状態:** 実装開始可能な仕様案。精度・速度の数値は測定前の受け入れ目標であり、達成済みの値ではない
+- **アプリ名:** Best Shot Picker / ベストショット選び
+- **slug:** `best-shot-picker`
+- **リポジトリ名（計画上）:** `htmlapps-best-shot-picker`。実在・作成済みを意味しない
+- **設計基準:** Browser Kitty Guide、実装開始時点の最新版 `ttomohisa/htmlapps-template` の `AGENTS.md` / `APP_SPEC.md` / `docs/ARCHITECTURE.md`
 
-## 1. Product identity
+> **一文で:** 連写や似た写真をまとめて比較し、残したい写真を選んで、元ファイルのまま保存できるブラウザツール。
 
-- **Working name:** Single HTML App Starter
-- **One-sentence purpose:** Demonstrate the template's local-first, responsive, bilingual, single-file application foundation.
-- **Primary users:** Developers and LLM coding agents starting a new browser utility.
-- **Release artifacts:** `dist/index.html`, `dist/index.self-extract.html`, and a repository-root copy of the readable build named from `repository.name` with a leading `htmlapps-` removed
+---
 
-## 2. Problem and outcome
+## 1. 問題・対象利用者・成功状態
 
-The starter must make the repository's constraints visible and testable without pretending to be a finished end-user product. A user can enter text, see basic counts, copy it, save it, and persist it locally.
+### 1.1 解決する問題
 
-A successful replacement app should state here:
+写真を何枚も撮ると、同じ場面の微妙に違う写真が増える。全枚数を順番に確認して比較し、必要な数枚を選ぶ作業が面倒で、特にスマートフォンでは拡大比較しづらい。写真をクラウドにアップロードすることを望まない利用者もいる。
 
-- What concrete problem it solves.
-- Who experiences the problem.
-- What result the user gets in one session.
-- Why a local single-HTML implementation is useful.
+### 1.2 主な利用者
 
-## 3. Core user flow
+1. **家族写真:** 子どもや集合写真の連写から、目が開いていて鮮明な候補を選びたい人。
+2. **ペット写真:** 動く被写体の複数枚からブレの少ない瞬間を選びたい人。
+3. **旅行写真:** 似た風景・構図の写真をまとめ、アルバムや共有に使う数枚を選びたい人。
+4. **一般的な写真整理:** PCで取り込んだ写真から重複と撮り直しを見分けたい人。
 
-1. Open the page locally or through GitHub Pages.
-2. Enter or paste text.
-3. See character, word, and line counts update immediately.
-4. Edit the suggested output filename, then copy or download the text.
-5. Use Clear or Restore sample and undo the reversible change from the toast when needed.
-6. Reload and recover the locally saved text.
+### 1.3 成功状態
 
-## 4. Functional requirements
+- 例: 120枚を読み込み、似た写真を適切な単位にまとめ、各組の候補を素早く見比べて18枚を選択し、元画像18枚をZIPで取り出せる。
+- 対象となる写真が1枚だけでも手動選択・保存が成立する。
+- AI判定に異議がある場合は、人間がグループと選択結果を変更できる。
+- 途中で失敗した画像があっても、残りの写真の選択・保存は続けられる。
 
-- Provide a responsive text area.
-- Calculate Unicode-aware character count.
-- Calculate approximate word and line counts.
-- Copy text with a compatibility fallback.
-- Download UTF-8 plain text with a user-editable output filename and a predictable `.txt` extension.
-- Save the current text in local storage when available.
-- Use the reusable `AppToast.show()` Undo pattern for reversible Clear / Restore sample operations. Reserve `AppConfirm.ask()` for irreversible or high-risk actions.
-- Switch Japanese and English without reloading.
-- Use a light-only interface; do not add a dark-mode or theme switcher.
-- Expose build version, generation timestamp, and embedded dependency count.
+### 1.4 非目的（v1.0.0ではしない）
 
-## 5. Data and privacy
+- 写真ライブラリからの直接削除、端末上の原本の移動・上書き。
+- RAW現像、レタッチ、美肌加工、色調補正、画像アップスケール。
+- クラウド同期、ユーザーアカウント、共有アルバム、長期的な写真管理。
+- AIによる無確認の大量削除・確定選別。
+- 顔認証、人物同定、個人別自動仕分け、感情・魅力度の判定。
+- 動画からのベストフレーム抽出（別アプリ領域）。
 
-- Input text remains in browser memory and local storage.
-- The app performs no runtime network request.
-- There is no server-side storage, login, analytics, telemetry, or tracking.
-- Download occurs only after a user action.
+---
 
-## 6. Non-goals
+## 2. 絶対に守る設計原則
 
-- Collaborative editing.
-- Cloud synchronization.
-- Rich text formatting.
-- Server-side conversion.
-- Account management.
+**PR-01 人間が決める:** AIやヒューリスティックが示すのは「おすすめ候補」であり、選択済みには自動変更しない。自動的な削除は行わない。
 
-## 7. UX and accessibility
+**PR-02 誤グループ化の抑制:** 違う瞬間やシーンを誤ってまとめる方が、似た写真を見逃すより問題。判定不確実な写真は独立扱い、または「確認推奨」にする。
 
-- Mobile-first responsive layout from 320px upward.
-- All controls have visible labels or accessible names.
-- Keyboard focus is visible.
-- Motion respects `prefers-reduced-motion`.
-- Reversible changes provide a visible Undo action in the reusable toast.
-- Irreversible or high-risk destructive actions use the reusable confirmation component, centered on desktop and presented as a safe-area-aware bottom sheet on smartphones.
-- Status messages use an `aria-live` region.
-- If the finished app needs persistent smartphone access to 3-5 sections or workflow actions, reuse `components/mobile-bottom-bar.html` rather than inventing another fixed bottom bar. For long multi-section tools, prefer its mobile page-tab mode (`data-mobile-page-target`) so tapping a bottom tab shows only that group on smartphones while desktop still shows all sections. Keep unavailable actions disabled until their prerequisites exist.
+**PR-03 原本保護:** 出力は元の `File` のバイト列を使用する。圧縮再エンコード、回転の焼き込み、EXIF削除・改変などはしない。
 
-## 8. Performance expectations
+**PR-04 完全ローカル:** ファイルと画像特徴量、顔情報、選択状態はブラウザ内だけで処理する。ランタイムの外部通信をなくし、公開ページも単一HTML版も画像や入力内容を送信しない。検証するまでUIで「完全ローカル処理」と断言しない。
 
-- Initial UI should become interactive without network access.
-- Input updates should remain smooth for at least 100,000 characters on a typical desktop browser.
-- Avoid rebuilding large DOM sections on every keystroke.
+**PR-05 モバイル優先:** 320px幅、タッチ、長いファイル名、短い画面高さ、端末メモリ制約を初期設計に織り込む。
 
-## 9. Browser target
+**PR-06 小さい用途:** 最短の操作は「写真を入れる → 比較する → 選んで保存する」。詳細なAI設定は初期画面に出さない。
 
-Current stable desktop and mobile versions of Chromium, Firefox, and Safari. Direct `file://` opening is required.
+**PR-07 説明可能性:** おすすめの理由は計測可能なものだけに限定する。数値スコアの絶対的な正しさを装わない。
 
-## 10. Acceptance criteria
+---
 
-- `build-standalone.ps1` produces the readable HTML, a gzip self-extracting variant, and an exact repository-root copy named from `repository.name` with a leading `htmlapps-` removed (for example `htmlapps-tap-counter` → `tap-counter.html`).
-- Embedded asset bytes are Base64-encoded exactly once; the complete asset-bundle JSON is not wrapped in a second Base64 layer.
-- Assets configured with `gzip` / `auto` can be read through the async embedded-asset API, and the build writes `build-size-report.json`.
-- `scripts/verify-standalone.ps1` passes.
-- The self-extract loader is ASCII-only, inherits the embedded favicon from the readable HTML, and restores the source HTML byte-for-byte.
-- The generated HTML contains no unresolved build placeholder.
-- The generated HTML contains no external script, stylesheet, frame, module import, or CSS asset URL.
-- Runtime CSP includes `connect-src 'none'`.
-- The full core user flow works after opening either generated HTML directly.
-- No data leaves the page.
-- Japanese and English copy both fit at 360px width.
-- Clear happens immediately but offers Undo for long enough to recover the previous text.
-- The output filename can be edited before download; invalid filename characters are sanitized and an empty name falls back to the app slug.
+## 3. 対応環境・入力仕様
 
-## 11. Open decisions for a new app
+### 3.1 ブラウザ
 
-Replace these with explicit decisions before implementation:
+- 必須ターゲット: 現行安定版 Chrome / Edge（Windows、Android を含む）。
+- 検証ターゲット: 現行安定版 Safari（iPhone、macOS）および Firefox。
+- `file://` で直接開いた単一HTML版でもコア操作が機能すること。
+- 非対応のブラウザ機能は検出して代替表示する。WebGPUを必須にしない。推論はWASM/CPUを基準とする。
 
-- Maximum accepted input size.
-- Supported input file types.
-- Export file formats, default filename, editable filename behavior, sanitization, and extension rules.
-- Persistence strategy and reset behavior.
-- Undo/redo scope.
-- Error and recovery behavior, including stale async-result invalidation when inputs can change during processing.
-- Explicit async phases (`empty`, `ready`, `loading-runtime` if needed, `processing`, `result`, `error`) for heavy processing apps.
-- Mobile relationship between previews and their directly related controls.
-- Smartphone navigation model: bottom-tab page switching, section-scrolling bottom bar, workflow-action bar, or no fixed bottom bar.
-- Media coordinate/orientation strategy when drawing overlays.
-- Required third-party libraries.
-- Whether the app intentionally needs peer-to-peer WebRTC. If so, decide whether the fully serverless same-LAN QR pairing component is appropriate, what DataChannels are required, and how paired-device data is described to users.
-- Whether bilingual UI is required.
+### 3.2 入力形式
 
-## In-app help
+| 種類 | v0.1.0 | v1.0.0の扱い |
+|---|---|---|
+| JPEG / JPG | 必須 | 必須、EXIF日時・方向を可能な範囲で読む |
+| PNG | 必須 | 必須、透過を維持してプレビュー |
+| WebP（静止画） | 必須 | 必須 |
+| HEIC / HEIF | 対象外 | 環境がデコード可能なら受け付ける。非対応端末では明確に案内する。保証しない |
+| AVIF | 対象外 | デコード可能なブラウザでは対応を検討。必須ではない |
+| RAW / TIFF / PDF / GIFアニメーション / 動画 | 対象外 | 対象外 |
 
-The upper-right header includes a compact help button. It opens a bilingual “使い方と注意事項” dialog containing:
+- 読み込み方法: 複数ファイル選択、ドラッグ＆ドロップ、追加読み込み。
+- PCのフォルダ選択: 機能対応環境では提供。非対応ブラウザではファイル選択にフォールバック。
+- 入力ファイル数: アプリ独自の厳格な枚数上限は原則設けない。ただし処理資源が足りない場合は安全に停止・分割を案内する。
+- 空ファイル、破損画像、ブラウザ非対応形式は「処理できませんでした」へ隔離する。理由と元ファイル名を表示。
+- MIMEだけを信用せず、拡張子・デコード可否・必要ならファイルヘッダーを検査する。
 
-- the real user workflow,
-- privacy and local-processing behavior,
-- limitations and data-loss risks,
-- any browser or device constraints relevant to the app.
+### 3.3 画像と日時の扱い
 
-Acceptance criteria: help content is updated together with each user-facing behavior change, contains no leftover starter instructions, and remains fully scrollable at narrow smartphone widths / short viewport heights so the final item and close control are always reachable.
+- JPEG等のExif `DateTimeOriginal` を優先し、次にその他の撮影日時メタデータ、最後に `File.lastModified` を利用する。どの出典か内部で保持。
+- `lastModified` は撮影日時とは限らない。グループ化で利用する場合は低信頼として扱い、表示も「ファイル更新日時」と区別する。
+- EXIF方向を反映したプレビューと比較を必須とし、元画像に変更は加えない。
+- 拡大比較に用いる画像の「元の画素座標」「回転後の座標」「表示座標」「顔矩形の座標」の変換を一元化する。
+- ファイル名が同一でも別の入力ファイルとして扱う。内容一致は別途確認する。
 
-## WebRTC readiness requirement
+---
 
-When an app uses peer-to-peer WebRTC DataChannels, define which reliable channel represents application readiness. Custom channel layouts must set `readyChannelLabel`; do not define application-ready from ICE/PeerConnection `connected` alone.
+## 4. ユーザーフロー
+
+1. **読み込む:** 画像を複数選ぶ。先にサムネイルと枚数を表示し、解析中の進捗も表示する。
+2. **まとまりを見る:** 類似写真のグループと単独写真を表示。重複と「似た写真」を区別する。
+3. **比較する:** グループ内の2枚または複数枚を表示し、拡大・前後切替・顔周辺の確認を行う。
+4. **選ぶ:** 各写真を明示的に「残す」にする。1グループから複数選んでも、ゼロでもよい。
+5. **出力する:** 選択件数を確認し、名前を指定して元ファイルのZIPを保存する。
+6. **終える:** 元画像は一切変更されない。再読み込みすればセッションは初期状態から始まる（永続化しない）。
+
+### 4.1 必須の空状態・例外動作
+
+- 0枚: 「まだ写真がありません」＋「写真を追加」。
+- 1枚: グループ解析を待たず選択・プレビュー・保存可能。
+- すべて失敗: 成功写真0件と失敗理由を明示、追加可能。
+- 一部失敗: 成功写真は通常どおり使える。失敗件数を別表示。
+- 類似グループ0件: 単独写真一覧で選択できる。「要確認を先に見る」のような無意味な操作は出さない。
+- おすすめを計算できない: 「おすすめなし／比較して選んでください」で手動操作可能。
+- 選択0枚: 保存を無効化し「残す写真を選んでください」を案内。
+
+---
+
+## 5. 機能要件（ID・優先度・初出バージョン）
+
+P0=用途成立に必須、P1=リリース前に入れたい、P2=条件付き／精度次第。
+
+| ID | 優先度 | 初出 | 要件 |
+|---|---|---|---|
+| FR-001 | P0 | 0.1 | JPEG/PNG/WebPの複数読み込み・追加入力 |
+| FR-002 | P0 | 0.1 | 画像一覧、実サムネイル、ファイル名、解像度、サイズ表示 |
+| FR-003 | P0 | 0.1 | 1枚拡大、前後切替、PCの矢印キー操作 |
+| FR-004 | P0 | 0.1 | 2枚を比較。PC横並び・スマホ切替を基本 |
+| FR-005 | P0 | 0.1 | 写真ごとの「残す」選択／解除、選択件数表示 |
+| FR-006 | P0 | 0.1 | 選択済みの元画像をZIP保存、拡張子・バイト列保持 |
+| FR-007 | P0 | 0.1 | ZIP名の編集、安全なファイル名処理、同名画像衝突防止 |
+| FR-008 | P0 | 0.1 | 解析・保存中の進捗、キャンセル、部分失敗、再試行 |
+| FR-009 | P0 | 0.2 | バイト一致の重複検出と類似写真グループ化 |
+| FR-010 | P0 | 0.2 | グループの分割・手動結合、単独写真への戻し |
+| FR-011 | P0 | 0.2 | 自動グループの再計算で手動選択を勝手に失わない |
+| FR-012 | P1 | 0.3 | 相対的なブレ・露出評価とおすすめ候補提示 |
+| FR-013 | P0 | 0.3 | おすすめ理由の表示、低確信度なら「確認推奨」 |
+| FR-014 | P1 | 0.4 | 小型Image Embedderによる類似判定の補強 |
+| FR-015 | P0 | 0.4 | AIモデルが使えなくても基本機能が成立する |
+| FR-016 | P1 | 0.5 | 顔位置検出・顔付近の拡大比較・顔領域の鮮明度 |
+| FR-017 | P1 | 0.5 | 集合写真の複数顔切替。顔の対応不確実なら自動対応しない |
+| FR-018 | P2 | 0.6 | 目の開閉の参考表示（精度基準を満たす時のみ有効化） |
+| FR-019 | P0 | 0.7 | 大量写真を逐次処理、Worker使用、資源開放、長時間UI停止防止 |
+| FR-020 | P1 | 0.8 | 分割ZIP・大容量保存の安全なフォールバック |
+| FR-021 | P1 | 0.8 | 選択一覧のCSV/JSON出力（利用者の明示操作のみ） |
+| FR-022 | P0 | 0.9 | PC/スマホ・日英UI・ヘルプ・アクセシビリティ完成 |
+| FR-023 | P0 | 0.9 | 単一HTMLの通常版・自己展開版、file://動作、外部送信なし |
+| FR-024 | P0 | 1.0 | リリース検証、README、スクリーンショット、CI成功 |
+
+**原則:** P2である目の開閉推定は、品質が足りない場合にはv1.0.0から除外する。これはリリースブロッカーにしない。
+
+---
+
+## 6. グループ化仕様
+
+### 6.1 3つの概念を区別
+
+1. **内容が同一:** バイト列が一致するファイル。候補のサイズ等で絞り込んだ上でSHA-256等により確定する。ファイル名のみで同一判定しない。
+2. **似た写真:** 同じ場面を続けて撮った、比較する価値のある別ファイル。異なる表情や軽い構図変化を含み得る。
+3. **単独写真:** 似た写真がない、または自動判定の確信が十分でない写真。
+
+### 6.2 v0.2.0: 低リスクの自動グループ化
+
+- 事前に撮影日時の出典と信頼度を取得。近接時間の画像をグループ候補として絞る。
+- dHash/pHash等の視覚的類似度を併用。単一の写真間比較だけで判定を確定しない。
+- 日時が不明な写真は、ほぼ同一の見た目である場合に限って自動グループに入れる。違いが大きい場合は独立して残す。
+- 異なるシーンが中間画像を介して連鎖的に一組になる「橋渡し」を防ぐため、グループ代表だけでなく既存構成員との整合性を確認する（complete-linkに近い保守的判定）。
+- 閾値はハードコードせず、設定オブジェクトに定義して再現可能な評価データで調整。特定値を仕様上の絶対真理にしない。
+- グループの並びは撮影時刻（信頼できる場合）→読み込み順を基本とし、作業中に勝手に大きく入れ替えない。
+- 単独写真も同じ一覧に表示し、通常どおり選べる。
+
+### 6.3 v0.4.0: Image Embedderによる補強
+
+- 第一候補: MediaPipe Image Embedder + MobileNetV3 Small。実装時点で精度、モデル容量、ライセンス、WASM同梱・`file://`実行を検証して決定。
+- 埋め込みベクトルのコサイン類似度を用いる。ただし「犬同士」のような意味的に似た別シーンが誤結合されないよう、時間・構図・画像ハッシュの条件を必ず併用する。
+- 追加モデルの効果は「誤グループの増加が許容内か」「見逃していた連写を拾えるか」の両方で評価する。
+- モデルの初期化失敗やWASM非対応時は従来の非MLアルゴリズムに復帰する。読み込んだ写真・人間の選択は残す。
+- モデル導入による初回HTMLサイズ、実行メモリ、端末別処理時間を計測する。
+
+### 6.4 グループ編集
+
+- 「この写真を別にする」「他のグループへ移す」「グループを結合」を提供。
+- グループ編集は可能な範囲でUndo可能。サムネイルの状態、選択済み数、比較画面は一致させる。
+- 手動グループ編集結果は、同一セッション中の再解析で上書きしない。明示的に再計算する場合、変更を維持するかリセットするか分かるUIを提供。
+- グループの数・件数の計算は、同一内容の重複表示と区別して整合させる。
+
+---
+
+## 7. おすすめ候補（写真品質評価）
+
+### 7.1 表示の基本
+
+- 初期状態で「残す」は未選択。おすすめ候補であっても、自動的には保存対象へ追加しない。
+- おすすめはグループ内の相対評価。絶対的な「88点の優秀な写真」等の誤解を与える点数は主UIに出さない。
+- 基本的な根拠表現: 「ほかの写真よりブレが少ない」「白飛びが少ない」「顔付近が比較的鮮明」。
+- 判定を裏付けられない時は理由を推測で作らない。「おすすめなし／比較して選んでください」を許容。
+- ユーザーが選んだ写真は、再解析により勝手に置き換えない。
+
+### 7.2 v0.3.0: 非MLの指標
+
+- 鮮明度: Laplacian分散またはTenengrad等を縮小画像の同等条件で計算。ノイズ・被写界深度・線画に影響されることを前提とする。
+- 露出: 輝度分布、飽和ハイライト・暗部つぶれの割合から注意候補を検出。夕景・夜景を一律に減点しない。
+- 比較: 画像サイズや撮影条件の差を正規化し、グループ内順位を出す。客観的な情報が不足すれば順位を控える。
+- 技術評価が高くても「表情のよさ」「構図の好み」は保証できないことをヘルプに記載。
+
+### 7.3 v0.5.0: 顔を使った比較
+
+- MediaPipe Face Detector等で顔矩形を取得。人物の名前やIDは判定しない。
+- 検出できた顔の周囲を拡大する。元画像の全体表示もワンタップで戻せる。
+- 顔領域の鮮明度を別計算し、背景ボケの大きいポートレートを過小評価しないようにする。
+- 複数顔は順に切替できる。別写真の同一人物を自動対応できる場合も、確信が低ければ対応付けしない。
+- 顔が検出されなかった画像を、その理由だけで減点しない。
+
+### 7.4 v0.6.0: 目の状態（条件付き）
+
+- Face Landmarker等を利用し、開閉を参考指標として試験導入する。
+- 実機の多様な照明、眼鏡、顔向き、小さな顔、部分遮蔽などで誤判定率を測定する。
+- 信頼できない画像には「判定不可」を表示。推定値は可逆・補助情報であり、魅力度や感情の判定には使わない。
+- 独立した受け入れ基準を満たせない場合は無効化してv1.0.0をリリースする。
+
+---
+
+## 8. 画面と操作
+
+### 8.1 画面構成
+
+**トップ／読み込み:** 何ができるか一文で説明。「写真を追加」を主ボタン。サンプルがある場合は二次導線。上部はブランドアイコンとEN/JA、ヘルプ。
+
+**写真一覧:** すべての写真、似た写真の組、選択済み、要確認、処理失敗を状況に応じて表示する。要確認が0なら要確認導線を隠す。
+
+**グループ画面:** 枚数と代表サムネイル、おすすめ候補、選択済み枚数。別グループへの切替、分割・結合。代表はおすすめの表示用であり、保存対象とは限らない。
+
+**比較画面:** PCは2枚横並びを主、最大4枚は表示可能な時のみ。スマホは1枚大きく表示して切替、必要時のみ2枚比較。拡大位置を揃えるモードは後期追加の選択肢。
+
+**選択済み／保存画面:** 選択した元写真の一覧、総件数と合計サイズ、ZIP名入力、保存。元データに位置情報が残る場合があることを案内。
+
+### 8.2 写真の選択状態
+
+- `unselected`（未選択） / `kept`（残す）を基本とする。削除・ゴミ箱の語は元画像の破壊と誤認されるので避ける。
+- グループ単位に `not-reviewed` / `reviewed` を持てる。「このグループでは選ばない」と明示的に完了させられる。
+- おすすめ候補は表示バッジであり、`kept`とは独立。
+- 一枚ずつでも複数枚でも「残す」にできる。グループ未処理でも選択済みは保存可能。
+- 選択・解除はUndoに対応。選択済み一覧から当該画像へ戻れる。
+
+### 8.3 デスクトップ
+
+- グループ一覧と比較対象へ速く移動できる配置。写真を大きく見るスペースを優先。
+- `←/→`: 比較対象の移動（フォーカスが入力欄にある時は無効）。`Enter`または明示ボタン: 残す状態の切替。`Esc`: 拡大画面・ダイアログを閉じる。
+- キーボード操作の説明はヘルプとツールチップへ。
+
+### 8.4 スマートフォン
+
+- 320/360/390px幅、セーフエリア、縦横、短い画面高さを考慮。
+- 3タブ `写真` / `比較` / `保存` を基本とし、テンプレート `mobile-bottom-bar` を再利用。実際の体験を阻害する場合は固定バーを見直す。
+- 比較対象の左右スワイプ、ピンチ拡大、ダブルタップ拡大はブラウザ標準ジェスチャーとの衝突を検証。
+- 比較操作ボタンは画像のすぐそばへ。固定バーで画像・モーダルの最終行を隠さない。
+- 長い名前は省略表示と全名確認ができること。誤タップしにくいタップ領域。
+
+### 8.5 日英・デザイン・アクセシビリティ
+
+- 日本語・英語をページ再読み込みなしで切替。切替時に画像・選択・解析状態を失わない。
+- ブランドカラー `#16624F`、明るい背景、グラデーションに依存しないUI。アイコンはSVG。faviconと左上アプリアイコンを同一にする。
+- アラートは `aria-live`。各写真の選択状態は支援技術へ伝える。フォーカス可視化、十分なコントラスト、縮小動作設定尊重。
+- ヘルプダイアログは背景スクロールを抑止し、短い端末でも本文末尾と閉じるボタンへ到達可能。
+
+---
+
+## 9. データモデルと状態管理
+
+### 9.1 写真オブジェクト（概念）
+
+```ts
+interface PhotoRecord {
+  id: string;                 // セッション内で一意。表示名とは独立
+  file: File;                 // 原本参照。UI以外へ送信しない
+  name: string;
+  relativePath?: string;
+  size: number;
+  mime: string;
+  width?: number;
+  height?: number;
+  orientation?: number;
+  timestamp?: number;
+  timestampSource: 'exif' | 'other-metadata' | 'file-last-modified' | 'unknown';
+  thumbnailUrl?: string;      // 適切にrevokeする
+  contentHash?: string;       // 必要な候補だけ計算
+  visualHash?: string;
+  embedding?: Float32Array;
+  metrics?: { sharpness?: number; exposure?: number; faceSharpness?: number };
+  groupId?: string;
+  kept: boolean;
+  loadStatus: 'pending' | 'ready' | 'unsupported' | 'failed';
+  errorCode?: string;
+}
+```
+
+値は概念例であり、ソース型定義・データ保存形式を拘束するものではない。
+
+### 9.2 状態
+
+- `empty`: 写真0枚。追加を案内。
+- `reading`: 入力検査・サムネイル準備。成功した写真は順次閲覧可能。
+- `ready`: 手動比較・選択が可能。
+- `loading-runtime`: MLランタイム準備中。基本操作は継続。
+- `analyzing`: グループ・品質解析中。進捗 `(完了数 / 対象数)` を表示。選択操作可能。
+- `result`: 解析が完了。おすすめ・グループ表示。
+- `exporting`: ZIP作成／保存中。選択スナップショットを固定し、変更は次回出力に反映。
+- `complete`: ZIP生成または保存開始が成功。ブラウザの実ディスク書込み完了と区別して案内。
+- `partial-error`: 一部の入力・解析に失敗したが操作続行可能。
+- `fatal-error`: 継続不能。再試行か追加読み込みを案内。
+- `cancelled`: 解析・出力中止。成功した手動選択は保持。
+
+処理状態と選択件数は直交した状態として管理する。エラーになった写真を成功件数に混ぜない。
+
+### 9.3 非同期結果の安全性
+
+- 入力集合の変更・全消去時は単調増加 `generationId` で過去の解析結果を無効化。
+- Worker・推論・サムネイル等はコミット直前に `generationId` を照合。遅延した旧結果が新しい画像状態を上書きしない。
+- 画像追加時は、同一セッションの既存写真の `kept` を保持し、追加画像だけ必要な解析を行うか、全体再計算後に手動編集情報を再適用する。
+- `AbortController`/キャンセル通知、Blob URLの破棄、ImageBitmapの`close()`等、資源解放を実施。
+- `localStorage`/IndexedDBに写真本体・顔特徴・サムネイルを自動保存しない。必要最小限のUI言語設定は保存可。
+- リロードで作業中の画像・選択は消える旨を、必要な場面で説明する。
+
+---
+
+## 10. 保存・エクスポート
+
+### 10.1 既定方式
+
+- ZIPの初期名 `best-shot-picker-YYYYMMDD.zip`。編集可能で、パス区切り・制御文字・危険な文字を除去し、空なら既定へ戻す。
+- ZIP内の画像は `File` から読み込んだ元バイト列をそのまま格納。JPEG/PNG/WebPは原則ZIP内で`store`（再圧縮不要）を使う。
+- 出力内ファイル名が衝突するときは拡張子を保って `image.jpg` / `image-2.jpg` のように決定的に回避。大文字小文字、Unicode正規化、パス区切りも考慮。
+- `../` などのパスはZIPのエントリ名に通さない。フォルダから入力しても既定は安全なフラット構成。
+- ファイル名が一致していても、選択済みの別ファイルは黙って間引かない。同一内容の重複を保存する場合は確認可能なUIにする。
+- ZIPに格納した各画像の展開後のSHA-256が元ファイルと一致することを自動試験で検証する。
+
+### 10.2 大容量時
+
+- RAMへZIP全体を一括構築する方式を避け、ストリーミングまたは小分け出力を目指す。
+- ファイル保存APIが未対応のブラウザでも、サイズ分割したZIPを順に保存できる代替手段を用意。
+- 分割容量の既定値は実機検証で決め、端末に応じて十分保守的に設定する。利用者には見積り容量と分割数を事前表示。
+- 単一ファイルが分割上限を超える場合は、そのファイルを分割ZIPに切り刻まず、個別保存または明確な案内へフォールバック。
+- 出力中に中止・失敗しても選択状態・原本に影響を与えない。
+
+### 10.3 メタデータとプライバシー
+
+- 原本のEXIF、GPS位置情報、撮影日時、色プロファイルなどを保持する。これは「メタデータが除去される」という意味ではない。
+- 保存前やヘルプで「選択した写真は元ファイルのまま保存され、位置情報などが残る場合があります」と明示。
+- v0.8.0で選択一覧CSV/JSON（ファイル名・選択状態・グループ等の必要最小情報）をオプション出力。元画像と同梱するかはUIでユーザーが決める。初期値は同梱しない。
+- 保存形式はZIPのみを初期の主経路とする。ブラウザの共有シート対応は将来検討。
+
+---
+
+## 11. プライバシー・セキュリティ
+
+- 実行時の外部CDN・AI API・テレメトリ・アクセス解析・外部フォント・外部画像を使用しない。画像の送信先を持たない。
+- CSPは可能な限り `connect-src 'none'`。必要な`blob:`/WASM/Worker許可は最小限にし、実機と単一HTMLで動作を確認。
+- ビルド時に依存パッケージ・モデルを同梱し、実行時はリモートモデルをfetchしない。
+- 同一オリジンの初回HTML配信とユーザーファイルのアップロードは区別し、UIで誤解を与えない。
+- ファイル名はHTMLへ挿入するとき常に安全にエスケープし、DOMの文字列は `textContent` を使用。パスをダウンロード名に転用しない。
+- 画像デコード失敗、圧縮爆弾的な巨大寸法、メモリ不足はアプリが強制終了しない範囲で検知して操作継続を案内。
+- 本アプリは顔を検出しても識別・照合・外部保存しない。
+- OSSで公開できるライセンスのみ採用。**コード、モデル重み、WASM、依存ライブラリを別々に確認**し、第三者表示・商用利用制限を検証して記録。
+
+---
+
+## 12. 実装アーキテクチャ
+
+### 12.1 ベースライン
+
+- 実装開始時に最新版 `ttomohisa/htmlapps-template` を再確認する。2026-10-16確認時点のテンプレートは `AGENTS.md` と `APP_SPEC.md` を契約として持ち、`src/index.template.html` を編集元とし、2種類の単一HTMLを生成する。
+- ソースは見通しが保てる範囲で単一テンプレートに収め、肥大化した場合は開発用`src/`を分割してビルドで統合。生成HTMLを直接編集しない。
+- テンプレートの共通 `toast` / `confirm-dialog` / `async-state` / `mobile-bottom-bar` 等を優先利用。
+- 依存はビルド時固定・ハッシュロック。`dependencies.json`、`dependencies.lock.json`、`THIRD_PARTY_NOTICES.md`に反映。
+
+### 12.2 論理モジュール
+
+```text
+File Intake / Metadata
+       ↓
+Thumbnail Pipeline / Worker
+       ↓
+Hashing & Group Candidate Engine
+       ├─ Exact Duplicate Verifier
+       ├─ Optional Image Embedding
+       └─ Conservative Group Builder
+       ↓
+Quality Heuristics / Optional Face Analysis
+       ↓
+Review State + User Overrides
+       ↓
+Compare UI / Selection UI
+       ↓
+Original-byte ZIP Exporter
+```
+
+- Worker内画像処理は `createImageBitmap` と `OffscreenCanvas` を候補とする。非対応環境は主スレッドで小分け実行する代替パスを用意。
+- モデルはWASM/CPUを標準パスとし、WebGPUはオプション最適化。WorkerとモデルバンドルのBlob/CSP/file://制約を実際に通す。
+- 推論は必要な画像・画面でのみ動かし、数百画像を同時デコードしない。
+- 拡大表示は必要時に原画像デコードし、閉じたら破棄する。
+
+### 12.3 配布成果物（テンプレート現在仕様を前提）
+
+- 読みやすい単一HTML `dist/index.html`。
+- gzip自己展開HTML `dist/index.self-extract.html`。
+- リポジトリ名から導出するルート直下の通常HTMLコピー。仮に`htmlapps-best-shot-picker`なら`best-shot-picker.html`だが、作成時に実リポジトリ名を確認する。
+- `dist/build-size-report.json` 等で容量確認。README日英・実画面スクリーンショット日英・favicon SVGを準備。
+- 読みやすい版も自己展開版も`file://`・オフラインで主要機能を実行できること。
+
+---
+
+## 13. 品質・性能・受け入れ基準
+
+### 13.1 正確性（リリースゲート）
+
+1. **誤グループ率:** 人手でシーン単位にラベル付けした評価セットに対し、自動生成グループのうち異なるシーンを含むグループの割合が**1%以下を目標**。達成しなければ閾値を保守側へ調整し、曖昧な写真は未グループにする。未検証の率を実績として表示しない。
+2. **厳密重複:** 同一ハッシュを確定した写真は同一バイト列。異なるバイト列を「厳密重複」と表示しない。
+3. **保存の忠実性:** 選択済み画像の元バイト列とZIP内画像が**全件一致**する。選択済み件数・出力件数の不一致がない。
+4. **非破壊:** 元ファイル削除・変更コードを含まない。
+5. **推薦の安全性:** 低信頼な品質判定で断定しない。選択済みをAIが変更しない。
+
+### 13.2 処理性能（要ベンチマーク）
+
+- まずスマホ100枚、続いて500枚、PC1000枚の試験を実施する。試験画像の解像度・形式・端末モデル・ブラウザバージョンをログ化。
+- 高負荷時もプログレス更新・中止・既に生成したサムネイルの閲覧を可能にする。
+- 達成前の「100枚を何秒で完了」等は宣伝しない。v0.7.0で実測の目標値を確定し、目標未達なら機能を段階的に減らすか容量上限を正直に案内。
+- 初期表示はモデルロードを待たずに操作可能とする。モデル同梱HTMLの初回展開時間も測定。
+
+### 13.3 対応テスト画像
+
+- 子どもの連写、ペットの高速動作、人物＋背景ボケ、全員が写る集合写真、夕景/夜景、同じ場所の別時刻。
+- 同じ画像内容・別名、同じ名前・異なる内容、EXIFなし、時計がずれた画像、異なる縦横比、回転EXIF、長い日本語名、透過PNG、破損画像。
+- 顔が小さい、眼鏡、横顔、複数人、被写体不在、ピンボケと背景ボケの区別、わずかに異なる構図。
+- 個人情報を含まない利用許諾済み素材を使用。一般家庭の写真をCI成果物・公開リポジトリへ入れない。
+
+### 13.4 ブラウザ・表示
+
+- PC: Chrome/Edge、可能ならFirefox/Safari。
+- スマホ実機: Android Chrome、iOS Safariを主要試験対象。
+- 320px / 360px / 390pxの横スクロール、固定UIの重なり、長文・全画面拡大・ヘルプモーダル末尾アクセス、縦横切替を確認。
+- キーボードのみ・スクリーンリーダーの選択状態、`prefers-reduced-motion`を確認。
+- 日本語/英語で表示崩れがなく、切替後も写真・選択が保持される。
+
+---
+
+## 14. 明示的な未確定事項と決め方
+
+| 論点 | 現段階の方針 | 決定段階 |
+|---|---|---|
+| 類似度の閾値 | 保守的に設定し評価セットで校正。数値の先決めは禁止 | v0.2〜0.4 |
+| モデルの重み・ライセンス | 公開配布物で商用利用・再配布・組み込みを確認 | v0.4・0.5 |
+| 顔の開閉の有効化 | 無理にリリースに入れない。誤判定を実測 | v0.6 |
+| HEIC対応 | ブラウザ能力の検出に基づく条件付き | v0.7 |
+| ZIP分割の閾値 | iPhone実機等のメモリ・保存動作で決める | v0.8 |
+| モデルを含むHTMLサイズ | ビルドサイズ報告と起動時間で判断 | v0.4以降 |
+| 性能の広告可能な表現 | 計測環境と成功基準を固定後に限定 | v0.9 |
+
+---
+
+## 15. 各段階の必須成果物
+
+各マイルストーンで、実装・テストとともに `APP_SPEC.md`、README（日英）、CHANGELOG、必要な依存・ライセンス通知、スクリーンショットを適切に更新する。開発用リポジトリの現在構成でファイル名・パスは再確認し、テンプレートや本仕様の古い記述だけで決めない。
+
+受け入れ試験の詳細は同梱 `ACCEPTANCE_MATRIX.md`、実装順序は `DEVELOPMENT_PLAN.md` を参照。
+
+---
+
+## 16. 参考実装・一次情報（2026-10-16確認）
+
+- Browser Kitty template: https://github.com/ttomohisa/htmlapps-template
+- MediaPipe Image Embedder Web: https://developers.google.com/edge/mediapipe/solutions/vision/image_embedder/web_js
+- MediaPipe Face Detector: https://developers.google.com/edge/mediapipe/solutions/vision/face_detector/web_js
+- MediaPipe Face Landmarker: https://developers.google.com/edge/mediapipe/solutions/vision/face_landmarker/web_js
+- MDN Worker `createImageBitmap`: https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/createImageBitmap
+- MDN `webkitdirectory`: https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
+- fflate ZIP library: https://github.com/101arrowz/fflate
+
+モデル・ブラウザAPIの対応状況、ライセンス、テンプレートの実装契約は、**着手・各リリース時に再確認する**。ここに記載した技術候補は、実機での実装成功・性能保証を意味しない。

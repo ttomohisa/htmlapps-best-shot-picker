@@ -1,0 +1,7 @@
+{
+  "name": "best-shot-picker-tests",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": { "test": "node --test tests/core.test.cjs", "test:browser": "node tests/browser.test.cjs" },
+  "devDependencies": { "playwright": "1.57.0" }
+}
