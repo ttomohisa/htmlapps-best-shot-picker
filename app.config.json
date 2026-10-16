@@ -3,7 +3,7 @@
   "name": "Best Shot Picker",
   "nameJa": "ベストショット選び",
   "slug": "best-shot-picker",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Compare photos, choose your favorites, and save the untouched originals in a ZIP.",
   "descriptionJa": "写真を見比べてお気に入りを選び、元ファイルのままZIPで保存。",
   "defaultLanguage": "auto",

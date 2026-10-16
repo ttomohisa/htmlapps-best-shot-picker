@@ -142,3 +142,114 @@ test('very large existing groups return a cap reason without spread-argument ove
  const ids=Array.from({length:150000},(_,i)=>`large-${i}`),result=similarity().eligibility([group('large',ids),group('other')]);
  assert.equal(result.ok,false);assert.equal(result.reason,'photo-limit');assert.equal(result.photoCount,150001);
 });
+
+test('explicit whole-group scope allows a canonical small search inside 120 automatic groups',()=>{
+ const S=similarity(),groups=freeze(Array.from({length:120},(_,i)=>group(`p${i}`))),before=structuredClone(groups);
+ const result=S.eligibility(groups,undefined,['g-p119','g-p2']);
+ assert.deepEqual(result,{ok:true,reason:null,eligibleGroupIds:['g-p2','g-p119'],photoIds:['p2','p119'],photoCount:2,groupCount:2,limit:36});
+ assert.deepEqual(S.eligibility(groups,groups.flatMap(g=>g.ids),['g-p119','g-p2']),result);
+ assert.equal(S.eligibility(groups).reason,'photo-limit');assert.equal(S.eligibility(groups,undefined,undefined).reason,'photo-limit');
+ assert.equal(S.eligibility(groups,undefined,[]).reason,'too-few-groups');assert.deepEqual(S.eligibility(groups,undefined,[]).photoIds,[]);
+ assert.deepEqual(groups,before);
+});
+
+test('scope cap counts every member of selected groups and never truncates at 36',()=>{
+ const S=similarity(),groups=Array.from({length:120},(_,i)=>group(`p${i}`));
+ const scope=groups.slice(20,56).map(g=>g.id),boundary=S.eligibility(groups,undefined,scope);
+ assert.equal(boundary.ok,true);assert.equal(boundary.photoCount,36);assert.deepEqual(boundary.eligibleGroupIds,scope);
+ const over=S.eligibility(groups,undefined,[...scope,groups[56].id]);assert.equal(over.reason,'photo-limit');assert.equal(over.photoCount,37);assert.equal(over.groupCount,37);
+ const big=group('big',Array.from({length:37},(_,i)=>`large-${i}`)),mixed=[big,group('a'),group('b')];
+ assert.equal(S.eligibility(mixed,undefined,['g-big']).reason,'photo-limit');assert.equal(S.eligibility(mixed,undefined,['g-big','g-a']).photoCount,38);
+ assert.equal(S.eligibility(mixed,undefined,['g-a','g-b']).ok,true);
+ const whole=[group('left',Array.from({length:18},(_,i)=>`l${i}`)),group('right',Array.from({length:18},(_,i)=>`r${i}`)),...groups];
+ assert.equal(S.eligibility(whole,undefined,['g-left','g-right']).photoCount,36);assert.equal(S.eligibility(whole,undefined,['g-left','g-right']).ok,true);
+});
+
+test('explicit scope rejects malformed, unknown, duplicate, protected or partly available groups',()=>{
+ const S=similarity(),groups=freeze([group('a',['a','a2']),group('b'),group('m',['m'],{manual:true}),group('r',['r'],{reviewed:true}),group('p',['p'],{pending:true})]);
+ const invalid=[null,{},'g-a',new Set(['g-a','g-b']),[1],[''],Array(2),['g-a','g-a'],['g-a','unknown'],['g-a','g-m'],['g-a','g-r'],['g-a','g-p']];
+ for(const scope of invalid){const result=S.eligibility(groups,undefined,scope);assert.equal(result.ok,false);assert.equal(result.reason,'invalid-scope');assert.deepEqual(result.photoIds,[]);}
+ const partial=S.eligibility(groups,['a','b'],['g-a','g-b']);assert.equal(partial.reason,'invalid-scope');assert.deepEqual(partial.photoIds,[]);
+ assert.equal(S.eligibility(groups,['a','b']).reason,'too-few-groups');
+ assert.equal(S.eligibility(groups,['a','a2','b'],['g-b','g-a']).ok,true);
+ assert.equal(S.eligibility(groups,['b'],['g-b']).reason,'too-few-groups');
+});
+
+test('scoped proposals read evidence only for the selected whole groups in a large partition',()=>{
+ const S=similarity(),groups=freeze(Array.from({length:120},(_,i)=>group(`p${i}`))),scope=['g-p90','g-p2'];
+ const outside=record('p0');for(const key of ['embedding','features','file','kept'])Object.defineProperty(outside,key,{get(){throw new Error(`Outside scope: ${key}`);}});
+ const result=S.propose(groups,[outside,record('p2'),record('p90')],{groupIds:scope});
+ assert.equal(result.ok,true);assert.equal(result.photoCount,2);assert.equal(result.proposals.length,1);
+ const proposal=result.proposals[0];assert.deepEqual(proposal.groupIds,['g-p2','g-p90']);assert.deepEqual(proposal.photoIds,['p2','p90']);assert.deepEqual(proposal.scopeGroupIds,['g-p2','g-p90']);assert(Object.isFrozen(proposal.scopeGroupIds));
+ scope.push('g-p0');assert.deepEqual(proposal.scopeGroupIds,['g-p2','g-p90']);
+ assert.deepEqual(S.propose(groups,[record('p90'),record('p2')],{groupIds:['g-p2','g-p90']}),result);
+ assert.equal(S.propose(groups,[record('p2'),record('p90')]).reason,'photo-limit');
+});
+
+test('proposals snapshot the complete canonical search scope independently of each merge',()=>{
+ const S=similarity(),groups=[group('a'),group('b'),group('c'),group('d'),group('outside')],records=groups.flatMap(g=>g.ids).map(id=>record(id,{color:['c','d'].includes(id)?200:100}));
+ const narrow=S.propose(groups,records,{groupIds:['g-b','g-a']}).proposals[0];
+ const wider=S.propose(groups,records,{groupIds:['g-d','g-b','g-c','g-a']});
+ assert.deepEqual(wider.proposals.map(p=>p.groupIds),[['g-a','g-b'],['g-c','g-d']]);
+ for(const proposal of wider.proposals)assert.deepEqual(proposal.scopeGroupIds,['g-a','g-b','g-c','g-d']);
+ assert.notEqual(narrow.id,wider.proposals[0].id);assert.equal(narrow.fingerprint,wider.proposals[0].fingerprint);
+ const legacy=S.propose(groups,records);for(const proposal of legacy.proposals)assert.deepEqual(proposal.scopeGroupIds,groups.map(g=>g.id));
+});
+
+test('propose fails closed on invalid scope options and rejects scoped runs above the full-member cap',()=>{
+ const S=similarity(),groups=[group('a',['a','a2']),group('b'),group('m',['m'],{manual:true})],records=['a','a2','b','m'].map(id=>record(id));
+ for(const options of [null,[],1,'g-a',{groupIds:null},{groupIds:Array(2)},{groupIds:['g-a','g-a']},{groupIds:['g-a','missing']},{groupIds:['g-a','g-m']}]){
+  const result=S.propose(groups,records,options);assert.equal(result.reason,'invalid-scope');assert.deepEqual(result.proposals,[]);
+ }
+ assert.equal(S.propose(groups,records,{groupIds:[]}).reason,'too-few-groups');
+ const many=Array.from({length:120},(_,i)=>group(`p${i}`)),evidence=many.map(g=>record(g.ids[0]));
+ const boundary=S.propose(many,evidence,{groupIds:many.slice(0,36).map(g=>g.id)});assert.equal(boundary.proposals[0].photoIds.length,36);
+ const over=S.propose(many,evidence,{groupIds:many.slice(0,37).map(g=>g.id)});assert.equal(over.reason,'photo-limit');assert.equal(over.photoCount,37);assert.deepEqual(over.proposals,[]);
+});
+
+test('scoped complete-link still rejects bridges and cannot rescue a matching subset of a group',()=>{
+ const S=similarity(),outside=Array.from({length:118},(_,i)=>group(`outside-${i}`));
+ const records=[record('a',{embedding:vector(0)}),record('b',{embedding:vector(.4)}),record('c',{embedding:vector(.8)})];
+ const groups=[group('a'),group('b'),group('c'),...outside];
+ assert.deepEqual(S.propose(groups,records,{groupIds:['g-c','g-b','g-a']}).proposals.map(p=>p.photoIds),[['a','b']]);
+ const indivisible=[group('ac',['a','c']),group('b'),...outside];
+ assert.deepEqual(S.propose(indivisible,records,{groupIds:['g-ac','g-b']}).proposals,[]);
+ assert.deepEqual(S.propose(indivisible,[record('a'),record('b')],{groupIds:['g-ac','g-b']}).proposals,[]);
+});
+
+test('scoped Apply in 120 groups leaves every outside group unchanged and restores only its members on Undo',()=>{
+ const S=similarity(),groups=freeze(Array.from({length:120},(_,i)=>group(`p${i}`,i===20?['p20','p20-extra']:[`p${i}`]))),scope=['g-p90','g-p20'];
+ const records=freeze(['p20','p20-extra','p90'].map(id=>({...record(id),kept:id==='p90',file:{name:`${id}.jpg`,bytes:[1,2,3]}}))),before=structuredClone({groups,records});
+ const proposal=S.propose(groups,records,{groupIds:scope}).proposals[0],edit=S.apply(groups,proposal);
+ assert.equal(edit.groups.length,119);assert.deepEqual(edit.groups.find(g=>g.id==='g-p20'),{...groups[20],ids:['p20','p20-extra','p90'],manual:true,pending:false});
+ for(const original of groups)if(!scope.includes(original.id))assert.deepEqual(edit.groups.find(g=>g.id===original.id),original);
+ assert.deepEqual(edit.patch.before,[groups[20],groups[90]]);assert.deepEqual(edit.patch.members,['p20','p20-extra','p90']);assert.deepEqual(G.undoEdit(edit.groups,edit.patch),groups);
+ const later=edit.groups.map(g=>({...g,ids:[...g.ids],...(g.id==='g-p0'?{reviewed:true}:{})}));later.push(group('later-import'));
+ const undone=G.undoEdit(later,edit.patch);assert.equal(undone.length,121);assert.equal(undone.find(g=>g.id==='g-p0').reviewed,true);assert.deepEqual(undone.find(g=>g.id==='g-later-import').ids,['later-import']);
+ assert.deepEqual(undone.find(g=>g.id==='g-p20'),groups[20]);assert.deepEqual(undone.find(g=>g.id==='g-p90'),groups[90]);G.validate(undone,[...groups.flatMap(g=>g.ids),'later-import']);
+ assert.deepEqual({groups,records},before);
+});
+
+test('Apply accepts a complete 36-photo scope without counting the other 84 photos',()=>{
+ const S=similarity(),groups=Array.from({length:120},(_,i)=>group(`p${i}`)),scope=groups.slice(20,56).map(g=>g.id);
+ const proposal=S.propose(groups,groups.map(g=>record(g.ids[0])),{groupIds:scope}).proposals[0],edit=S.apply(groups,structuredClone(proposal));
+ assert.equal(edit.groups.length,85);assert.equal(edit.groups[20].ids.length,36);G.validate(edit.groups,groups.flatMap(g=>g.ids));assert.deepEqual(G.undoEdit(edit.groups,edit.patch),groups);
+});
+
+test('Apply rejects missing, malformed, reordered, expanded or changed scope snapshots',()=>{
+ const S=similarity(),groups=[group('a'),group('b'),group('c'),group('d'),group('locked',['locked'],{manual:true})],records=[record('a'),record('b'),record('c',{color:200}),record('d',{color:200})];
+ const proposal=S.propose(groups,records,{groupIds:['g-a','g-b','g-c']}).proposals[0];
+ for(const scopeGroupIds of [undefined,null,{},[],['g-a'],['g-b','g-a','g-c'],['g-a','g-b'],['g-a','g-b','g-c','g-d'],['g-a','g-b','g-d'],['g-a','g-b','missing'],['g-a','g-b','g-locked'],['g-a','g-a'],Array(2)]){
+  assert.throws(()=>S.apply(groups,{...proposal,scopeGroupIds}),/invalid|scope|eligible|proposal/i);
+ }
+ const outside=S.propose(groups,records,{groupIds:['g-c','g-d']}).proposals[0];
+ assert.throws(()=>S.apply(groups,{...outside,scopeGroupIds:proposal.scopeGroupIds}),/invalid|scope|eligible|proposal/i);
+ const big=Array.from({length:120},(_,i)=>group(`p${i}`)),small=S.propose(big,[record('p0'),record('p1')],{groupIds:['g-p0','g-p1']}).proposals[0];
+ assert.throws(()=>S.apply(big,{...small,scopeGroupIds:big.slice(0,37).map(g=>g.id)}),/invalid|scope|eligible|proposal/i);
+});
+
+test('scoped proposals become stale after selected or outside membership and protection changes',()=>{
+ const S=similarity(),groups=Array.from({length:120},(_,i)=>group(`p${i}`)),proposal=S.propose(groups,[record('p20'),record('p90')],{groupIds:['g-p20','g-p90']}).proposals[0];
+ const changes=[current=>current.push(group('new')),current=>current[20].ids.push('new'),current=>current[0].ids.push('new'),current=>current[0].reviewed=true,current=>current[20].manual=true,current=>current[90].pending=true,current=>current.reverse()];
+ for(const change of changes){const current=structuredClone(groups);change(current);const before=structuredClone(current);assert.throws(()=>S.apply(current,proposal),/stale/i);assert.deepEqual(current,before);}
+});
