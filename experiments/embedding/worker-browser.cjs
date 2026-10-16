@@ -16,7 +16,8 @@ const out=path.resolve(__dirname,'../../test-results/embedding-worker');
    await page.waitForFunction(()=>window.burstExperiment?.done,{},{timeout:240000});
    const report=await page.evaluate(()=>window.burstExperiment.report);
    Object.assign(report,{file,cpuThrottleRate:rate,mode,httpRequests:requests,pageErrors:errors,consoleErrors:consoleDiagnostics,
-    environment:'Headless Linux Chromium; 390x844 CSS viewport. CPU throttling is a synthetic stress condition, not phone emulation or a phone-speed estimate.'});
+    environment:'Headless Linux Chromium; 390x844 CSS viewport. CPU throttling is a synthetic stress condition, not phone emulation or a phone-speed estimate.',
+    throttleScope:'CDP Emulation.setCPUThrottlingRate requested on the page; effective throttling of the separate worker thread is not independently calibrated.'});
    await fs.writeFile(path.join(out,`${file}.${rate}x.${mode}.json`),JSON.stringify(report,null,2)+'\n');
    assert.deepEqual(requests,[]);assert.deepEqual(errors,[]);assert.deepEqual(report.attempts,[]);assert.deepEqual(report.violations,[]);
    assert.equal(report.globalWebAssemblyUnchanged,true);assert.equal(report.fallbackPreserved,true);assert.equal(report.mainThreadRuntimeAbsent,true);

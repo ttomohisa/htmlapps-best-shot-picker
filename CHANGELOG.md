@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased — isolated embedding worker
+## Unreleased — approved icon and isolated embedding worker
 
+- Replace the header icon and favicon with the owner-provided Best Shot Picker SVG, using the canonical shared asset.
 - Prototype a bounded CPU embedding worker with transferable inputs, cancellation, timeout and stale-result cleanup.
 - Compare the unchanged frozen corpus and main-thread timer responsiveness without adding a model to the app.
 
