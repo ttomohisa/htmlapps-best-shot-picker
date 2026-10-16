@@ -5,6 +5,7 @@
 - Added manual JPEG / PNG / still WebP photo intake, thumbnails, EXIF-aware browser previews, and isolated import errors.
 - Added desktop A/B comparison, phone switching, full-size preview, zoom, explicit Keep selection, and Undo.
 - Added original-byte STORE ZIP export with editable output name, Unicode/case collision protection, progress, cancellation, and retry.
+- Aligned the header, Hero, and local-processing badge with the canonical template; retained the subtitle and used EN / JA language labels.
 - Added bilingual help, mobile page tabs, session reset, generation guards, and resource cleanup.
 - Added synthetic fixtures, original-byte ZIP regression tests, and browser acceptance CI for both standalone variants.
 - Adopted the supplied v0.1–v1.0 specification, milestone plan, and acceptance matrix. This release implements only the manual v0.1 milestone.
