@@ -1,6 +1,27 @@
-# v0.1 validation record
+# Validation records
 
-> **Current scope — 2026-10-16:** v0.5 product integration is approved only as an explicit, bounded similar-photo candidate search with review, Apply and Undo; default grouping remains non-ML. Earlier “adoption unapproved” or “not integrated” statements below describe their historical research stage. Those evaluations remain unchanged evidence and do not validate the product’s 480px thumbnail preprocessing or physical-phone cost. Product acceptance results must be recorded separately when actually run; this scope update does not claim those checks have passed. See [APP_SPEC.md](../APP_SPEC.md#19-v05任意候補検索の承認済み実装範囲2026-10-16).
+## Current release and evidence index — 2026-10-16
+
+The published baseline is v0.6.1: main merge `3fa9669a362ff1c39a765d6bb366ffb5de324f02`, tree `d540cb4`. Its reviewed PR10 final head is `d9b64083`. The v0.6.2 / PR11 change is limited to optional-model browser capability handling, help/license-display resilience and documentation; it adds no model, input format or ZIP mode.
+
+| Scope | Recorded outcome and evidence | Boundary |
+|---|---|---|
+| v0.6.1 final-head validation | [Run 38981464279](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464279): success | Automated checks for that head; not every acceptance-matrix case or physical device |
+| v0.6.1 exact-artifact HTTPS preview | [Run 38981464280](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464280): success | Hosted synthetic regression scope |
+| v0.6.1 paired rendering observations | [Run 38981464283](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464283): success | 100/500 tiny synthetic photos in CI Chromium; not real-photo or physical-phone performance |
+| v0.6.1 isolated face probe | [Run 38981464329](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464329): success | Probe coverage only; not general face accuracy or device-memory validation |
+| Published v0.6.1 Pages artifacts | [Run 38982053672](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38982053672): success; served readable and self-extract HTML both matched the same-run artifacts exactly | Confirms deployed bytes, not a new all-device functional pass |
+| v0.6.2 / PR11 compatibility and help | Pending: no final-head CI or preview result recorded here | Missing Worker / DecompressionStream handling for both optional features, readable-HTML core flow, self-extract launch limitation, and localized license-display retry/error coverage |
+
+Both optional model features require Web Workers and `DecompressionStream`. The readable HTML retains manual comparison, Keep and original-byte ZIP export when these optional capabilities are absent. The self-extracting HTML itself cannot open without `DecompressionStream`; the readable form is the alternative. The PR11 row does not claim this new compatibility coverage has passed.
+
+The owner reported the previous version's smartphone smoke flow as successful, without device/browser, photo count or timings. Physical Android/iPhone 100/500-photo and PC 1,000-photo gates, peak/process memory, real-photo decoding throughput, and broad photographic accuracy remain unverified. Split/disk-streaming ZIP and CSV/JSON selection-list export are not implemented; eye-state estimation remains deferred. Narrow viewports and synthetic throttling are not physical-device evidence.
+
+The records below retain their original milestone scope, dates, observations and failures. Historical statements about unapproved models or unfinished checks are not the current release status; the index above identifies later evidence without converting partial coverage into an all-P0 pass. See [the acceptance scope/status index](../ACCEPTANCE_MATRIX.md#現在の実装範囲と検証状況2026-10-16).
+
+## v0.1 validation record
+
+> **Historical v0.5 scope note — 2026-10-16:** v0.5 product integration is approved only as an explicit, bounded similar-photo candidate search with review, Apply and Undo; default grouping remains non-ML. Earlier “adoption unapproved” or “not integrated” statements below describe their historical research stage. Those evaluations remain unchanged evidence and do not validate the product’s 480px thumbnail preprocessing or physical-phone cost. Product acceptance results must be recorded separately when actually run; this scope update does not claim those checks have passed. See [APP_SPEC.md](../APP_SPEC.md#19-v05任意候補検索の承認済み実装範囲2026-10-16).
 
 Date: 2026-10-16. Scope: manual-selection milestone only. Fixtures: project-created synthetic landscapes, EXIF orientation, transparent PNG, static/animated WebP, malformed/empty files. No personal photos.
 

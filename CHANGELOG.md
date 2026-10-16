@@ -2,6 +2,13 @@
 
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
+## 0.6.2 — development (2026-10-16)
+
+- Explain when required browser APIs for optional similarity/face searches are unavailable, while retaining readable-HTML comparison, Keep and original ZIP saving.
+- Check capabilities without starting a worker or expanding model assets; keep ordinary processing failures separately retryable.
+- Give bundled license text its own localized loading/error/retry state and discard failed asset-expansion cache entries so explicit retries can recover.
+- Align Japanese/English browser requirements and current validation evidence without claiming untested device or release gates passed.
+
 ## 0.6.1 — development (2026-10-16)
 
 - Reuse photo cards, group controls, comparison options and selected-photo rows instead of rebuilding unchanged DOM during import and Keep updates.
