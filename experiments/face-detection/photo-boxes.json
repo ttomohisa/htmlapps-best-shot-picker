@@ -1,0 +1,998 @@
+[
+  {
+    "file": "neutral_front/001_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 455,
+      "yMin": 365,
+      "xMax": 910,
+      "yMax": 995
+    },
+    "eyeCenters": [
+      {
+        "x": 565.0,
+        "y": 632.0
+      },
+      {
+        "x": 778.0,
+        "y": 624.0
+      }
+    ],
+    "notes": "Hairline is slightly irregular; central face unobscured. Hair mass, loose outer strands, ears and neck excluded from intended extent.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/001_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 565.0,
+          "y": 632.0
+        },
+        {
+          "x": 778.0,
+          "y": 624.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/010_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 470,
+      "yMin": 300,
+      "xMax": 915,
+      "yMax": 950
+    },
+    "eyeCenters": [
+      {
+        "x": 584.0,
+        "y": 563.0
+      },
+      {
+        "x": 779.0,
+        "y": 561.0
+      }
+    ],
+    "notes": "Side-part hair makes the upper corners approximate; central face unobscured. Ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/010_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 584.0,
+          "y": 563.0
+        },
+        {
+          "x": 779.0,
+          "y": 561.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/020_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 465,
+      "yMin": 365,
+      "xMax": 930,
+      "yMax": 1005
+    },
+    "eyeCenters": [
+      {
+        "x": 575.0,
+        "y": 633.0
+      },
+      {
+        "x": 786.0,
+        "y": 635.0
+      }
+    ],
+    "notes": "Hairline and lower chin boundary are slightly soft; central face unobscured. Outer hair, ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/020_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 575.0,
+          "y": 633.0
+        },
+        {
+          "x": 786.0,
+          "y": 635.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/032_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 435,
+      "yMin": 310,
+      "xMax": 905,
+      "yMax": 975
+    },
+    "eyeCenters": [
+      {
+        "x": 568.0,
+        "y": 586.0
+      },
+      {
+        "x": 774.0,
+        "y": 576.0
+      }
+    ],
+    "notes": "Clear central face; fine hairline transition and chin shadow make top/bottom approximate. Ears excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/032_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 568.0,
+          "y": 586.0
+        },
+        {
+          "x": 774.0,
+          "y": 576.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/043_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 430,
+      "yMin": 340,
+      "xMax": 910,
+      "yMax": 1015
+    },
+    "eyeCenters": [
+      {
+        "x": 559.0,
+        "y": 615.0
+      },
+      {
+        "x": 783.0,
+        "y": 617.0
+      }
+    ],
+    "notes": "Hairline transition and lower chin shadow are approximate; central face unobscured. Ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/043_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 559.0,
+          "y": 615.0
+        },
+        {
+          "x": 783.0,
+          "y": 617.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/068_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 470,
+      "yMin": 325,
+      "xMax": 900,
+      "yMax": 950
+    },
+    "eyeCenters": [
+      {
+        "x": 578.0,
+        "y": 560.0
+      },
+      {
+        "x": 779.0,
+        "y": 571.0
+      }
+    ],
+    "notes": "Side hair/sideburn boundaries make lateral limits approximate; central face unobscured. Outer hair, ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/068_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 578.0,
+          "y": 560.0
+        },
+        {
+          "x": 779.0,
+          "y": 571.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/091_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 435,
+      "yMin": 355,
+      "xMax": 910,
+      "yMax": 980
+    },
+    "eyeCenters": [
+      {
+        "x": 578.0,
+        "y": 621.0
+      },
+      {
+        "x": 783.0,
+        "y": 620.0
+      }
+    ],
+    "notes": "A few fine strands cross forehead/left cheek; boundary chosen around visible face, excluding outer hair and ears. Chin transition is soft.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/091_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 578.0,
+          "y": 621.0
+        },
+        {
+          "x": 783.0,
+          "y": 620.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/103_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 450,
+      "yMin": 310,
+      "xMax": 900,
+      "yMax": 970
+    },
+    "eyeCenters": [
+      {
+        "x": 579.0,
+        "y": 566.0
+      },
+      {
+        "x": 765.0,
+        "y": 556.0
+      }
+    ],
+    "notes": "Hair/sideburn boundary and lower chin shadow are approximate; central face unobscured. Ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/103_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 579.0,
+          "y": 566.0
+        },
+        {
+          "x": 765.0,
+          "y": 556.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/117_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 465,
+      "yMin": 325,
+      "xMax": 885,
+      "yMax": 960
+    },
+    "eyeCenters": [
+      {
+        "x": 581.0,
+        "y": 562.0
+      },
+      {
+        "x": 771.0,
+        "y": 569.0
+      }
+    ],
+    "notes": "Hair/sideburn transition makes lateral limits approximate; central face unobscured. Ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/117_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 581.0,
+          "y": 562.0
+        },
+        {
+          "x": 771.0,
+          "y": 569.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/127_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 440,
+      "yMin": 350,
+      "xMax": 925,
+      "yMax": 995
+    },
+    "eyeCenters": [
+      {
+        "x": 566.0,
+        "y": 636.0
+      },
+      {
+        "x": 764.0,
+        "y": 631.0
+      }
+    ],
+    "notes": "Fine hairline and side-hair transitions make perimeter approximate; central face unobscured. Ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/127_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 566.0,
+          "y": 636.0
+        },
+        {
+          "x": 764.0,
+          "y": 631.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/137_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 445,
+      "yMin": 340,
+      "xMax": 910,
+      "yMax": 990
+    },
+    "eyeCenters": [
+      {
+        "x": 570.0,
+        "y": 581.0
+      },
+      {
+        "x": 791.0,
+        "y": 579.0
+      }
+    ],
+    "notes": "Soft hairline transition and chin shadow make top/bottom approximate; central face unobscured. Ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/137_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 570.0,
+          "y": 581.0
+        },
+        {
+          "x": 791.0,
+          "y": 579.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_front/173_03.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 450,
+      "yMin": 330,
+      "xMax": 895,
+      "yMax": 985
+    },
+    "eyeCenters": [
+      {
+        "x": 570.0,
+        "y": 594.0
+      },
+      {
+        "x": 768.0,
+        "y": 593.0
+      }
+    ],
+    "notes": "Hairline/sideburn borders and lower chin shadow make perimeter approximate; central face unobscured. Outer hair, ears and neck excluded.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+    "provenance-manual-landmarks": {
+      "source": "neutral_front/173_03.tem",
+      "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+      "templatePointIndicesZeroBased": [
+        0,
+        1
+      ],
+      "points": [
+        {
+          "x": 570.0,
+          "y": 594.0
+        },
+        {
+          "x": 768.0,
+          "y": 593.0
+        }
+      ],
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+    },
+    "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+  },
+  {
+    "file": "neutral_left_3quarter/001_02.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 400,
+      "yMin": 345,
+      "xMax": 850,
+      "yMax": 975
+    },
+    "eyeCenters": null,
+    "notes": "Irregular hairline and near-ear cheek boundary are approximate; fine strands near the outer jaw. Far-side face is foreshortened.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "three-quarter",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_3quarter/020_02.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 390,
+      "yMin": 340,
+      "xMax": 850,
+      "yMax": 965
+    },
+    "eyeCenters": null,
+    "notes": "Hairline and near-ear cheek boundary are approximate; visible central face unobscured. Far-side face is foreshortened.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "three-quarter",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_3quarter/043_02.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 380,
+      "yMin": 325,
+      "xMax": 870,
+      "yMax": 1000
+    },
+    "eyeCenters": null,
+    "notes": "Near-ear cheek/jaw transition and chin-to-neck shadow are approximate. Far-side face is foreshortened.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "three-quarter",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_3quarter/091_02.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 375,
+      "yMin": 370,
+      "xMax": 855,
+      "yMax": 1000
+    },
+    "eyeCenters": null,
+    "notes": "Fine strands cross forehead; near-ear cheek boundary and lower chin transition are approximate. Far-side face is foreshortened.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "three-quarter",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_3quarter/117_02.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 415,
+      "yMin": 335,
+      "xMax": 845,
+      "yMax": 950
+    },
+    "eyeCenters": null,
+    "notes": "Side hair/sideburns partly cover the lateral temple; cheek/ear-root boundary is approximate. Far-side face is foreshortened.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "three-quarter",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_3quarter/137_02.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 390,
+      "yMin": 325,
+      "xMax": 860,
+      "yMax": 970
+    },
+    "eyeCenters": null,
+    "notes": "Hairline and near-ear cheek/jaw transition are approximate; chin shadow is soft. Far-side face is foreshortened.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "three-quarter",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_profile/001_01.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 295,
+      "yMin": 440,
+      "xMax": 685,
+      "yMax": 1025
+    },
+    "eyeCenters": null,
+    "notes": "Profile hides the far-side face; no hidden landmark guessed. Hair partly covers temple; posterior cheek/ear-root extent is ambiguous. Profile crop IoU is exploratory only.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "profile",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_profile/020_01.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 290,
+      "yMin": 320,
+      "xMax": 710,
+      "yMax": 900
+    },
+    "eyeCenters": null,
+    "notes": "Profile hides the far-side face; no hidden landmark guessed. Fine hair partly covers temple; posterior cheek/ear-root and chin/neck limits are approximate. Profile crop IoU is exploratory only.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "profile",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_profile/043_01.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 320,
+      "yMin": 350,
+      "xMax": 710,
+      "yMax": 975
+    },
+    "eyeCenters": null,
+    "notes": "Profile hides the far-side face; no hidden landmark guessed. Posterior cheek/ear-root and jaw/neck transition are ambiguous. Profile crop IoU is exploratory only.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "profile",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_profile/091_01.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 285,
+      "yMin": 370,
+      "xMax": 715,
+      "yMax": 990
+    },
+    "eyeCenters": null,
+    "notes": "Profile hides the far-side face; no hidden landmark guessed. Fine hair near temple and cheek/ear-root boundary add uncertainty; lower chin transition is soft. Profile crop IoU is exploratory only.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "profile",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_profile/117_01.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 310,
+      "yMin": 390,
+      "xMax": 710,
+      "yMax": 975
+    },
+    "eyeCenters": null,
+    "notes": "Profile hides the far-side face; no hidden landmark guessed. Sideburns obscure part of temple; posterior cheek/ear-root and lower jaw limits are approximate. Profile crop IoU is exploratory only.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "profile",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  },
+  {
+    "file": "neutral_left_profile/137_01.jpg",
+    "width": 1350,
+    "height": 1350,
+    "box": {
+      "xMin": 335,
+      "yMin": 350,
+      "xMax": 725,
+      "yMax": 975
+    },
+    "eyeCenters": null,
+    "notes": "Profile hides the far-side face; no hidden landmark guessed. Hairline and posterior cheek/ear-root boundary are approximate; lower chin transition is soft. Profile crop IoU is exploratory only.",
+    "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+    "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+    "provenance-manual-landmarks": null,
+    "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+    "datasetProvenance": {
+      "datasetCreators": [
+        "Lisa DeBruine",
+        "Benedict Jones"
+      ],
+      "dataset": "Face Research Lab London Set, version 5",
+      "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+      "license": "CC BY 4.0",
+      "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+      "sourcePoseLabel": "profile",
+      "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+    },
+    "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+    "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+  }
+]

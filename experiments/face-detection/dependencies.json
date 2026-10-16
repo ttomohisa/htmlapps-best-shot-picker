@@ -1,0 +1,72 @@
+{
+  "purpose": "Isolated face-box technical probe; not imported by the product builder",
+  "package": {
+    "name": "@tensorflow-models/face-detection",
+    "version": "1.0.3",
+    "license": "Apache-2.0",
+    "integrity": "sha512-4Ld/vFF8MrdFdrMWhlLKZD4hMW0PNY9OkYeqoCPNZ+LwFyenxAqVaNaWrR8JKp37vw9Nuzp4ILbkal5zPUnA0g==",
+    "url": "https://registry.npmjs.org/@tensorflow-models/face-detection/-/face-detection-1.0.3.tgz",
+    "bytes": 133047,
+    "sha256": "61124203f7e2ffba31197d414d48ef61949440b5b632cd39b8a9a74accf84945",
+    "asset": "package/dist/face-detection.min.js",
+    "assetSha256": "fd4d7802308ce764cfb9c5702885fff681537fe6b3f478de7babf12834d6d49f"
+  },
+  "models": {
+    "short": {
+      "url": "https://www.kaggle.com/api/v1/models/mediapipe/face-detection/tfJs/short/1/download",
+      "bytes": 194021,
+      "sha256": "0ed428c45a8c14bf85722c23645212a501c9a2d112c525c3a2a8790da0e15ede",
+      "license": "Apache-2.0",
+      "licenseEvidenceUrl": "https://www.kaggle.com/api/v1/models/list?search=face-detection&owner=mediapipe",
+      "licenseEvidence": {
+        "id": 1324,
+        "slug": "short",
+        "framework": "tfJs",
+        "versionId": 1579,
+        "versionNumber": 1,
+        "licenseName": "Apache 2.0",
+        "totalUncompressedBytes": 276990
+      },
+      "assets": [
+        {
+          "path": "short/model.json",
+          "bytes": 75722,
+          "sha256": "c131145fade749f714d39811f282e973760a69cb9e1a9c22f91e132bd8dcd396"
+        },
+        {
+          "path": "short/group1-shard1of1.bin",
+          "bytes": 201268,
+          "sha256": "e9b69ee1c1f8cd33c58120bcd75bf8c56bfba20c880f447e9d293ec102059d4b"
+        }
+      ]
+    },
+    "full": {
+      "url": "https://www.kaggle.com/api/v1/models/mediapipe/face-detection/tfJs/full/1/download",
+      "bytes": 559581,
+      "sha256": "979ef4ac2c2bb9fa3a3f17c2dffbeabc175acc6d980f46bd9dfe0a733fd3595f",
+      "license": "Apache-2.0",
+      "licenseEvidenceUrl": "https://www.kaggle.com/api/v1/models/list?search=face-detection&owner=mediapipe",
+      "licenseEvidence": {
+        "id": 1323,
+        "slug": "full",
+        "framework": "tfJs",
+        "versionId": 1578,
+        "versionNumber": 1,
+        "licenseName": "Apache 2.0",
+        "totalUncompressedBytes": 1223027
+      },
+      "assets": [
+        {
+          "path": "full/model.json",
+          "bytes": 196835,
+          "sha256": "23efcb74f315004e28ae19c19f08cb2cc35837dd6b5f1f18462b54384bec5448"
+        },
+        {
+          "path": "full/group1-shard1of1.bin",
+          "bytes": 1026192,
+          "sha256": "5c3f885a2fd36cb36a6e8bf96a902d9702d486dc76454536e7c15ba73c4e5b42"
+        }
+      ]
+    }
+  }
+}

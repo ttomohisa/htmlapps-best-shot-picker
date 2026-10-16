@@ -217,6 +217,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Normal preview checks failed." }
           node tests/similarity.browser.cjs
           if ($LASTEXITCODE -ne 0) { throw "Opt-in similarity preview checks failed." }
+          node tests/face.browser.cjs
+          if ($LASTEXITCODE -ne 0) { throw "Optional face zoom preview checks failed." }
 
       - name: Upload normal preview browser evidence
         if: always() && steps.cloudflare.outputs.configured == 'true'

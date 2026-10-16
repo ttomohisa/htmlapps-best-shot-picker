@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "face-detection",
+  "name": "MediaPipe Face Detector TFJS short",
+  "version": "1",
+  "modelType": "short",
+  "license": "Apache-2.0",
+  "homepage": "https://www.kaggle.com/models/mediapipe/face-detection/tfJs/short/1",
+  "package": {
+    "name": "@tensorflow-models/face-detection",
+    "version": "1.0.3",
+    "license": "Apache-2.0",
+    "integrity": "sha512-4Ld/vFF8MrdFdrMWhlLKZD4hMW0PNY9OkYeqoCPNZ+LwFyenxAqVaNaWrR8JKp37vw9Nuzp4ILbkal5zPUnA0g==",
+    "url": "https://registry.npmjs.org/@tensorflow-models/face-detection/-/face-detection-1.0.3.tgz",
+    "bytes": 133047,
+    "sha256": "61124203f7e2ffba31197d414d48ef61949440b5b632cd39b8a9a74accf84945",
+    "asset": "package/dist/face-detection.min.js",
+    "assetSha256": "fd4d7802308ce764cfb9c5702885fff681537fe6b3f478de7babf12834d6d49f"
+  },
+  "source": {
+    "url": "https://www.kaggle.com/api/v1/models/mediapipe/face-detection/tfJs/short/1/download",
+    "bytes": 194021,
+    "sha256": "0ed428c45a8c14bf85722c23645212a501c9a2d112c525c3a2a8790da0e15ede",
+    "license": "Apache-2.0",
+    "licenseEvidenceUrl": "https://www.kaggle.com/api/v1/models/list?search=face-detection&owner=mediapipe",
+    "licenseEvidence": {
+      "id": 1324,
+      "slug": "short",
+      "framework": "tfJs",
+      "versionId": 1579,
+      "versionNumber": 1,
+      "licenseName": "Apache 2.0",
+      "totalUncompressedBytes": 276990
+    }
+  },
+  "runtime": {
+    "id": "tfjs",
+    "key": "runtime",
+    "package": "@tensorflow/tfjs",
+    "version": "4.22.0",
+    "bytes": 1105894,
+    "sha256": "a1f9e32fd9b373cf394905050cf0c8c66238b34925846c065db00d2a34d1c040"
+  },
+  "assets": [
+    {
+      "key": "model",
+      "path": "model.json",
+      "mime": "application/json",
+      "compression": "gzip",
+      "bytes": 75722,
+      "sha256": "c131145fade749f714d39811f282e973760a69cb9e1a9c22f91e132bd8dcd396"
+    },
+    {
+      "key": "weights",
+      "path": "group1-shard1of1.bin",
+      "mime": "application/octet-stream",
+      "compression": "gzip",
+      "bytes": 201268,
+      "sha256": "e9b69ee1c1f8cd33c58120bcd75bf8c56bfba20c880f447e9d293ec102059d4b"
+    },
+    {
+      "key": "detector",
+      "path": "detector.min.js",
+      "mime": "text/javascript",
+      "compression": "gzip",
+      "bytes": 17930,
+      "sha256": "fd4d7802308ce764cfb9c5702885fff681537fe6b3f478de7babf12834d6d49f"
+    },
+    {
+      "key": "license",
+      "path": "LICENSE.Apache-2.0.txt",
+      "mime": "text/plain",
+      "compression": "gzip",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "key": "notices",
+      "path": "THIRD_PARTY_NOTICES.txt",
+      "mime": "text/plain",
+      "compression": "gzip",
+      "bytes": 2099,
+      "sha256": "7e6295ab96d4f3505bd7bd4162510b8223de331cfde290b1739b04968f6aa826"
+    }
+  ]
+}
