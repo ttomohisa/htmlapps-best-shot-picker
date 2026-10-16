@@ -30,3 +30,7 @@ v0.1 requires BSP-001–008, 011–015, 037–042, 046, 051–054. Core tests co
 ## Template alignment regression
 
 The header, Hero, and local-processing badge use the canonical htmlapps-template shell (cb908779). The existing subtitle is unchanged. Browser regression assertions cover desktop shell widths and font sizes, the borderless help control, shield icon, EN / JA labels, and narrow-screen typography/version visibility. Local core tests and canonical syntax/build checks pass. All 52 browser assertions pass in CI at ae69c707. The same-head HTTPS preview was checked with four synthetic images, two kept originals, A/B comparison, a renamed ZIP, and Japanese/English switching. Independent Python extraction confirms both downloaded files match their original bytes and CRC. Refreshed Japanese/English README screenshots were captured from that hosted preview and visually compared with the canonical template; CI also retains desktop screenshots. Narrow-width screenshot capture is included for continued visual regression review.
+
+## Local-processing label and mobile footer
+
+At a10cff89, canonical build and all 52 Chromium checks pass. The badge reads “完全ローカル処理” / “Fully local processing”, including initial HTML fallback. The informational footer is hidden at widths ≤600px, while desktop footer and mobile navigation remain present. Tests cover desktop and 320/360/390px visibility. Updated desktop screenshots were captured from the same-runtime HTTPS preview after loading four synthetic photos and keeping two.
