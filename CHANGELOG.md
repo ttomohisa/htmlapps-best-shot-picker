@@ -2,7 +2,8 @@
 
 ## 0.4.0 — 2026-10-16
 
-- Extend the isolated evaluation with a smaller TFJS feature-vector model, unchanged-CSP security controls, and a licensed, scene-disjoint real-photo lighting pilot. Keep consumer-photo and device adoption gates open.
+- Extend the isolated evaluation with a roughly 89% smaller TFJS harness, verified CPU inference in both unchanged-CSP forms, negative security controls, and a licensed scene-disjoint real-photo lighting pilot.
+- Retain the pilot's raw pair evidence, frozen development thresholds, all strategy results, and a clearly labeled fixed-guard diagnostic. Keep consumer-photo and device adoption gates open.
 
 - Harden the non-ML fallback against malformed, sparse, non-finite or incompatible visual evidence, without broadening grouping thresholds.
 - Ignore unknown capture-time domains rather than treating them as trusted timestamps; exact-byte duplicates retain priority.

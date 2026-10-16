@@ -49,6 +49,8 @@
     const subsets = Object.fromEntries(['development','holdout'].map(split=>[split,samples.filter(s=>s.split===split)]));
     const result = {protocol:'Scene-disjoint development/holdout pilot. Only development labels select thresholds; no product threshold changes.',
       thresholdGrid:THRESHOLDS, visualGuard:'aspect relative difference <= 0.025; dHash <= 12; mean RGB distance <= 48; both luma deviation >= 12',
+      visualGuardOnlyAblation:{protocol:'Post-hoc diagnostic using the already fixed visual guard, without cosine or threshold retuning; not a new confirmatory holdout.',
+        ...Object.fromEntries(Object.entries(subsets).map(([split,subset])=>[split,metrics(subset,partition(subset,(a,b)=>{const pair=lookup.get(pairKey(a.id,b.id));return pair.baseline.match||pair.visualGuard;}))]))},
       baseline:Object.fromEntries(Object.entries(subsets).map(([split,subset])=>[split,metrics(subset,partition(subset,baseline))])), strategies:{}};
     for (const strategy of ['cosine-only','guarded-hybrid']) {
       const candidates = THRESHOLDS.map(threshold=>({threshold,metrics:metrics(subsets.development,partition(subsets.development,predicate(strategy,threshold)))}));

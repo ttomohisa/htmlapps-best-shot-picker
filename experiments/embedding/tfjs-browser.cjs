@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
+const {createHash} = require('node:crypto');
 const {chromium} = require('playwright');
 const out = path.resolve(__dirname,'../../test-results/embedding-tfjs');
 (async()=>{
@@ -70,7 +71,8 @@ const out = path.resolve(__dirname,'../../test-results/embedding-tfjs');
     assert(wrapperMaxCosineDifference<0.00001);if(backendMaxCosineDifference!==null)assert(backendMaxCosineDifference<0.01);
     const pilot=results.find(r=>r.file==='photo-pilot.html'),pilotWrapped=results.find(r=>r.file==='photo-pilot.self-extract.html');
     assert(compare(pilot,pilotWrapped)<0.00001);assert.deepEqual(pilot.evaluation,pilotWrapped.evaluation);
-    const summary={kind:'isolated-TFJS-alternative',browser:browser.version(),platform:process.platform,
+    const outputFiles=await Promise.all(['index.html','index.self-extract.html','photo-pilot.html','photo-pilot.self-extract.html'].map(async file=>{const bytes=await fs.readFile(path.join(out,file));return {file,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};}));
+    const summary={outputFiles,kind:'isolated-TFJS-alternative',browser:browser.version(),platform:process.platform,
       architecture:process.arch,productionModelIncluded:false,adoption:'NOT APPROVED',consumerBurstAccuracy:'NOT MEASURED',
       wrapperMaxCosineDifference,backendMaxCosineDifference,availableWebglComparisons,
       unavailableBackends:results.filter(r=>r.backendUnavailable).map(r=>({file:r.file,mode:r.mode,backend:r.backend,reason:r.error.message,diagnostics:r.webglDiagnostics})),results};

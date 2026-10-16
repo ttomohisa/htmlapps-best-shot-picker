@@ -4,7 +4,7 @@ This developer experiment is not included in the distributed Best Shot Picker ap
 
 ## Decision and gates
 
-**Model adoption is not approved.** The four project-authored landscape/texture fixtures exercise integration, not photographic quality. Human-labeled photographic grouping improvement, false-group rate, the planned 50/200-group corpus, and physical Android/iPhone performance remain unmeasured. A self-similarity of 1 or successful inference does not demonstrate useful grouping.
+**Model adoption is not approved.** Four project-authored fixtures test integration, and a licensed 51-photo controlled-lighting pilot now provides narrow photographic evidence. Representative consumer-burst grouping, population false-group risk, the planned 50/200-group corpus, and physical Android/iPhone performance remain unverified. A self-similarity of 1 or successful inference does not demonstrate useful grouping.
 
 The experiment records existing non-ML decisions and cosine values for the same fixtures, initialization time, first/warm inference times, build sizes, invalid-model fallback, and both standalone forms. It does not relax grouping or select photographs. If the canonical self-extract wrapper's CSP blocks WASM, the report retains that adoption blocker rather than claiming success. No broad `unsafe-eval` or production CSP change is introduced.
 
@@ -57,7 +57,7 @@ This candidate uses only CPU/WebGL inference and in-memory model loading. The un
 
 Full Apache-2.0 and the bundled seedrandom/Alea MIT notices are embedded in each experimental file. `LICENSE.TensorFlow.js.txt` and `THIRD_PARTY.TFJS.txt` retain the upstream texts. No TensorFlow.js runtime, model, public photo or experimental page is added to the app, normal PR preview or Pages.
 
-The local synthetic candidate builds to about 1.57 MB, compared with the earlier roughly 14.1 MB MediaPipe harness. This is a build-size result, not yet a device-speed or photographic-quality result. The first extended browser/held-out evaluation is pending CI.
+The measured synthetic candidate is 1,565,843 bytes, about 89% smaller than the 14,130,687-byte MediaPipe harness. This is an isolated harness comparison, not a model-shipped app size. Both default-CSP standalone forms now run CPU inference successfully in CI; detailed results and limits follow below.
 
 Reproduce with `npm run experiment:tfjs:build`, wrap `test-results/embedding-tfjs/index.html` and `photo-pilot.html` using the unchanged canonical PowerShell self-extract builder, then run `npm run experiment:tfjs:test`. CI performs these steps and uploads only JSON evidence and text-only experiment screenshots, not model HTML or original public photos.
 
@@ -72,3 +72,24 @@ The pilot compares the unchanged non-ML predicate with cosine-only and a conserv
 This is a useful real-photograph lighting stress test, not a representative consumer-burst benchmark. It has a static camera, shared calibration objects/backgrounds, few related indoor scenes, and no family, child, pet, outdoor burst, human-preference or physical-phone validation. A held-out gain on this pilot alone cannot authorize shipping a model. The original 50/200-case diversity and false-group/device gates remain open.
 
 Other investigated corpora are not silently substituted: Tanks and Temples' official license page contains contradictory commercial/redistribution clauses despite a CC BY heading; HPatches/LLFF code licenses alone do not establish rights to all external image downloads. Those assets are not used.
+
+### Measured extended result
+
+[Retained measurements and pair evidence](tfjs-results-2026-10-16.json) come from head `65d6bf1`, [CI run 38889459860](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38889459860), Chromium 143 on Linux x64. Readable and canonical self-extract `file://` forms both complete CPU inference, including all 51 photos, with identical cosine outputs and evaluation. The invalid model preserves baseline groups. Normal inference has no HTTP(S) requests, intercepted networking attempts, CSP violations or page errors, and disposes all model tensors. Separate negative controls confirm that eval, Function, WASM compilation and network access remain blocked in both forms. No CSP change was needed.
+
+Default WebGL is unavailable on this runner (`HAS_WEBGL=false`, version 0). Separate software-allowed WebGL2 cases succeed in both forms and differ from CPU cosine values by at most 0.000000362. TensorFlow.js's [context policy](https://github.com/tensorflow/tfjs/blob/tfjs-v4.22.0/tfjs-backend-webgl/src/canvas_util.ts) normally rejects major performance caveats; the isolated diagnostic enables its existing software-rendering option. This does not establish hardware-GPU availability or speed. Chromium warns that automatic software fallback is deprecated; no unsafe SwiftShader/browser flag is added. CPU remains the candidate's portable tested path.
+
+On this run, ten synthetic warm CPU inferences had p50/p95 of 99.1/102.9 ms (readable) and 99.4/100.4 ms (wrapped), with about 3.1 ms model initialization. The photo page's CPU warm p50 was 103.5 ms. These are single-run desktop CI observations, not phone performance, and are not a controlled speed comparison with the earlier MediaPipe run. The 51-photo research page is 5,625,176 bytes readable and 5,583,799 bytes wrapped; its public photos account for much of the extra size.
+
+Development-only selection chose cosine threshold 0.85 for both model strategies. It is frozen; the holdout result has not been used to lower it. On the nine held-out scenes (27 photos, 27 same-scene pairs, 324 different-scene pairs):
+
+| Strategy | Recovered same-scene pairs | Mixed-scene groups / all predicted groups | False joined pairs |
+| --- | ---: | ---: | ---: |
+| Existing conservative no-time baseline | 0 / 27 | 0 / 27 | 0 |
+| Cosine only | 27 / 27 | 0 / 9 | 0 |
+| Guarded hybrid | 13 / 27 | 0 / 16 | 0 |
+| Fixed visual guard without cosine, post-hoc diagnostic | 13 / 27 | 1 / 15 | 1 |
+
+The last row reuses the already fixed visual guard without retuning. It diagnoses model contribution after seeing the initial result; it is not a new confirmatory holdout. The hybrid rejects the guard-only false join (different scenes 56 and 61 under lighting 24, cosine about 0.766) while preserving the recovered pairs. Cosine-only performs best on this narrow pilot, but that is not a basis for choosing a broad production policy. The baseline has no trusted burst timestamps here and intentionally applies its strict no-time thresholds. Do not translate this result into a general accuracy percentage or a demonstrated <1% false-group risk.
+
+**Next gate:** freeze this candidate and protocol, then obtain a new, substantially more diverse labeled scene/burst set plus physical Android/iPhone measurements. Keep existing product grouping and explicit Keep behavior unchanged while collecting that evidence.

@@ -37,3 +37,20 @@ test('TFJS candidate has exact model-license evidence and does not relax canonic
  const runner=fs.readFileSync('experiments/embedding/tfjs-runner.js','utf8');assert(runner.includes('(function(WebAssembly)'));assert(!/window\.WebAssembly\s*=([^=]|$)/.test(runner));assert(runner.includes('tf.io.fromMemory'));
  const builder=fs.readFileSync('build-standalone.ps1','utf8');assert(!builder.includes('tfjs'));
 });
+
+test('fixed guard-only ablation distinguishes wider heuristics from embedding evidence',()=>{
+ const f=fixture(),r=E.evaluate(f.samples,f.pairs);
+ assert.equal(r.visualGuardOnlyAblation.holdout.falseGroups,1);
+ assert.equal(r.strategies['guarded-hybrid'].holdout.falseGroups,0);
+ assert.equal(r.visualGuardOnlyAblation.holdout.recoveredPairs,r.strategies['guarded-hybrid'].holdout.recoveredPairs);
+ assert.match(r.visualGuardOnlyAblation.protocol,/Post-hoc/);
+});
+test('retained photo evidence reproduces frozen development selection and all diagnostic counts',()=>{
+ const result=require('../experiments/embedding/tfjs-results-2026-10-16.json');
+ const samples=require('../experiments/embedding/photo-pilot.json').images;
+ assert.deepEqual(E.evaluate(samples,result.photoPilotPairs),result.evaluation);
+ assert.equal(result.evaluation.strategies['guarded-hybrid'].selectedThreshold,.85);
+ assert.equal(result.evaluation.strategies['guarded-hybrid'].holdout.recoveredPairs,13);
+ assert.equal(result.evaluation.strategies['guarded-hybrid'].holdout.falseGroups,0);
+ assert.equal(result.evaluation.visualGuardOnlyAblation.holdout.falseGroups,1);
+});
