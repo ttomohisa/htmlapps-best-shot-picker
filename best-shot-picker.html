@@ -563,7 +563,7 @@
           <img id="appBrandIcon" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNiIgZmlsbD0iIzE2NjI0RiIvPjxyZWN0IHg9IjEzIiB5PSIxNiIgd2lkdGg9IjM0IiBoZWlnaHQ9IjI4IiByeD0iNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iMjQiIGN5PSIyNSIgcj0iNCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJtMTUgMzkgMTEtMTAgOCA4IDUtNSA3IDciIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxjaXJjbGUgY3g9IjQ2IiBjeT0iNDYiIHI9IjExIiBmaWxsPSIjMTY2MjRGIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Im00MSA0NiAzLjUgMy41IDYuNS03IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPgo=" alt="">
         </div>
         <div class="brand-copy">
-          <p class="brand-name"><span id="brandName">Best Shot Picker</span><span class="version-badge" id="versionBadge">v0.1.0</span></p>
+          <p class="brand-name"><span id="brandName">Best Shot Picker</span><span class="version-badge" id="versionBadge">v0.2.0</span></p>
           <p class="brand-meta" data-i18n="brandMeta">Compare. Choose. Keep the originals.</p>
         </div>
       </div>
@@ -645,7 +645,7 @@
 <script>
 (() => {
       const APP_CONFIG = {"$schema":"./schemas/app-config.schema.json","name":"Best Shot Picker","nameJa":"ベストショット選び","slug":"best-shot-picker","version":"0.2.0","description":"Compare photos, choose your favorites, and save the untouched originals in a ZIP.","descriptionJa":"写真を見比べてお気に入りを選び、元ファイルのままZIPで保存。","defaultLanguage":"auto","repository":{"owner":"ttomohisa","name":"htmlapps-best-shot-picker"},"build":{"output":"dist/index.html","blockRuntimeNetwork":true,"selfExtract":{"enabled":true,"output":"dist/index.self-extract.html"},"sizeBudget":{"readableWarningMb":25,"selfExtractWarningMb":12}}};
-      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-16T06:43:01.8928149Z","app":{"name":"Best Shot Picker","slug":"best-shot-picker","version":"0.2.0"},"dependencies":[]};
+      const BUILD_MANIFEST = {"schemaVersion":2,"builder":"single-html-app-template/1.3","generatedAtUtc":"2026-10-16T06:56:57.4351615Z","app":{"name":"Best Shot Picker","slug":"best-shot-picker","version":"0.2.0"},"dependencies":[]};
       // Asset payloads are Base64 exactly once. The JSON bundle itself is embedded directly.
       const assetBundle = {"schemaVersion":2,"dependencies":{}};
       const blobUrls = new Set();
@@ -1654,6 +1654,7 @@ const api=Object.freeze({CONFIG,features,hamming,pairDecision,groupPhotos,editGr
     if($('#appToast').classList.contains('show')&&!$('#appToastAction').hidden){$('#appToastMessage').textContent=translate($('#appToast').dataset.messageKey||'selectionChanged');$('#appToastAction').textContent=translate('undo');}
     render();
   }
+  function revealToast(){const action=$('#appToastAction');(action.hidden?$('#appToast'):action).scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});}
   function selectPhoto(photo, source = 'compare') {
     if(!photo)return;
     const toast = $('#appToast');
@@ -1664,7 +1665,7 @@ const api=Object.freeze({CONFIG,features,hamming,pairDecision,groupPhotos,editGr
     const focusSelection = () => { const control = $('#previewDialog').open ? $('#previewKeep') : toast.parentElement.querySelector('.keep-button') || ($('#selectedList button')) || $('#clearButton'); control?.focus({preventScroll:true}); };
     const generation=state.generation;
     showToast(translate('selectionChanged'),{actionLabel:translate('undo'),duration:7000,onRestoreFocus:focusSelection,onAction:()=>{if(generation!==state.generation||!byId(photo.id))return;photo.kept=previous;render();focusSelection();}});
-    toast.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'nearest' });
+    revealToast();
   }
   function renderGrid() {
     const grid=$('#photoGrid');
@@ -1743,7 +1744,7 @@ const api=Object.freeze({CONFIG,features,hamming,pairDecision,groupPhotos,editGr
   function organizeGroups(){if(state.analysis){stopAnalysis();state.analysisMessage='analysisCancelled';renderGroups();}setOptions($('#sourceGroup'),state.groups.map(g=>[g.id,groupLabel(g)]),state.groupFilter||state.groups[0]?.id);refreshGroupDialog();$('#groupDialog').showModal();}
   function editGroup(type){
     stopAnalysis();const generation=state.generation;const result=Groups.editGroups(state.groups,{type,sourceId:$('#sourceGroup').value,targetId:$('#targetGroup').value,photoId:$('#groupPhoto').value});state.groupingRevision++;state.groups=result.groups;state.analysisMessage='';$('#groupDialog').close();$('#groupToastHost').append($('#appToast'));render();
-    const restore=()=>$('#organizeButton').focus({preventScroll:true});showToast(translate('groupChanged'),{messageKey:'groupChanged',actionLabel:translate('undo'),duration:7000,onRestoreFocus:restore,onAction:()=>{if(state.generation!==generation)return;stopAnalysis();state.groupingRevision++;state.groups=Groups.undoEdit(state.groups,result.patch);render();restore();}});$('#appToast').scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});
+    const restore=()=>$('#organizeButton').focus({preventScroll:true});showToast(translate('groupChanged'),{messageKey:'groupChanged',actionLabel:translate('undo'),duration:7000,onRestoreFocus:restore,onAction:()=>{if(state.generation!==generation)return;stopAnalysis();state.groupingRevision++;state.groups=Groups.undoEdit(state.groups,result.patch);render();restore();}});revealToast();
   }
   $('#groupFilter').addEventListener('change',event=>{state.groupFilter=event.target.value;render();});$('#organizeButton').addEventListener('click',organizeGroups);$('#sourceGroup').addEventListener('change',refreshGroupDialog);$('#closeGroupButton').addEventListener('click',()=>$('#groupDialog').close());
   for(const [id,type] of [['splitGroupButton','split'],['moveGroupButton','move'],['mergeGroupButton','merge'],['reviewGroupButton','review']])$('#'+id).addEventListener('click',()=>editGroup(type));
@@ -1798,7 +1799,7 @@ const api=Object.freeze({CONFIG,features,hamming,pairDecision,groupPhotos,editGr
   $('#clearButton').addEventListener('click',async()=>{if(await AppConfirm.ask({title:translate('clearTitle'),message:translate('clearMessage'),confirmLabel:translate('clearAction'),cancelLabel:translate('cancel'),tone:'danger'}))resetSession();});
   ['A','B'].forEach((slot,index)=>{$(`#slot${slot}`).addEventListener('click',()=>{state.active=index;renderCompare();});$(`#select${slot}`).addEventListener('change',event=>{state.active=index;state.pair[index]=event.target.value;renderCompare();});$(`#keep${slot}`).addEventListener('click',()=>{state.active=index;selectPhoto(byId(state.pair[index]));});});$('#compareZoom').addEventListener('change',renderCompare);$('#previousButton').addEventListener('click',()=>movePhoto(-1));$('#nextButton').addEventListener('click',()=>movePhoto(1));$('#openPreviewButton').addEventListener('click',event=>openPreview(state.pair[state.active],event.currentTarget,comparisonPhotos()));$('#previewPrevious').addEventListener('click',()=>movePhoto(-1,true));$('#previewNext').addEventListener('click',()=>movePhoto(1,true));$('#previewKeep').addEventListener('click',()=>selectPhoto(byId(state.previewId)));$('#previewZoom').addEventListener('change',renderPreview);
   $('#languageButton').addEventListener('click',()=>{language=language==='ja'?'en':'ja';writeStorage(storageKeys.language,language);applyLanguage();});$('#helpButton').addEventListener('click',()=>$('#helpDialog').showModal());$('#closeHelpButton').addEventListener('click',()=>$('#helpDialog').close());$('#closePreviewButton').addEventListener('click',()=>$('#previewDialog').close());
-  [$('#helpDialog'),$('#previewDialog')].forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}));$('#previewDialog').addEventListener('close',()=>{const hadPreview=!!state.previewId;state.previewId=null;$('#previewImage').removeAttribute('src');const toast=$('#appToast');(previewReturnHost.isConnected ? previewReturnHost : $('#toastHost')).append(toast);if(hadPreview&&toast.classList.contains('show'))toast.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});releaseUnusedFullUrls();});
+  [$('#helpDialog'),$('#previewDialog')].forEach(dialog=>dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}));$('#previewDialog').addEventListener('close',()=>{const hadPreview=!!state.previewId;state.previewId=null;$('#previewImage').removeAttribute('src');const toast=$('#appToast');(previewReturnHost.isConnected ? previewReturnHost : $('#toastHost')).append(toast);if(hadPreview&&toast.classList.contains('show'))revealToast();releaseUnusedFullUrls();});
   document.addEventListener('keydown',event=>{if(event.defaultPrevented||event.altKey||event.ctrlKey||event.metaKey||event.shiftKey)return;if(event.target.closest('input,textarea,select,[contenteditable="true"]'))return;if($('#helpDialog').open||$('#appConfirmDialog').open||$('#groupDialog').open)return;const preview=$('#previewDialog').open;if(!preview&&window.matchMedia('(max-width:600px)').matches&&mobile.currentPage()!=='compare')return;if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();movePhoto(event.key==='ArrowLeft'?-1:1,preview);}else if(event.key==='Enter'&&!event.target.closest('button,a')){event.preventDefault();selectPhoto(preview?byId(state.previewId):activePhoto());}});
   window.addEventListener('beforeunload',event=>{if(state.photos.length||state.load||state.exporting){event.preventDefault();event.returnValue='';}});
   window.addEventListener('pagehide',event=>{if(event.persisted)return;stopAnalysis();state.load?.controller.abort();state.exporting?.controller.abort();state.photos.forEach(photo=>URL.revokeObjectURL(photo.thumbnailUrl));state.fullUrls.forEach(url=>URL.revokeObjectURL(url));state.downloadUrls.forEach(url=>URL.revokeObjectURL(url));});
