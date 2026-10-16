@@ -80,3 +80,5 @@ MIT. No third-party runtime dependencies. See [LICENSE](LICENSE) and [THIRD_PART
 See [grouping design and evaluation limits](docs/GROUPING.md).
 
 See [technical-hint design and evidence limits](docs/QUALITY.md) and the [isolated embedding feasibility experiment](experiments/embedding/README.md).
+
+Developer-only evaluation now includes a frozen-protocol HDR+ burst holdout. It does not add a model to the app; see [experiment scope and limits](experiments/embedding/README.md#independent-hdr-burst-holdout).

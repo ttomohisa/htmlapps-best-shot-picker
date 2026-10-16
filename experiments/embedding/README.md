@@ -93,3 +93,46 @@ Development-only selection chose cosine threshold 0.85 for both model strategies
 The last row reuses the already fixed visual guard without retuning. It diagnoses model contribution after seeing the initial result; it is not a new confirmatory holdout. The hybrid rejects the guard-only false join (different scenes 56 and 61 under lighting 24, cosine about 0.766) while preserving the recovered pairs. Cosine-only performs best on this narrow pilot, but that is not a basis for choosing a broad production policy. The baseline has no trusted burst timestamps here and intentionally applies its strict no-time thresholds. Do not translate this result into a general accuracy percentage or a demonstrated <1% false-group risk.
 
 **Next gate:** freeze this candidate and protocol, then obtain a new, substantially more diverse labeled scene/burst set plus physical Android/iPhone measurements. Keep existing product grouping and explicit Keep behavior unchanged while collecting that evidence.
+
+## Independent HDR+ burst holdout
+
+The next experiment uses actual first/last frames from Google's [HDR+ Burst Photography Dataset](https://www.hdrplusdata.org/dataset.html), under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). This is a separate corpus, not another split of the MIT lighting data. `burst-holdout.json` fixes source object generations, raw and derivative hashes, scene labels, rendering parameters and selection limitations before inference. Raw photographs and rendered PNGs remain in ignored caches, outside Git, Pages and normal app previews. Derived images retain CC BY-SA 4.0 and full attribution in the isolated HTML; the runtime/model licenses remain separate.
+
+`evaluateFrozen` rejects protocol changes. Cosine 0.85, the existing visual guard and ID-sorted greedy complete-link partitioning are frozen from the earlier pilot; external labels cannot tune thresholds or pick a strategy. Reports expose false mixed-scene groups against both all groups and joined (non-singleton) groups, plus recovered positive pairs and false negative-scene joins. The baseline here is the unchanged non-ML pair predicate under the shared ID-sorted protocol; the app-order baselineGroups/fallbackGroups fields separately test preservation and can have different partitions. These counts do not establish a population false-group bound. A zero joined-group denominator is null, not zero risk.
+
+The bounded acquisition selects the 20 smallest first/last DNG pairs in the curated 153-burst release (279,559,788 raw bytes before any scene-review exclusions). This explicitly biases camera, compression, detail and noise conditions. The frozen final set has 18 bursts / 36 frames (250,789,472 raw bytes), after excluding a second beach view and a second restaurant view that overlap other settings. Burst IDs establish positive pairs; assistant visual scene review establishes provisional cross-burst labels before model inference. This is not independent human ground truth. Raw files are developed with pinned rawpy/LibRaw settings, oriented, converted to 8-bit sRGB and resized to at most 512 pixels. This tests rendered public burst frames, not direct DNG support in the app, and not phone-produced JPEG color processing.
+
+The research harness decodes one image at a time and releases its image source before continuing. It records baseline preparation, model/runtime initialization, per-image inference, decode/yield overhead, pair evaluation, long tasks and limited tensor accounting. Tensor samples are taken after execute/dataSync but before the outer tf.tidy cleanup, so they include retained preprocessing/output tensors. They exclude transient activations, browser caches and native allocations; they are not peak process-memory measurements. The embedded corpus itself also has overhead unlike a production File-based session.
+
+CI runs both `file://` standalone forms, an invalid-model fallback, and a separate 4× CPU-throttled Linux Chromium case at 390×844 CSS pixels. That synthetic stress condition is neither phone emulation nor a phone-speed estimate. Physical Android/iPhone, representative family/pet/action diversity, and the original release gates remain unresolved. No production adoption follows automatically from a favorable result.
+
+Reproduce on Linux x86_64 with Python 3.12 and the normal Node test dependencies:
+
+```sh
+python -m pip install -r experiments/embedding/burst-render.requirements.txt
+npm run experiment:burst:acquire
+npm run experiment:burst:build
+pwsh -NoProfile -File scripts/check-powershell-syntax.ps1
+pwsh -NoProfile -File scripts/build-self-extract.ps1 -InputPath test-results/embedding-burst/index.html -OutputPath test-results/embedding-burst/index.self-extract.html
+npm run experiment:burst:test
+```
+
+Acquisition is hash-checked and fails closed if source bytes or rendered derivatives drift. Do not update hashes merely to make CI pass. CI publishes JSON evidence only, not the photographs or research HTML. Results and the adoption decision will be recorded after the exact-commit browser run; implementation of the harness alone is not evidence of successful inference.
+
+### Measured external result and integration decision
+
+[Retained raw pair evidence and cost measurements](burst-results-2026-10-16.json) come from commit `c172517`, [CI run 38932756664](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38932756664), Chromium 143.0.7499.4 on Linux x86_64. All 36 source derivatives reproduced exactly in CI. Normal and canonical self-extract `file://` forms completed CPU inference with identical evaluation; the 4× throttled case agreed. Runtime HTTP requests, intercepted network attempts, CSP violations and page errors were zero. The deliberately broken model preserved fixture-order fallback groups and disposed all model tensors. Existing product browser and build regressions also passed.
+
+On 18 positive burst pairs and 612 cross-scene negative pairs, under the fixed ID-sorted comparison protocol:
+
+| Predicate | Recovered burst pairs | Mixed groups / all groups | Mixed groups / joined groups | False joined pairs |
+| --- | ---: | ---: | ---: | ---: |
+| Unchanged non-ML | 11 / 18 | 0 / 25 | 0 / 11 | 0 |
+| Frozen cosine only | 18 / 18 | 0 / 18 | 0 / 18 | 0 |
+| Frozen guarded hybrid | 17 / 18 | 0 / 19 | 0 / 17 | 0 |
+
+This is a new, narrow real-burst benefit: the guarded model recovers six additional pairs without an observed false join. The missed pair is the dim ornate interior. It is not a general accuracy claim, a <1% population-risk demonstration, or a basis for switching to cosine-only. No threshold or corpus label was tuned on these outputs.
+
+The readable case measured 424.5 ms baseline preparation, 4.6 ms baseline grouping, 155.5 ms runtime load and 73.4 ms model initialization. Its extra 36-photo decode/inference/yield pass took 5,119.1 ms, with per-image inference p50/p95 of 131.2/142.6 ms. The wrapped case's extra pass took 5,270.1 ms. Under 4× CPU throttling, the extra pass took 23,304.8 ms, with inference p50/p95 of 606.2/727.9 ms. These are phase measurements in an isolated harness, not a controlled product speed ratio or phone benchmark. The 15.5 MB research HTML includes approximately 10.5 MB of public PNG fixture bytes and is not the shipped app or proposed model-only bundle size.
+
+**Integration decision: keep the model out of the product.** The benefit justifies continuing a bounded prototype, but this synchronous main-thread adapter already blocks for materially longer than an interactive frame budget. The Long Task API reported only a subset of these continuations; its logged maxima are incomplete observations, not a worst-case UI pause bound. Retained per-image synchronous timings expose that limitation. Next implementation work should isolate inference in a worker or a genuinely interruptible path and test cancellation, stale-result rejection, manual grouping/Keep preservation and failure recovery before any opt-in product integration. Physical Android/iPhone measurements and broader independent labels remain open gates. Repeating the same favorable corpus is not a substitute.

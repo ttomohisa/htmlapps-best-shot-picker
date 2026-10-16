@@ -80,3 +80,5 @@ MIT。サードパーティーの実行時依存はありません。[LICENSE](L
 [グループ化の設計と評価上の制限](docs/GROUPING.md)も参照してください。
 
 [比較のヒントの設計と評価上の制限](docs/QUALITY.md)、[分離された画像埋め込みの技術検証](experiments/embedding/README.md)も参照してください。
+
+開発用の独立したHDR+連写評価では、既存のモデル判定条件を固定して検証します。アプリへのモデル搭載は行いません。[評価範囲と制約](experiments/embedding/README.md#independent-hdr-burst-holdout)を参照してください。

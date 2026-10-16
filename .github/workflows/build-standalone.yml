@@ -145,3 +145,37 @@ jobs:
             test-results/embedding-tfjs/*.json
             test-results/embedding-tfjs/*.png
           retention-days: 14
+
+  external-burst-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: python -m pip install -r experiments/embedding/burst-render.requirements.txt
+      - run: npx playwright install --with-deps chromium
+      - name: Acquire only hash-pinned public burst frames and render fixed derivatives
+        run: npm run experiment:burst:acquire
+      - name: Build frozen external holdout, isolated from product distribution
+        run: npm run experiment:burst:build
+      - name: Wrap with unchanged canonical CSP
+        shell: pwsh
+        run: |
+          ./scripts/check-powershell-syntax.ps1
+          ./scripts/build-self-extract.ps1 -InputPath test-results/embedding-burst/index.html -OutputPath test-results/embedding-burst/index.self-extract.html
+          ./scripts/verify-self-extract.ps1 -Path test-results/embedding-burst/index.self-extract.html -ExpectedSourcePath test-results/embedding-burst/index.html
+      - name: Measure frozen grouping, sequential costs, and model-failure fallback
+        run: npm run experiment:burst:test
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: external-burst-holdout-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/embedding-burst/*.json
+          retention-days: 14

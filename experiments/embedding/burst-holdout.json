@@ -1,0 +1,845 @@
+{
+  "kind": "external-real-burst-holdout",
+  "title": "HDR+ Burst Photography Dataset",
+  "source": "https://www.hdrplusdata.org/dataset.html",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "attribution": "Samuel W. Hasinoff, Dillon Sharlet, Ryan Geiss, Andrew Adams, Jonathan T. Barron, Florian Kainz, Jiawen Chen, and Marc Levoy. Burst photography for high dynamic range and low-light imaging on mobile cameras. ACM Transactions on Graphics (SIGGRAPH Asia), 35(6), 2016. HDR+ Burst Photography Dataset, https://www.hdrplusdata.org/dataset.html. Licensed CC BY-SA 4.0.",
+  "licenseEvidence": "The official dataset page explicitly licenses the dataset CC-BY-SA; its license link points to version 4.0. This applies to the photographs/data, not merely code.",
+  "protocolFrozenBeforeInference": true,
+  "selection": {
+    "method": "For every one of the 153 curated bursts with >=2 DNGs, choose lexicographically first and last payload_N*.dng. Rank candidates by combined source object size ascending, then burst ID ascending; keep the first 20. Exact object names and generations are frozen below.",
+    "model_scores_used": false,
+    "reason": "Keep source DNG transfer below a 300,000,000-byte ceiling while reaching 20 independently captured burst groups.",
+    "size_bias": "Explicit size-based selection favors compressed/newer-camera 2016 bursts and less detailed/noisy content. This is a scoped reproducible evaluation set, not an unbiased dataset sample.",
+    "frame_policy": "First and last captured raw files, rather than multiple renderings of a merged output.",
+    "scene_policy": "Use the documented visually reviewed distinct scenes, with two overlapping-settings candidates excluded before inference.",
+    "burst_count": 18,
+    "frame_count": 36,
+    "total_source_bytes": 250789472,
+    "total_reference_jpeg_bytes": 80437785,
+    "initialCandidateBursts": 20,
+    "initialSourceBytes": 279559788,
+    "review": "Assistant visual review of first-frame contact sheet before model inference, not independent human ground truth. Excluded two overlapping settings; no selection or labels use model scores. Distinct composition/time contexts are separate scene labels; shared broad subject matter is not a same-scene label.",
+    "excluded": [
+      {
+        "burst": "5066_20160413_171343_904",
+        "reason": "Visually related to sea-cave/beach burst 5066_20160413_170521_051; avoid assuming cross-burst negative ground truth."
+      },
+      {
+        "burst": "5066_20160504_181920_148",
+        "reason": "Same restaurant setting as bottle-foreground burst 5066_20160504_184741_899; avoid assuming cross-burst negative ground truth."
+      }
+    ]
+  },
+  "rendering": {
+    "description": "Derived from separate raw burst frames: rawpy half-size camera-white-balance development without auto-brightening, orientation from source metadata, 8-bit sRGB, gamma (2.222, 4.5), Lanczos downscale to maximum 512 pixels, lossless PNG. No merged HDR output is an evaluation frame.",
+    "python": "3.12",
+    "rawpy": "0.25.1",
+    "numpy": "2.2.6",
+    "Pillow": "11.3.0",
+    "platform": "Linux x86_64",
+    "OMP_NUM_THREADS": "1",
+    "half_size": true,
+    "use_camera_wb": true,
+    "no_auto_bright": true,
+    "output_bps": 8,
+    "output_color": "sRGB",
+    "gamma": [
+      2.222,
+      4.5
+    ],
+    "max_dimension": 512,
+    "resize": "Pillow LANCZOS",
+    "format": "PNG",
+    "compress_level": 6,
+    "optimize": false
+  },
+  "scenes": [
+    {
+      "id": "0155_20160816_115629_383",
+      "description": "Flowers against foliage",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "5066_20160413_170521_051",
+      "description": "Sea cave looking toward surf",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0009_20160702_154921_383",
+      "description": "Indoor mechanical display",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0043_20160917_113940_016",
+      "description": "Outdoor decorated pumpkin display",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0047_20160609_110125_873",
+      "description": "Street with church spire",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0006_20160722_115157_431",
+      "description": "Large tree in sunlit forest",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0043_20161103_114437_266",
+      "description": "Modern building and flagpole in daylight",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "5066_20160722_183026_986",
+      "description": "Mountain valley and foreground tree",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "5066_20160721_183005_439",
+      "description": "Feet above moving stream",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0132_20160917_175200_202",
+      "description": "Plated meal on table",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0155_20160923_180141_698",
+      "description": "Tall cathedral facade against sky",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0006_20160727_185921_651",
+      "description": "Person beside large wooden sculpture",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0043_20160825_193900_964",
+      "description": "Bare trees against twilight sky",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0047_20160609_133132_746",
+      "description": "Illuminated waterfront architecture at night",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "5066_20160504_184741_899",
+      "description": "Bottle foreground and person at restaurant table",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0127_20161018_111029_303",
+      "description": "Dim ornate interior and stone basin",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0127_20161107_171749_524",
+      "description": "Modern buildings and sunset sky",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    },
+    {
+      "id": "0006_20160727_200154_366",
+      "description": "Hanging chairs in bright gallery",
+      "labelSource": "Published burst membership plus pre-inference assistant visual scene review"
+    }
+  ],
+  "limitations": [
+    "Only 18 bursts after visual overlap exclusions; small size-biased selection, not a representative consumer sample.",
+    "Assistant visual review has no independent human annotation or inter-rater agreement.",
+    "First/last HDR+ raw captures are very close in time and may already be easy for non-ML grouping.",
+    "Fixed raw rendering is not phone JPEG processing; no DNG support is added to the app.",
+    "No reliable timestamps are passed to grouping; burst membership is a label, not invented EXIF.",
+    "No representative children, pets, action, expression-preference or physical-device validation.",
+    "Zero observed false groups cannot prove population risk below 1%."
+  ],
+  "images": [
+    {
+      "id": "0155_20160816_115629_383-payload_N000",
+      "burst": "0155_20160816_115629_383",
+      "scene": "0155_20160816_115629_383",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "13024efe2205d952c7ee77da794dce4e52d74724f14550c532db516cbe1a10c1",
+      "bytes": 320349,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0155_20160816_115629_383/payload_N000.dng",
+        "generation": "1518721574300180",
+        "size": "5525742",
+        "md5Hash": "YHqIFKNHTIOvzkd502WUXg==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0155_20160816_115629_383/payload_N000.dng",
+        "sha256": "b70716dcd9a704fd860aeba3beaa2a4819b45b419466412ecd265e04b494348d"
+      }
+    },
+    {
+      "id": "0155_20160816_115629_383-payload_N006",
+      "burst": "0155_20160816_115629_383",
+      "scene": "0155_20160816_115629_383",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "688f7654a9b37cf52bb282409a93bb58eb37533cec44940112be7a4b659bdb4a",
+      "bytes": 320246,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0155_20160816_115629_383/payload_N006.dng",
+        "generation": "1518721574142173",
+        "size": "5520634",
+        "md5Hash": "1SBhphPvpMKHSa+5E8Nvjg==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0155_20160816_115629_383/payload_N006.dng",
+        "sha256": "20b5aca2dd76c8b705b96f01427f2f87feeb4fa49a7eabe5586d0c5ad2befbba"
+      }
+    },
+    {
+      "id": "5066_20160413_170521_051-payload_N000",
+      "burst": "5066_20160413_170521_051",
+      "scene": "5066_20160413_170521_051",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "3c470395e028b2ad942e8fe9d4fe062024715e454efed2366c308ea9f28955b1",
+      "bytes": 239660,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160413_170521_051/payload_N000.dng",
+        "generation": "1518721548039272",
+        "size": "5540612",
+        "md5Hash": "uzNEdCu/6gb6eM5h+ft+8A==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160413_170521_051/payload_N000.dng",
+        "sha256": "2c42f9ead5b9d040bad6eb542ce32863d9d0b96e779e11852e71cfc4336dc41b"
+      }
+    },
+    {
+      "id": "5066_20160413_170521_051-payload_N006",
+      "burst": "5066_20160413_170521_051",
+      "scene": "5066_20160413_170521_051",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "3956929d1f004449178ed186e0e5ec2474f756e9008f8984b211efed6fa87ade",
+      "bytes": 238163,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160413_170521_051/payload_N006.dng",
+        "generation": "1518721548355111",
+        "size": "5536192",
+        "md5Hash": "Q4nTlTMajyjEeliqQ1NSGg==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160413_170521_051/payload_N006.dng",
+        "sha256": "9a580d54fdddf89abe96926efdc7cfe98ce30b48a582fb30c4a0c2e51137fb87"
+      }
+    },
+    {
+      "id": "0009_20160702_154921_383-payload_N000",
+      "burst": "0009_20160702_154921_383",
+      "scene": "0009_20160702_154921_383",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "94e54e169ef23f27181437b8b0c33150608caba0a73b8cf314d2e442d780525b",
+      "bytes": 259608,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0009_20160702_154921_383/payload_N000.dng",
+        "generation": "1518721370051642",
+        "size": "5567082",
+        "md5Hash": "8I/Khe2HvEDsa1dwTKJR5w==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0009_20160702_154921_383/payload_N000.dng",
+        "sha256": "12505c8ce1b21ec4f1718f64eaa9c91274a8a33f27a35bd992b2954c12b7f265"
+      }
+    },
+    {
+      "id": "0009_20160702_154921_383-payload_N006",
+      "burst": "0009_20160702_154921_383",
+      "scene": "0009_20160702_154921_383",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "721b2a31d124cf991038297741667dd8b94842a936fe1985ec9deb09e4636a48",
+      "bytes": 259321,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0009_20160702_154921_383/payload_N006.dng",
+        "generation": "1518721372147344",
+        "size": "5567618",
+        "md5Hash": "5M27brU3jAL6WeqY/HfP0g==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0009_20160702_154921_383/payload_N006.dng",
+        "sha256": "3e2024874214e7ce51b323710a3810c759ee8ee8c6f15401ca668a150476c6c3"
+      }
+    },
+    {
+      "id": "0043_20160917_113940_016-payload_N000",
+      "burst": "0043_20160917_113940_016",
+      "scene": "0043_20160917_113940_016",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "c81777c77c491312f60ec1587cf0031276442a906fffd387f2fbfa7943b65099",
+      "bytes": 287225,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0043_20160917_113940_016/payload_N000.dng",
+        "generation": "1518721398942822",
+        "size": "5701472",
+        "md5Hash": "T/bousNJoS2g2HEtn9qAlA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0043_20160917_113940_016/payload_N000.dng",
+        "sha256": "ed3466b16772f2b4fb7242939e250827ffd25d990afce1a617f7950a31e95971"
+      }
+    },
+    {
+      "id": "0043_20160917_113940_016-payload_N006",
+      "burst": "0043_20160917_113940_016",
+      "scene": "0043_20160917_113940_016",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "108864dbd16cac74331bf6fc836df87d015d23a53b732625f291ce0cb4a128c5",
+      "bytes": 287055,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0043_20160917_113940_016/payload_N006.dng",
+        "generation": "1518721400256866",
+        "size": "5700824",
+        "md5Hash": "bfTF+28D5SfoicZPTLQ7SA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0043_20160917_113940_016/payload_N006.dng",
+        "sha256": "c86c72a5816764477393aa3695a4980ee9d374859930e3adb4c100a358808e34"
+      }
+    },
+    {
+      "id": "0047_20160609_110125_873-payload_N000",
+      "burst": "0047_20160609_110125_873",
+      "scene": "0047_20160609_110125_873",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "dd4dd1857d091cbcbf0da6b2c4faa9827a061e2892a3977b7f0060740d4fefd3",
+      "bytes": 238834,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0047_20160609_110125_873/payload_N000.dng",
+        "generation": "1518721431817705",
+        "size": "5733870",
+        "md5Hash": "6j6Asv2MbYjkBs07yQjasg==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0047_20160609_110125_873/payload_N000.dng",
+        "sha256": "5b561c0ea734827318caf7e6aced4163e8d86ab8bbb454cc6a9bda6eacf86223"
+      }
+    },
+    {
+      "id": "0047_20160609_110125_873-payload_N006",
+      "burst": "0047_20160609_110125_873",
+      "scene": "0047_20160609_110125_873",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "602e3df2e6493f4abf41c69c5e1f24e5220b3185a2a46d78ebdf51c578ad8c64",
+      "bytes": 237444,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0047_20160609_110125_873/payload_N006.dng",
+        "generation": "1518721432039882",
+        "size": "5670708",
+        "md5Hash": "P6xArE8isou358RvqefihQ==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0047_20160609_110125_873/payload_N006.dng",
+        "sha256": "048540f3d22050621c1ee5296b4fc6b79d76a2b1e0656a4656dd76d255c720ad"
+      }
+    },
+    {
+      "id": "0006_20160722_115157_431-payload_N000",
+      "burst": "0006_20160722_115157_431",
+      "scene": "0006_20160722_115157_431",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "315e087f2a48473517aa1e1cfad8405fb3c13f364a9e0ceabadce8de15782396",
+      "bytes": 333461,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0006_20160722_115157_431/payload_N000.dng",
+        "generation": "1518721409675415",
+        "size": "6356788",
+        "md5Hash": "q8PfKbSmAByRCU2GYPuE2Q==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160722_115157_431/payload_N000.dng",
+        "sha256": "9744f7c309c7aa278d470e497126ae58da439910f46c4c09f3021b76586689d9"
+      }
+    },
+    {
+      "id": "0006_20160722_115157_431-payload_N006",
+      "burst": "0006_20160722_115157_431",
+      "scene": "0006_20160722_115157_431",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "db32f096d4e64f7481fa0992090a0a2c0eca9a6f39bdb0ab5e0b5af220cf2110",
+      "bytes": 325284,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0006_20160722_115157_431/payload_N006.dng",
+        "generation": "1518721410006212",
+        "size": "6357768",
+        "md5Hash": "t9dX/52HQJab13VRUz3gkQ==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160722_115157_431/payload_N006.dng",
+        "sha256": "fd659e755429a620b0a127ff3087afca452a391ef666ac6ddc5028e81487a34a"
+      }
+    },
+    {
+      "id": "0043_20161103_114437_266-payload_N000",
+      "burst": "0043_20161103_114437_266",
+      "scene": "0043_20161103_114437_266",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "eaa4517aa4b6c85f2bd3c66c3f8c6faede2ec6385587d6bcc65c02a55bb84ab2",
+      "bytes": 265612,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0043_20161103_114437_266/payload_N000.dng",
+        "generation": "1518721283972979",
+        "size": "6558812",
+        "md5Hash": "FRpwaHCrCtSu/+xtdWnrMA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0043_20161103_114437_266/payload_N000.dng",
+        "sha256": "b90beb4407b1f9022d483622b9a6a68718d120b07a72870174041055e47a8fa5"
+      }
+    },
+    {
+      "id": "0043_20161103_114437_266-payload_N002",
+      "burst": "0043_20161103_114437_266",
+      "scene": "0043_20161103_114437_266",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "96cbd517e14a5bd1f420472bc7594fb137cafd4726e07bff43ef1674ea1d1264",
+      "bytes": 255346,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0043_20161103_114437_266/payload_N002.dng",
+        "generation": "1518721283838734",
+        "size": "6556122",
+        "md5Hash": "BLRBGAR60DLs8yFforbnxA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0043_20161103_114437_266/payload_N002.dng",
+        "sha256": "3885ae045dc471b746e6eb3c6fa44c217b48a65fd445c96f3bdd3cdde71113ef"
+      }
+    },
+    {
+      "id": "5066_20160722_183026_986-payload_N000",
+      "burst": "5066_20160722_183026_986",
+      "scene": "5066_20160722_183026_986",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "8afade8dd6b705536c4338e888833afb823d0010a0cafa9e35400212ef8183cf",
+      "bytes": 286761,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160722_183026_986/payload_N000.dng",
+        "generation": "1518721475788123",
+        "size": "6571464",
+        "md5Hash": "sq2XTBPa2jIFjWCghk7Ojw==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160722_183026_986/payload_N000.dng",
+        "sha256": "909565a14a9c0d2c6746becc22e99e721ea321d012ab372708ceaf8c1b3789f0"
+      }
+    },
+    {
+      "id": "5066_20160722_183026_986-payload_N002",
+      "burst": "5066_20160722_183026_986",
+      "scene": "5066_20160722_183026_986",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "e1250d7d1adf8f542a1abce734673d2ab93d01b93ea85e067cf7a6559af8609f",
+      "bytes": 286907,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160722_183026_986/payload_N002.dng",
+        "generation": "1518721475622466",
+        "size": "6571728",
+        "md5Hash": "VN9MH6e7MxT6T2c4SiMmAA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160722_183026_986/payload_N002.dng",
+        "sha256": "f926f90d32812c79e92f562dd1dd8a7941fdb228b383d0447395fb1609a8a591"
+      }
+    },
+    {
+      "id": "5066_20160721_183005_439-payload_N000",
+      "burst": "5066_20160721_183005_439",
+      "scene": "5066_20160721_183005_439",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "2b30e0d89cdc5e74a53036a054f71f4384b8b729104a2d585923da82588beeca",
+      "bytes": 348060,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160721_183005_439/payload_N000.dng",
+        "generation": "1518721397849029",
+        "size": "6918486",
+        "md5Hash": "a9a/UOlbs8AiF8LyDbXeOA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160721_183005_439/payload_N000.dng",
+        "sha256": "93b8a015ddc289a97fc76b651a1514224302de492f423639065773788f83e28d"
+      }
+    },
+    {
+      "id": "5066_20160721_183005_439-payload_N004",
+      "burst": "5066_20160721_183005_439",
+      "scene": "5066_20160721_183005_439",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "e0b97139c7682eb53c5b16dd1746781ea023873d5dd95e174231181981103384",
+      "bytes": 348595,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160721_183005_439/payload_N004.dng",
+        "generation": "1518721397267091",
+        "size": "6896352",
+        "md5Hash": "ihfD/kcNFq6ajWo/4z97ig==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160721_183005_439/payload_N004.dng",
+        "sha256": "240ed4b60a788512a22eec7481a2b9354093007d8aaf93dff84c0c52153f78fd"
+      }
+    },
+    {
+      "id": "0132_20160917_175200_202-payload_N000",
+      "burst": "0132_20160917_175200_202",
+      "scene": "0132_20160917_175200_202",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "1dcccb9c9f542c2f7eb528112b11e6664e960afd6eca0642f130f2ff6b5b97b8",
+      "bytes": 308056,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0132_20160917_175200_202/payload_N000.dng",
+        "generation": "1518721425901277",
+        "size": "6955644",
+        "md5Hash": "bc0b+DiZJ9yYuckoxh0D+Q==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0132_20160917_175200_202/payload_N000.dng",
+        "sha256": "8085ce64cdf402ebcce7ad9036c441c797a49962b064e6c8e79e3550e04b24c5"
+      }
+    },
+    {
+      "id": "0132_20160917_175200_202-payload_N002",
+      "burst": "0132_20160917_175200_202",
+      "scene": "0132_20160917_175200_202",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "c27fbecee3e7fe69f9958a6dcd2b7d5c00e4e44f0be450801fbdef1bc2a478a0",
+      "bytes": 307635,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0132_20160917_175200_202/payload_N002.dng",
+        "generation": "1518721425522487",
+        "size": "6949674",
+        "md5Hash": "Lu6meuv8lPSOgo5g8Iu4+Q==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0132_20160917_175200_202/payload_N002.dng",
+        "sha256": "dab9ce60f9e01cbb6d8275bc446d0ec6ae412fe6fd7a9013d7d13dc9027004b5"
+      }
+    },
+    {
+      "id": "0155_20160923_180141_698-payload_N000",
+      "burst": "0155_20160923_180141_698",
+      "scene": "0155_20160923_180141_698",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "7b6398fbb6039b566352125d516537c204bf7f587f0b7b7016be6085c026b51f",
+      "bytes": 306673,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0155_20160923_180141_698/payload_N000.dng",
+        "generation": "1518721392470475",
+        "size": "7256232",
+        "md5Hash": "f1oUClU19i9KswQsLARFYg==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0155_20160923_180141_698/payload_N000.dng",
+        "sha256": "3fc274e2f71378ed890a97e997f0c21b9385ed06b8c7a521a69dcca61b3ec4e9"
+      }
+    },
+    {
+      "id": "0155_20160923_180141_698-payload_N002",
+      "burst": "0155_20160923_180141_698",
+      "scene": "0155_20160923_180141_698",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "e31e92ece5038a4dd1585441e683fad7686c5f7cf1ed2d06d4207c5a929189f0",
+      "bytes": 305521,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0155_20160923_180141_698/payload_N002.dng",
+        "generation": "1518721392275874",
+        "size": "7259048",
+        "md5Hash": "y6RPNRW6XysB0soySp0ncg==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0155_20160923_180141_698/payload_N002.dng",
+        "sha256": "7317a89232a92dd002c00d9742e3c0da9fa2d61c3b90f5e1d0b371168d9fec88"
+      }
+    },
+    {
+      "id": "0006_20160727_185921_651-payload_N000",
+      "burst": "0006_20160727_185921_651",
+      "scene": "0006_20160727_185921_651",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "06c8986221d227763e5468cfe6477c532155f3233e89cda4856fea44edda995c",
+      "bytes": 355730,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0006_20160727_185921_651/payload_N000.dng",
+        "generation": "1518721425043819",
+        "size": "7364102",
+        "md5Hash": "azfx0ZntxHRnPBhHao6L4Q==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160727_185921_651/payload_N000.dng",
+        "sha256": "37a82a206537cc63af0446fdcf0a65f6f47b97b9440c413df554c0f53deb5ed3"
+      }
+    },
+    {
+      "id": "0006_20160727_185921_651-payload_N003",
+      "burst": "0006_20160727_185921_651",
+      "scene": "0006_20160727_185921_651",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "31dbb29caf7ebeb647abec823a46631138dbb2f3fa58c619b687e533cdaf1f0e",
+      "bytes": 355428,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0006_20160727_185921_651/payload_N003.dng",
+        "generation": "1518721425169994",
+        "size": "7362284",
+        "md5Hash": "3B6RrEZxCn/umWrImYdNPw==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160727_185921_651/payload_N003.dng",
+        "sha256": "ac691cbfb333f2f625f8d2ec7c52de284ad01dbd65a9e5389eea52ee26366283"
+      }
+    },
+    {
+      "id": "0043_20160825_193900_964-payload_N000",
+      "burst": "0043_20160825_193900_964",
+      "scene": "0043_20160825_193900_964",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "c46f4c21335473e5cf7d59149069777f82422e2edf1974c2a9d9956af751069f",
+      "bytes": 258622,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0043_20160825_193900_964/payload_N000.dng",
+        "generation": "1518721389843370",
+        "size": "7470224",
+        "md5Hash": "sv4UA/pIqIxm0P6FANJeJw==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0043_20160825_193900_964/payload_N000.dng",
+        "sha256": "745b35922be268e134560e3f9d68d3b364810247178080312409fa57e2d72982"
+      }
+    },
+    {
+      "id": "0043_20160825_193900_964-payload_N002",
+      "burst": "0043_20160825_193900_964",
+      "scene": "0043_20160825_193900_964",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "b7019662e69e2a355ff6ef3e64f05c725248bbc96954d2951435d4cc83524a44",
+      "bytes": 258657,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0043_20160825_193900_964/payload_N002.dng",
+        "generation": "1518721390062618",
+        "size": "7483242",
+        "md5Hash": "uC/G3HmOSV4VLcrHAggP6w==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0043_20160825_193900_964/payload_N002.dng",
+        "sha256": "d68079742b1aa610169cd3520d31ef0ad4ffd3e4abd05d01e4a8489135e69f5b"
+      }
+    },
+    {
+      "id": "0047_20160609_133132_746-payload_N000",
+      "burst": "0047_20160609_133132_746",
+      "scene": "0047_20160609_133132_746",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "ccc400b2d0075edbe75683f23e510b69623c232cfd77b5c4fbc6d1bd54a10659",
+      "bytes": 281501,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0047_20160609_133132_746/payload_N000.dng",
+        "generation": "1518721538539890",
+        "size": "7691320",
+        "md5Hash": "ht7CZP+1mC2+J7kiuFonXA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0047_20160609_133132_746/payload_N000.dng",
+        "sha256": "07104f61e1f4ff6271a70c443dac547cc24c4bfbdb2eb27b1f3ad46740d0bb68"
+      }
+    },
+    {
+      "id": "0047_20160609_133132_746-payload_N006",
+      "burst": "0047_20160609_133132_746",
+      "scene": "0047_20160609_133132_746",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "e495f7a1cded972c35c01842038b9f92c41b35bc4e1a4be24de228e7561c10bf",
+      "bytes": 281391,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/0047_20160609_133132_746/payload_N006.dng",
+        "generation": "1518721542627763",
+        "size": "7676320",
+        "md5Hash": "bzXloV5cnbMMeZCxBjXPvQ==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0047_20160609_133132_746/payload_N006.dng",
+        "sha256": "7f141142821ab02c3c4478ffb212d6a71a763b4bce29705b041bf1a2404cc470"
+      }
+    },
+    {
+      "id": "5066_20160504_184741_899-payload_N000",
+      "burst": "5066_20160504_184741_899",
+      "scene": "5066_20160504_184741_899",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "9f136e61a5fb1255c0296d8b0c23b787bbb4a9f46e93b9194e71cd314912d8d2",
+      "bytes": 279627,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160504_184741_899/payload_N000.dng",
+        "generation": "1518721467556498",
+        "size": "7819424",
+        "md5Hash": "E4uH3TQecONfUYJTvqtLQQ==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160504_184741_899/payload_N000.dng",
+        "sha256": "cf367dd53f913b9df81c84f6e211b290b6600793db066c5e4a0b2887b9d9dc1b"
+      }
+    },
+    {
+      "id": "5066_20160504_184741_899-payload_N006",
+      "burst": "5066_20160504_184741_899",
+      "scene": "5066_20160504_184741_899",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "2ce9fc6fc4ee142005016ffb5a98e227b73b3ae7dc97bd577a4ea40e2ddfec12",
+      "bytes": 279396,
+      "width": 512,
+      "height": 384,
+      "source": {
+        "name": "20171106_subset/bursts/5066_20160504_184741_899/payload_N006.dng",
+        "generation": "1518721467430890",
+        "size": "7811288",
+        "md5Hash": "nqbJIJp12/UkUdHz2pzCdA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/5066_20160504_184741_899/payload_N006.dng",
+        "sha256": "1302a0409b08e30d359ccb7354a405ac872c41484fbe5e19b3941740fe8ec624"
+      }
+    },
+    {
+      "id": "0127_20161018_111029_303-payload_N000",
+      "burst": "0127_20161018_111029_303",
+      "scene": "0127_20161018_111029_303",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "8e78f56abc0b20e5d6b29989a07315089f500cc70edf23905e974e13799d365b",
+      "bytes": 319783,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0127_20161018_111029_303/payload_N000.dng",
+        "generation": "1518721430325253",
+        "size": "8204128",
+        "md5Hash": "v/1az77Nshmnc54O9rOuZw==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0127_20161018_111029_303/payload_N000.dng",
+        "sha256": "9bde39b70ee22bec8285104ab978dffac10d1477fa887d3f4aa08e4a13aa4bb0"
+      }
+    },
+    {
+      "id": "0127_20161018_111029_303-payload_N006",
+      "burst": "0127_20161018_111029_303",
+      "scene": "0127_20161018_111029_303",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "351e33fd2d1f8a33d49fb9edc9c313eee4a700472248f2ae98f5b3d297fc26d2",
+      "bytes": 320532,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0127_20161018_111029_303/payload_N006.dng",
+        "generation": "1518721430948220",
+        "size": "8216766",
+        "md5Hash": "nCuWz2KBzUcwvq6jW2lxiA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0127_20161018_111029_303/payload_N006.dng",
+        "sha256": "ccbbe5d1eb89b4e8ee2a664a70a38b742a9b5962d07d2f762e8b33036e353244"
+      }
+    },
+    {
+      "id": "0127_20161107_171749_524-payload_N000",
+      "burst": "0127_20161107_171749_524",
+      "scene": "0127_20161107_171749_524",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "8ee3474c4a52aef949d52dd837907e2907aed8538ff605b5e4c3c8fe8522d772",
+      "bytes": 275657,
+      "width": 512,
+      "height": 385,
+      "source": {
+        "name": "20171106_subset/bursts/0127_20161107_171749_524/payload_N000.dng",
+        "generation": "1518721432228519",
+        "size": "8218086",
+        "md5Hash": "nG1l5MKRymxyFHGVr1ktSA==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0127_20161107_171749_524/payload_N000.dng",
+        "sha256": "438cf22c4271f643a4ad44b66f8e318bd7d2aa2c0b46fd969ed9da1d5424477b"
+      }
+    },
+    {
+      "id": "0127_20161107_171749_524-payload_N008",
+      "burst": "0127_20161107_171749_524",
+      "scene": "0127_20161107_171749_524",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "f3d02b7778683d66083c63829eb37ddad686e1c0910b511a66f06f077ea1098d",
+      "bytes": 275734,
+      "width": 512,
+      "height": 385,
+      "source": {
+        "name": "20171106_subset/bursts/0127_20161107_171749_524/payload_N008.dng",
+        "generation": "1518721432113704",
+        "size": "8221268",
+        "md5Hash": "gqtHqdN7GRZP60pip69PuQ==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0127_20161107_171749_524/payload_N008.dng",
+        "sha256": "e700bd6a59181a33bcf9b8c6a2819a430e8dbf2ac8ef71171b6e5f9af8d3800f"
+      }
+    },
+    {
+      "id": "0006_20160727_200154_366-payload_N000",
+      "burst": "0006_20160727_200154_366",
+      "scene": "0006_20160727_200154_366",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "87735a16cf71aca09a9cf29efcf7a2ebbd3135af785e9c49b32ed714385cd38b",
+      "bytes": 293320,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0006_20160727_200154_366/payload_N000.dng",
+        "generation": "1518721285204574",
+        "size": "9991272",
+        "md5Hash": "3jFkisIC47frNv7M+XpS1Q==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160727_200154_366/payload_N000.dng",
+        "sha256": "b54eac7b178a282a9fb814338db0d299aea6510186c71e838209cea255514eb2"
+      }
+    },
+    {
+      "id": "0006_20160727_200154_366-payload_N006",
+      "burst": "0006_20160727_200154_366",
+      "scene": "0006_20160727_200154_366",
+      "split": "external-holdout",
+      "mime": "image/png",
+      "sha256": "3679a3831798849e8dbbf3012989905721606d7e2e7b9f456893814b8d32c2ff",
+      "bytes": 292837,
+      "width": 384,
+      "height": 512,
+      "source": {
+        "name": "20171106_subset/bursts/0006_20160727_200154_366/payload_N006.dng",
+        "generation": "1518721285752559",
+        "size": "9986876",
+        "md5Hash": "WN0oHF0rmzGpMe+QH6w1qw==",
+        "url": "https://storage.googleapis.com/hdrplusdata/20171106_subset/bursts/0006_20160727_200154_366/payload_N006.dng",
+        "sha256": "34ad8f00b67dba63a9e20e02168eaf485bb1afb5a88b7e78250d54ab4de06de4"
+      }
+    }
+  ]
+}
