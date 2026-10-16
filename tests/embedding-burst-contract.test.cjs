@@ -28,3 +28,18 @@ test('external corpus is fixed before inference with licensed hash-pinned real f
   assert(!p.selection.excluded.some(e=>e.burst===i.burst));
  }
 });
+test('retained external evidence reproduces the frozen result and exposes synchronous costs',()=>{
+ const E=require('../experiments/embedding/evaluate.js');
+ const p=require('../experiments/embedding/burst-holdout.json');
+ const r=require('../experiments/embedding/burst-results-2026-10-16.json');
+ assert.deepEqual(E.evaluateFrozen(p.images,r.photoPairs,r.protocol),r.evaluation);
+ assert.equal(r.evaluation.baseline.externalHoldout.recoveredPairs,11);
+ assert.equal(r.evaluation.strategies['guarded-hybrid'].externalHoldout.recoveredPairs,17);
+ assert.equal(r.evaluation.strategies['guarded-hybrid'].externalHoldout.falseJoinedPairs,0);
+ assert.equal(r.realDevicePerformance,'NOT MEASURED');assert.equal(r.adoption,'NOT APPROVED');
+ for(const run of r.executions){
+  assert.deepEqual(run.httpRequests,[]);assert.deepEqual(run.attempts,[]);assert.deepEqual(run.violations,[]);assert.equal(run.remainingTensors,0);
+  if(run.status==='inference-completed')assert.equal(run.derivedMaxSynchronousInferenceMs,Math.max(...run.inferenceMs));
+ }
+ assert.match(r.interpretation.longTaskCaution,/incomplete observations/);
+});

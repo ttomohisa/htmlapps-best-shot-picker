@@ -118,3 +118,21 @@ npm run experiment:burst:test
 ```
 
 Acquisition is hash-checked and fails closed if source bytes or rendered derivatives drift. Do not update hashes merely to make CI pass. CI publishes JSON evidence only, not the photographs or research HTML. Results and the adoption decision will be recorded after the exact-commit browser run; implementation of the harness alone is not evidence of successful inference.
+
+### Measured external result and integration decision
+
+[Retained raw pair evidence and cost measurements](burst-results-2026-10-16.json) come from commit `c172517`, [CI run 38932756664](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38932756664), Chromium 143.0.7499.4 on Linux x86_64. All 36 source derivatives reproduced exactly in CI. Normal and canonical self-extract `file://` forms completed CPU inference with identical evaluation; the 4× throttled case agreed. Runtime HTTP requests, intercepted network attempts, CSP violations and page errors were zero. The deliberately broken model preserved fixture-order fallback groups and disposed all model tensors. Existing product browser and build regressions also passed.
+
+On 18 positive burst pairs and 612 cross-scene negative pairs, under the fixed ID-sorted comparison protocol:
+
+| Predicate | Recovered burst pairs | Mixed groups / all groups | Mixed groups / joined groups | False joined pairs |
+| --- | ---: | ---: | ---: | ---: |
+| Unchanged non-ML | 11 / 18 | 0 / 25 | 0 / 11 | 0 |
+| Frozen cosine only | 18 / 18 | 0 / 18 | 0 / 18 | 0 |
+| Frozen guarded hybrid | 17 / 18 | 0 / 19 | 0 / 17 | 0 |
+
+This is a new, narrow real-burst benefit: the guarded model recovers six additional pairs without an observed false join. The missed pair is the dim ornate interior. It is not a general accuracy claim, a <1% population-risk demonstration, or a basis for switching to cosine-only. No threshold or corpus label was tuned on these outputs.
+
+The readable case measured 424.5 ms baseline preparation, 4.6 ms baseline grouping, 155.5 ms runtime load and 73.4 ms model initialization. Its extra 36-photo decode/inference/yield pass took 5,119.1 ms, with per-image inference p50/p95 of 131.2/142.6 ms. The wrapped case's extra pass took 5,270.1 ms. Under 4× CPU throttling, the extra pass took 23,304.8 ms, with inference p50/p95 of 606.2/727.9 ms. These are phase measurements in an isolated harness, not a controlled product speed ratio or phone benchmark. The 15.5 MB research HTML includes approximately 10.5 MB of public PNG fixture bytes and is not the shipped app or proposed model-only bundle size.
+
+**Integration decision: keep the model out of the product.** The benefit justifies continuing a bounded prototype, but this synchronous main-thread adapter already blocks for materially longer than an interactive frame budget. The Long Task API reported only a subset of these continuations; its logged maxima are incomplete observations, not a worst-case UI pause bound. Retained per-image synchronous timings expose that limitation. Next implementation work should isolate inference in a worker or a genuinely interruptible path and test cancellation, stale-result rejection, manual grouping/Keep preservation and failure recovery before any opt-in product integration. Physical Android/iPhone measurements and broader independent labels remain open gates. Repeating the same favorable corpus is not a substitute.
