@@ -43,11 +43,13 @@ Photos and choices are temporary. Reloading, closing the page, or starting over 
 
 Designed for modern Chrome and Edge on desktop and phones. Japanese / English layouts target widths of 320px and above. Folder selection appears only when the browser supports it.
 
-See [validation results](docs/VALIDATION.md) for the environments and checks covered.
+Both optional model features, **Find similar-photo candidates** and **Find faces**, require Web Workers and `DecompressionStream`. When either API is absent, the app explains why those features are unavailable. In the readable HTML, manual comparison, Keep, and original-byte ZIP export remain available. Having these APIs does not guarantee that a model can start or finish on every device.
+
+See [validation results](docs/VALIDATION.md) for the environments and checks covered. Physical Android/iPhone 100/500-photo tests, PC 1,000-photo tests, peak memory, and real-photo throughput remain unverified.
 
 ## Limitations
 
-This is the v0.6.1 development version. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
+This is the v0.6.2 development version. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
 
 The 36-photo limit applies to each optional search, not the whole session. Choose the groups you want to compare; unselected groups stay unchanged. A group containing more than 36 photos cannot be selected for this search. No photos are silently truncated and existing groups are never split. Adding photos, editing groups, or starting a new analysis clears pending candidates. Applying one proposal clears the others, so search again for current candidates. Cancel or failure leaves existing groups, Keep choices, and originals unchanged. Processing may be slow on some devices; normal comparison and saving remain available.
 
@@ -57,15 +59,17 @@ Duplicate hashing is limited to 64 MiB per original and requires Web Crypto. A s
 
 Images above 100 megapixels or 32,768 pixels on either side are skipped before decoding when the header supplies dimensions, and checked again after decoding. This does not guarantee protection against every malformed image or low-memory device.
 
-The ZIP writer reads bounded chunks for CRC and stores original Blob parts, but the final archive still uses browser-managed memory. It does not provide disk streaming, ZIP64, or split archives. Keep selections below ZIP32 limits (under 65,535 entries and 4 GiB total), and use smaller batches if memory is constrained. Download initiation is not proof that the browser finished writing to disk.
+The ZIP writer reads bounded chunks for CRC and stores original Blob parts, but the final archive still uses browser-managed memory. It does not provide disk streaming, ZIP64, split archives, or CSV/JSON selection-list export. Keep selections below ZIP32 limits (under 65,535 entries and 4 GiB total), and use smaller batches if memory is constrained. Download initiation is not proof that the browser finished writing to disk.
 
 ## Single HTML / offline use
 
-Save and open `best-shot-picker.html` or `dist/index.html` directly. All application code, icons, model weights, worker code, and license notices are embedded in both forms. The optional model assets are decompressed only when needed; candidate search requires `DecompressionStream` and Web Workers. If it cannot run, the normal comparison and saving workflow remains available. `dist/index.self-extract.html` is a gzip-wrapped alternative that requires `DecompressionStream` to open and restores the same app.
+Save and open the readable `best-shot-picker.html` or `dist/index.html` directly. All application code, icons, model weights, worker code, and license notices are embedded in both forms. Optional similarity and face-model assets are decompressed only when needed; both features share the browser requirements above.
+
+`dist/index.self-extract.html` is a gzip-wrapped alternative that restores the same app. It cannot open without `DecompressionStream`; use the readable HTML instead. Once the readable app is open, missing model capabilities do not prevent manual comparison, Keep, or original-byte ZIP export.
 
 ## Development
 
-Read `AGENTS.md`, `APP_SPEC.md`, `DEVELOPMENT_PLAN.md`, and `ACCEPTANCE_MATRIX.md`. Edit `src/index.template.html`, `src/app.js`, `src/core.js`, `src/grouping.js`, `src/quality.js`, `src/similarity.js`, `src/embedding-worker-client.js`, and `src/embedding-worker.js`; do not edit generated HTML. Pinned model assets and their hash manifest are in `assets/embedding/`.
+Read `AGENTS.md`, `APP_SPEC.md`, `DEVELOPMENT_PLAN.md`, and `ACCEPTANCE_MATRIX.md`. Edit `src/index.template.html`, `src/app.js`, `src/core.js`, `src/grouping.js`, `src/quality.js`, `src/similarity.js`, `src/embedding-worker-client.js`, `src/embedding-worker.js`, `src/face-geometry.js`, `src/face-worker-client.js`, and `src/face-worker.js`; do not edit generated HTML. Pinned model assets and their hash manifests are in `assets/embedding/` and `assets/face-detection/`.
 
 On Windows, run `build-standalone.bat`. The canonical PowerShell builder generates both variants and the exact root HTML copy. Run PowerShell syntax preflight and `scripts/check-repository.ps1` before completion.
 
@@ -83,7 +87,7 @@ Browser tests use synthetic, non-personal images and open both generated HTML fi
 
 ## License
 
-The app is MIT-licensed. The optional model feature embeds TensorFlow.js 4.22.0 and Google MobileNet V1 0.25 224 feature vector v2 under Apache-2.0, with preserved third-party notices. The help dialog includes the embedded software and model notices. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The app is MIT-licensed. The optional model features share TensorFlow.js 4.22.0 and bundle Google MobileNet V1 0.25 224 feature vector v2, @tensorflow-models/face-detection 1.0.3, and MediaPipe face-detection short TFJS v1 under Apache-2.0, with preserved third-party notices. The help dialog includes the embedded software and model notices. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 See [grouping design and evaluation limits](docs/GROUPING.md).
 

@@ -43,11 +43,13 @@ ZIPには元のバイト列を保存するため、EXIF、GPS位置情報、色�
 
 現行Chrome・EdgeのPC／スマートフォン向けに設計しています。日英とも320px以上の幅を対象とし、フォルダー選択はブラウザーが対応している場合だけ表示します。
 
-確認した環境と実施済みの項目は[検証結果](docs/VALIDATION.md)をご覧ください。
+任意の「似た写真の候補を探す」と「顔を探す」は、どちらもWeb Workersと `DecompressionStream` が必要です。どちらかのAPIがない場合は、任意機能を使えない理由を表示します。通常版HTMLでは、手動比較・「残す」の選択・元画像ZIP保存を続けられます。APIが存在しても、すべての端末でモデルの起動・処理完了を保証するものではありません。
+
+確認した環境と実施済みの項目は[検証結果](docs/VALIDATION.md)をご覧ください。Android／iPhone実機の100・500枚、PCの1,000枚、ピークメモリ、実写真での処理性能は未検証です。
 
 ## 制限
 
-v0.6.1の開発版です。通常のグループ分けは非ML方式で、任意の端末内モデルによる候補検索は試験的な機能です。どちらも似た写真を見逃したり、関係のない写真をまとめたりすることがあります。候補は適用前に確認してください。残す写真を自動で選ばず、一般の写真での分類精度を保証するものでもありません。
+v0.6.2の開発版です。通常のグループ分けは非ML方式で、任意の端末内モデルによる候補検索は試験的な機能です。どちらも似た写真を見逃したり、関係のない写真をまとめたりすることがあります。候補は適用前に確認してください。残す写真を自動で選ばず、一般の写真での分類精度を保証するものでもありません。
 
 36枚の上限は1回の任意検索に適用され、セッション全体の枚数は制限しません。比較したいグループを選び、選ばなかったグループはそのまま残ります。1組で36枚を超えるグループは検索対象に選べません。先頭36枚だけを黙って選んだり、既存のグループを分割したりしません。写真の追加・グループ編集・再解析で候補は消えます。1つ適用するとほかの候補も消えるため、必要なら再検索してください。中止・失敗時も既存のグループ、「残す」の選択、元画像は変わりません。端末によって時間がかかることがありますが、通常の比較・保存は利用できます。
 
@@ -57,15 +59,17 @@ v0.6.1の開発版です。通常のグループ分けは非ML方式で、任意
 
 1億画素または一辺32,768pxを超える画像は対象外です。ヘッダーで寸法を得られる場合はデコード前に確認し、デコード後にも確認します。すべての不正画像や低メモリ環境の安全を保証するものではありません。
 
-ZIPは小さなチャンクでCRCを計算し、元のBlobを格納しますが、完成ZIPはブラウザー管理のメモリを使います。ディスクへのストリーミング、ZIP64、分割ZIPはありません。ZIP32の上限（65,535件未満・合計4 GiB未満）を超えず、メモリ不足時は少ない枚数に分けて保存してください。ダウンロード開始はディスク保存完了を意味しません。
+ZIPは小さなチャンクでCRCを計算し、元のBlobを格納しますが、完成ZIPはブラウザー管理のメモリを使います。ディスクへのストリーミング、ZIP64、分割ZIP、選択一覧のCSV／JSON出力はありません。ZIP32の上限（65,535件未満・合計4 GiB未満）を超えず、メモリ不足時は少ない枚数に分けて保存してください。ダウンロード開始はディスク保存完了を意味しません。
 
 ## 単一HTML・オフライン
 
-`best-shot-picker.html` または `dist/index.html` を保存して直接開けます。両方の形式にコード、アイコン、モデル重み、Worker、ライセンス表示を同梱しています。任意機能のモデル資産は必要になったときだけ展開します。候補検索にはDecompressionStreamとWeb Workersが必要です。利用できなくても通常の比較・保存は続けられます。gzip自己展開版 `dist/index.self-extract.html` は開く際にDecompressionStream対応が必要で、同じアプリを復元します。
+通常版の `best-shot-picker.html` または `dist/index.html` を保存して直接開けます。両方の形式にコード、アイコン、モデル重み、Worker、ライセンス表示を同梱しています。任意の類似候補検索と顔検出のモデル資産は必要になったときだけ展開し、どちらも前述のブラウザー機能が必要です。
+
+gzip自己展開版 `dist/index.self-extract.html` は同じアプリを復元しますが、`DecompressionStream` がないブラウザーでは起動できません。その場合は通常版HTMLを使ってください。通常版では任意モデルに必要な機能がなくても、手動比較・「残す」の選択・元画像ZIP保存を利用できます。
 
 ## 開発・ビルド
 
-`AGENTS.md`、`APP_SPEC.md`、`DEVELOPMENT_PLAN.md`、`ACCEPTANCE_MATRIX.md` を参照してください。編集元は `src/index.template.html`、`src/app.js`、`src/core.js`、`src/grouping.js`、`src/quality.js`、`src/similarity.js`、`src/embedding-worker-client.js`、`src/embedding-worker.js` です。固定モデルとハッシュ一覧は `assets/embedding/` にあります。生成HTMLを直接編集しません。
+`AGENTS.md`、`APP_SPEC.md`、`DEVELOPMENT_PLAN.md`、`ACCEPTANCE_MATRIX.md` を参照してください。編集元は `src/index.template.html`、`src/app.js`、`src/core.js`、`src/grouping.js`、`src/quality.js`、`src/similarity.js`、`src/embedding-worker-client.js`、`src/embedding-worker.js`、`src/face-geometry.js`、`src/face-worker-client.js`、`src/face-worker.js` です。固定モデルとハッシュ一覧は `assets/embedding/` と `assets/face-detection/` にあります。生成HTMLを直接編集しません。
 
 Windowsでは `build-standalone.bat` を実行します。正規PowerShellビルドは通常版、自己展開版、通常版と同一のルートHTMLを生成します。完了前にPowerShell事前検査と `scripts/check-repository.ps1` を実行します。
 
@@ -83,7 +87,7 @@ npm run test:browser
 
 ## ライセンス
 
-アプリ本体はMITです。任意のモデル機能にはApache-2.0のTensorFlow.js 4.22.0とGoogle MobileNet V1 0.25 224 feature vector v2を同梱し、第三者表示を保持しています。ヘルプから同梱ソフトウェアとモデルのライセンス表示も確認できます。[LICENSE](LICENSE)、[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)を参照してください。
+アプリ本体はMITです。任意のモデル機能はTensorFlow.js 4.22.0を共用し、Google MobileNet V1 0.25 224 feature vector v2、@tensorflow-models/face-detection 1.0.3、MediaPipe face-detection short TFJS v1を同梱しています。これらはApache-2.0で、第三者表示も保持しています。ヘルプから同梱ソフトウェアとモデルのライセンス表示も確認できます。[LICENSE](LICENSE)、[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)を参照してください。
 
 [グループ化の設計と評価上の制限](docs/GROUPING.md)も参照してください。
 
