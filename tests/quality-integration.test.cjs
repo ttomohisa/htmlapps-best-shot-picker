@@ -11,6 +11,6 @@ test('quality source is embedded once between grouping and app, with build valid
 test('quality disclosure and comparison containers exist without replacing canonical header',()=>{
  const html=fs.readFileSync(path.join(root,'src/index.template.html'),'utf8');
  for(const id of ['qualitySummary','qualityA','qualityB','qualityPreview']) assert.match(html,new RegExp('id="'+id+'"'));
- assert.match(html,/\.photo-quality\{display:grid/);assert.match(html,/\.preview-quality\{[^}]*max-height:19dvh;overflow-y:auto/);assert.match(html,/data-i18n="helpQuality"/);assert.match(html,/class="brand-mark"/);
+ assert.match(html,/\.photo-quality\{display:grid/);assert.match(html,/\.preview-quality\{[^}]*max-height:19dvh;overflow-y:auto/);assert.match(html,/id="qualityPreview"[^>]*tabindex="0"[^>]*data-i18n-aria-label="qualityTitle"/);assert.match(html,/data-i18n="helpQuality"/);assert.match(html,/class="brand-mark"/);
  assert.match(html,/data-i18n="localBadge">完全ローカル処理/);
 });

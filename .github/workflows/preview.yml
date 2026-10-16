@@ -197,3 +197,27 @@ jobs:
             --body $body `
             --edit-last `
             --create-if-none
+
+      - name: Install preview browser test tooling
+        if: steps.cloudflare.outputs.configured == 'true'
+        shell: pwsh
+        run: |
+          npm ci
+          if ($LASTEXITCODE -ne 0) { throw "npm ci failed." }
+          npx playwright install chromium
+          if ($LASTEXITCODE -ne 0) { throw "Chromium install failed." }
+
+      - name: Verify the normal HTTPS preview with synthetic photos
+        if: steps.cloudflare.outputs.configured == 'true'
+        shell: pwsh
+        env:
+          BSP_PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
+        run: node tests/preview.smoke.cjs
+
+      - name: Upload normal preview browser evidence
+        if: always() && steps.cloudflare.outputs.configured == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: preview-browser-${{ github.event.pull_request.head.sha }}
+          path: test-results/
+          retention-days: 14
