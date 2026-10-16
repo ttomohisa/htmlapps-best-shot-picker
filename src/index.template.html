@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f5f5f2">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Single HTML App Starter</title>
+  <link rel="icon" href="__APP_ICON_DATA_URI__">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f5f2;
+      --surface: #ffffff;
+      --surface-muted: #f0f0ed;
+      --surface-hover: #e9e9e5;
+      --text: #20211f;
+      --muted: #666963;
+      --line: #dadbd6;
+      --line-strong: #bfc1ba;
+      --accent: #16624f;
+      --accent-hover: #0e503f;
+      --accent-soft: #e1f0ea;
+      --danger: #b3261e;
+      --focus: #4d8bc7;
+      --shadow-sm: 0 1px 2px rgba(25, 28, 24, .08), 0 1px 6px rgba(25, 28, 24, .04);
+      --shadow-md: 0 12px 34px rgba(25, 28, 24, .10);
+      --radius: 12px;
+      --header-height: 66px;
+    }
+    * { box-sizing: border-box; }
+    html { min-height: 100%; background: var(--bg); scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", "Yu Gothic UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, textarea, input { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, textarea:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--focus) 55%, transparent);
+      outline-offset: 2px;
+    }
+    .app-header {
+      position: sticky;
+      z-index: 30;
+      top: 0;
+      min-height: var(--header-height);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(16px) saturate(1.2);
+    }
+    .header-inner {
+      width: min(1180px, 100%);
+      min-height: var(--header-height);
+      margin: 0 auto;
+      padding: 10px clamp(14px, 2.8vw, 30px);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand-mark {
+      display: block;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 11px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .brand-mark img { width: 100%; height: 100%; display: block; }
+    .brand-copy { min-width: 0; }
+    .brand-name {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.2;
+      letter-spacing: .01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .version-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 7px;
+      padding: 1px 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--surface-muted);
+      font-size: 10px;
+      font-weight: 650;
+      vertical-align: 2px;
+    }
+    .brand-meta {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .header-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+    .button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .button:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+    .button:active { transform: translateY(1px); }
+    .language-button {
+      min-width: 0;
+      padding: 5px 1px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: color .16s ease, opacity .16s ease;
+    }
+    .language-button:hover { color: var(--text); }
+    .language-button:active { opacity: .65; }
+    .icon-button {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+    .icon-button:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+    .icon-button:active { transform: translateY(1px); }
+    .icon-button svg { width: 18px; height: 18px; display: block; }
+    .header-icon-button {
+      width: auto;
+      height: auto;
+      padding: 5px 1px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      transition: color .16s ease, opacity .16s ease;
+    }
+    .header-icon-button:hover { border-color: transparent; background: transparent; color: var(--text); }
+    .header-icon-button:active { transform: none; opacity: .65; }
+    .header-icon-button svg { width: 20px; height: 20px; }
+    .main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 22px clamp(14px, 2.8vw, 30px) 54px;
+    }
+    .page-intro {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 2px 18px;
+    }
+    .page-intro h2 {
+      margin: 0;
+      font-size: clamp(21px, 3vw, 26px);
+      line-height: 1.3;
+      letter-spacing: -.025em;
+    }
+    .page-intro p { margin: 5px 0 0; max-width: 760px; color: var(--muted); font-size: 13px; }
+    .local-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: 0 0 auto;
+      margin-top: 3px;
+      padding: 7px 10px;
+      border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
+      border-radius: 999px;
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .local-badge svg { width: 15px; height: 15px; display: block; }
+    .workspace {
+      margin: 0 0 28px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
+    }
+    .workspace-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; margin-bottom: 15px; }
+    .workspace h2, .section-title { margin: 0; letter-spacing: -.02em; }
+    .workspace h2 { font-size: 19px; }
+    .workspace-head p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 7px; }
+    .stat { min-width: 70px; padding: 7px 10px; border-radius: 10px; background: var(--surface-muted); text-align: center; }
+    .stat-value { display: block; font-size: 15px; font-weight: 780; line-height: 1.2; }
+    .stat-label { color: var(--muted); font-size: 10px; }
+    textarea {
+      width: 100%;
+      min-height: 260px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      background: #fbfbf9;
+      color: var(--text);
+      line-height: 1.7;
+    }
+    textarea:hover { border-color: var(--line-strong); }
+    .toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 12px; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .button { min-height: 40px; padding: 8px 14px; font-weight: 700; }
+    .button.primary { border-color: var(--accent); color: white; background: var(--accent); }
+    .button.primary:hover { border-color: var(--accent-hover); background: var(--accent-hover); }
+    .button.danger { color: var(--danger); }
+    .save-status { align-self: center; color: var(--muted); font-size: 12px; }
+    .export-row { display: flex; align-items: end; gap: 10px; margin-top: 12px; }
+    .export-field { display: grid; gap: 5px; min-width: min(100%, 320px); }
+    .export-label { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .filename-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+    .filename-control:focus-within { border-color: var(--focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 20%, transparent); }
+    .filename-input { width: 100%; min-width: 0; min-height: 40px; padding: 8px 10px; border: 0; outline: 0; background: transparent; color: var(--text); }
+    .filename-extension { padding: 0 10px; color: var(--muted); font-size: 12px; user-select: none; }
+    .section { padding: 26px 0; }
+    .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; margin-bottom: 15px; }
+    .section-title { font-size: 20px; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .card-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .card { min-height: 150px; padding: 17px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow-sm); }
+    .card-number { color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+    .card h3 { margin: 17px 0 6px; font-size: 15px; }
+    .card p { margin: 0; color: var(--muted); font-size: 12px; }
+    details { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; box-shadow: var(--shadow-sm); }
+    summary { cursor: pointer; padding: 14px 16px; font-weight: 720; }
+    .build-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 16px 16px; }
+    .build-item { padding: 11px; border-radius: 10px; background: var(--surface-muted); }
+    .build-item span { display: block; color: var(--muted); font-size: 10px; }
+    .build-item strong { display: block; overflow-wrap: anywhere; font-size: 12px; }
+    footer { width: min(1180px, 100%); margin: 0 auto; padding: 0 clamp(14px, 2.8vw, 30px) 34px; color: var(--muted); font-size: 12px; }
+    /* Reusable toast / Undo component. Canonical source: components/toast.html */
+    .app-toast {
+      position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 60;
+      display: flex; align-items: center; gap: 12px; max-width: min(420px, calc(100vw - 36px));
+      padding: 10px 12px 10px 14px; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--surface); color: var(--text); box-shadow: var(--shadow-md); opacity: 0;
+      transform: translateY(12px); pointer-events: none; transition: opacity .18s ease, transform .18s ease;
+    }
+    .app-toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .app-toast[data-tone="success"] { border-color: color-mix(in srgb, var(--accent) 34%, var(--line)); }
+    .app-toast[data-tone="warning"] { border-color: #c58a24; }
+    .app-toast-message { min-width: 0; flex: 1 1 auto; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+    .app-toast-action { flex: 0 0 auto; min-height: 34px; padding: 5px 8px; border: 0; border-radius: 8px; background: transparent; color: var(--accent); font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+    .app-toast-action:hover { background: var(--surface-hover); }
+    .app-toast-action[hidden] { display: none; }
+    dialog {
+      width: min(640px, calc(100% - 28px));
+      max-height: min(760px, calc(100dvh - 28px));
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-md);
+    }
+    dialog::backdrop { background: rgba(15, 17, 14, .52); backdrop-filter: blur(4px); }
+    #helpDialog[open] {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    }
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 0 0 auto;
+      gap: 12px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .dialog-header h2 { margin: 0; font-size: 17px; }
+    .dialog-body {
+      min-height: 0;
+      flex: 1 1 auto;
+      padding: 20px 20px calc(28px + env(safe-area-inset-bottom));
+      overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    .dialog-body h3 {
+      margin: 25px 0 8px;
+      padding-top: 19px;
+      border-top: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+      font-size: 14px;
+    }
+    .dialog-body h3:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+    .dialog-body p, .dialog-body li { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .dialog-body p { margin: 8px 0 0; }
+    .dialog-body ul, .dialog-body ol { margin: 8px 0 0; padding-left: 22px; }
+    .dialog-body li + li { margin-top: 7px; }
+    .dialog-note {
+      margin-top: 12px;
+      padding: 11px 12px;
+      border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+      border-radius: 10px;
+      background: var(--accent-soft);
+      color: var(--text) !important;
+    }
+
+    /* Reusable confirmation component. Canonical source: components/confirm-dialog.html */
+    .app-confirm-dialog { width: min(420px, calc(100% - 24px)); max-width: 100%; }
+    .app-confirm-dialog::backdrop { background: rgba(15, 17, 14, .48); backdrop-filter: blur(3px); }
+    .app-confirm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 18px 13px;
+      border-bottom: 1px solid var(--line);
+    }
+    .app-confirm-title { margin: 0; font-size: 17px; letter-spacing: -.01em; }
+    .app-confirm-close {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .app-confirm-close:hover { background: var(--surface-hover); }
+    .app-confirm-close svg { width: 19px; height: 19px; }
+    .app-confirm-body { padding: 18px; }
+    .app-confirm-message {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+    .app-confirm-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+    .app-confirm-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--text);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 760;
+      cursor: pointer;
+    }
+    .app-confirm-button:hover { border-color: var(--line-strong); background: var(--surface-hover); }
+    .app-confirm-button.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .app-confirm-button.primary:hover { border-color: var(--accent-hover); background: var(--accent-hover); }
+    .app-confirm-button.danger { border-color: var(--danger); background: var(--danger); color: #fff; }
+    .app-confirm-button:focus-visible, .app-confirm-close:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--focus) 55%, transparent);
+      outline-offset: 2px;
+    }
+
+    code { padding: 1px 5px; border-radius: 5px; background: var(--surface-muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    @media (max-width: 820px) {
+      .page-intro { align-items: stretch; flex-direction: column; gap: 10px; }
+      .local-badge { align-self: flex-start; }
+      .workspace-head, .section-head { align-items: stretch; flex-direction: column; }
+      .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .build-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      :root { --header-height: 58px; }
+      .header-inner { padding-block: 8px; }
+      .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+      .brand-name { font-size: 15px; }
+      .brand-meta { display: none; }
+      .header-actions { gap: 11px; }
+      .language-button { padding-block: 6px; }
+      .header-icon-button { padding-block: 6px; }
+      .main { padding-top: 18px; }
+      .page-intro { padding-bottom: 14px; }
+      .workspace { padding: 14px; border-radius: 14px; }
+      .stats { width: 100%; }
+      .stat { flex: 1 1 0; min-width: 0; }
+      .card-grid { grid-template-columns: 1fr; }
+      .toolbar, .button-row { width: 100%; }
+      .button-row .button { flex: 1 1 auto; }
+      .export-row, .export-field { width: 100%; }
+      .app-toast { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); max-width: none; }
+      textarea { min-height: 235px; }
+      #helpDialog {
+        width: calc(100% - 20px);
+        max-height: calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+      }
+      #helpDialog .dialog-body {
+        padding: 18px 18px calc(24px + env(safe-area-inset-bottom));
+      }
+      .app-confirm-dialog {
+        width: 100%;
+        max-width: none;
+        margin: auto 0 0;
+        border-width: 1px 0 0;
+        border-radius: 22px 22px 0 0;
+      }
+      .app-confirm-dialog::backdrop { background: rgba(0, 0, 0, .42); backdrop-filter: blur(2px); }
+      .app-confirm-header { padding: 14px 18px 12px; }
+      .app-confirm-body { padding: 12px 18px calc(env(safe-area-inset-bottom) + 18px); }
+      .app-confirm-message { font-size: 14px; line-height: 1.75; }
+      .app-confirm-actions { grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+      .app-confirm-button { min-height: 48px; font-size: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <img id="appBrandIcon" src="__APP_ICON_DATA_URI__" alt="">
+        </div>
+        <div class="brand-copy">
+          <p class="brand-name"><span id="brandName">Single HTML App Starter</span><span class="version-badge" id="versionBadge">v1.1.0</span></p>
+          <p class="brand-meta" data-i18n="brandMeta">Single file · Local-first · GitHub Pages</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="language-button" id="languageButton" type="button" aria-label="Switch language">EN</button>
+        <button class="icon-button header-icon-button" id="helpButton" type="button" data-i18n-title="helpTitle" data-i18n-aria-label="helpTitle" title="使い方と注意事項" aria-label="使い方と注意事項">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 1 1 3.72 1.9c-.92.67-1.52 1.12-1.52 2.1"/><path d="M12 17h.01"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="page-intro" aria-labelledby="heroTitle">
+      <div>
+        <h2 id="heroTitle" data-i18n="introTitle">単一HTMLアプリのスターター</h2>
+        <p data-i18n="lead">PDF Organizerと同じ、固定依存・完全内包・実行時通信なしの構成から、新しいブラウザーアプリを作れます。</p>
+      </div>
+      <div class="local-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.8 8 7 10 4.2-2 7-5.4 7-10V6z"/><path d="m9 12 2 2 4-5"/></svg>
+        <span data-i18n="localBadge">実行時通信なし</span>
+      </div>
+    </section>
+
+    <!-- APP:BEGIN Replace this demo workspace with the real application. -->
+    <section class="shell workspace" aria-labelledby="workspaceTitle">
+      <div class="workspace-head">
+        <div>
+          <h2 id="workspaceTitle" data-i18n="workspaceTitle">Starter workspace</h2>
+          <p data-i18n="workspaceBody">Text stays in this browser. It is never sent by this app.</p>
+        </div>
+        <div class="stats" aria-live="polite">
+          <div class="stat"><span class="stat-value" id="characterCount">0</span><span class="stat-label" data-i18n="characters">Characters</span></div>
+          <div class="stat"><span class="stat-value" id="wordCount">0</span><span class="stat-label" data-i18n="words">Words</span></div>
+          <div class="stat"><span class="stat-value" id="lineCount">0</span><span class="stat-label" data-i18n="lines">Lines</span></div>
+        </div>
+      </div>
+      <label class="sr-only" for="editor" data-i18n="editorLabel">Text editor</label>
+      <textarea id="editor" spellcheck="true"></textarea>
+      <div class="export-row">
+        <label class="export-field" for="outputFilename">
+          <span class="export-label" data-i18n="outputFilename">出力ファイル名</span>
+          <span class="filename-control">
+            <input class="filename-input" id="outputFilename" type="text" maxlength="120" autocomplete="off" spellcheck="false" aria-describedby="outputFilenameHint">
+            <span class="filename-extension" aria-hidden="true">.txt</span>
+          </span>
+          <span class="sr-only" id="outputFilenameHint" data-i18n="outputFilenameHint">拡張子は自動で .txt が付きます</span>
+        </label>
+      </div>
+      <div class="toolbar">
+        <div class="button-row">
+          <button class="button primary" id="copyButton" type="button" data-i18n="copy">Copy</button>
+          <button class="button" id="downloadButton" type="button" data-i18n="download">Download text</button>
+          <button class="button" id="sampleButton" type="button" data-i18n="sample">Restore sample</button>
+        </div>
+        <div class="button-row">
+          <button class="button danger" id="clearButton" type="button" data-i18n="clear">Clear</button>
+        </div>
+        <span class="save-status" id="saveStatus" data-i18n="savedLocally">Saved locally</span>
+      </div>
+    </section>
+    <!-- APP:END -->
+
+    <section class="shell section" aria-labelledby="guaranteesTitle">
+      <div class="section-head">
+        <h2 class="section-title" id="guaranteesTitle" data-i18n="guaranteesTitle">Template guarantees</h2>
+        <p data-i18n="guaranteesBody">Keep these constraints unless the product specification explicitly changes them.</p>
+      </div>
+      <div class="card-grid">
+        <article class="card"><div class="card-number">01</div><h3 data-i18n="card1Title">One deliverable</h3><p data-i18n="card1Body">The release artifact is dist/index.html. It opens directly and can be hosted as a static page.</p></article>
+        <article class="card"><div class="card-number">02</div><h3 data-i18n="card2Title">Pinned dependencies</h3><p data-i18n="card2Body">Third-party npm assets are version-pinned, hashed, and embedded during the build.</p></article>
+        <article class="card"><div class="card-number">03</div><h3 data-i18n="card3Title">No runtime network</h3><p data-i18n="card3Body">Content Security Policy blocks runtime connections. User data stays inside the page.</p></article>
+        <article class="card"><div class="card-number">04</div><h3 data-i18n="card4Title">LLM-ready workflow</h3><p data-i18n="card4Body">AGENTS.md and APP_SPEC.md give coding agents a stable contract, acceptance criteria, and handoff format.</p></article>
+      </div>
+    </section>
+
+    <section class="shell section">
+      <details>
+        <summary data-i18n="buildInfo">Build information</summary>
+        <div class="build-grid">
+          <div class="build-item"><span data-i18n="appVersion">App version</span><strong id="buildVersion">—</strong></div>
+          <div class="build-item"><span data-i18n="builtAt">Built at</span><strong id="builtAt">—</strong></div>
+          <div class="build-item"><span data-i18n="dependencies">Embedded dependencies</span><strong id="dependencyCount">0</strong></div>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer><span id="footerName">Single HTML App Starter</span> · MIT License · <span data-i18n="footer">Generated as one self-contained HTML file</span></footer>
+  <div class="app-toast" id="appToast" role="status" aria-live="polite" aria-atomic="true" data-tone="default">
+    <span class="app-toast-message" id="appToastMessage"></span>
+    <button class="app-toast-action" id="appToastAction" type="button" hidden></button>
+  </div>
+
+  <!-- Reusable confirmation component. Keep in sync with components/confirm-dialog.html. -->
+  <dialog class="app-confirm-dialog" id="appConfirmDialog" aria-labelledby="appConfirmTitle" aria-describedby="appConfirmMessage">
+    <div class="app-confirm-header">
+      <h2 class="app-confirm-title" id="appConfirmTitle">確認</h2>
+      <button class="app-confirm-close" id="appConfirmClose" type="button" data-i18n-aria-label="close" aria-label="閉じる">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="app-confirm-body">
+      <p class="app-confirm-message" id="appConfirmMessage"></p>
+      <div class="app-confirm-actions">
+        <button class="app-confirm-button" id="appConfirmCancel" type="button">キャンセル</button>
+        <button class="app-confirm-button primary" id="appConfirmOk" type="button">実行する</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-header">
+      <h2 id="helpTitle" data-i18n="helpTitle">使い方と注意事項</h2>
+      <button class="icon-button" id="closeHelpButton" type="button" data-i18n-title="close" data-i18n-aria-label="close" title="閉じる" aria-label="閉じる">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <!-- APP:HELP:BEGIN Update this section together with the real application. -->
+      <h3 data-i18n="helpBasicsTitle">基本操作</h3>
+      <ol>
+        <li data-i18n="helpStep1">作業領域へテキストを入力します。内容は入力のたびに端末内へ保存されます。</li>
+        <li data-i18n="helpStep2">出力ファイル名を必要に応じて変更し、「コピー」または「テキスト保存」で入力内容を取り出せます。</li>
+        <li data-i18n="helpStep3">「サンプルに戻す」や「消去」の直後は、トーストの「元に戻す」から取り消せます。</li>
+      </ol>
+
+      <h3 data-i18n="helpPrivacyTitle">プライバシー</h3>
+      <p data-i18n="helpPrivacyBody">入力内容と操作はブラウザー内で処理され、このアプリから外部へ送信されません。必要なコードと依存ファイルも配布用HTMLに内包されます。</p>
+
+      <h3 data-i18n="helpNotesTitle">注意事項</h3>
+      <ul>
+        <li data-i18n="helpNoteStorage">ブラウザーのサイトデータを削除すると、端末内に保存した入力内容も消える場合があります。必要な内容はファイルとして保存してください。</li>
+        <li data-i18n="helpNoteBrowser">一部の機能はブラウザーの制限や端末性能の影響を受けます。重要な成果物は保存後に内容を確認してください。</li>
+        <li data-i18n="helpNoteTemplate">この画面はスターターの例です。新しいアプリを作る際は、機能と一緒にこのヘルプも実際の操作へ書き換えます。</li>
+      </ul>
+      <p class="dialog-note" data-i18n="helpOffline">配布物は dist/index.html ひとつです。ローカルで直接開くことも、GitHub Pagesで公開することもできます。</p>
+      <!-- APP:HELP:END -->
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const APP_CONFIG = __APP_CONFIG_JSON__;
+      const BUILD_MANIFEST = __BUILD_MANIFEST_JSON__;
+      // Asset payloads are Base64 exactly once. The JSON bundle itself is embedded directly.
+      const assetBundle = __EMBEDDED_ASSET_BUNDLE_JSON__;
+      const blobUrls = new Set();
+      const assetByteCache = new Map();
+
+      function decodeBase64Bytes(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+        return bytes;
+      }
+
+      function getAsset(dependencyId, assetKey) {
+        const asset = assetBundle.dependencies?.[dependencyId]?.assets?.[assetKey];
+        if (!asset) throw new Error(`Embedded asset not found: ${dependencyId}/${assetKey}`);
+        return asset;
+      }
+
+      async function inflateAsset(asset) {
+        const stored = decodeBase64Bytes(asset.base64);
+        if (!asset.compression || asset.compression === 'none') return stored;
+        if (asset.compression !== 'gzip') throw new Error(`Unsupported embedded asset compression: ${asset.compression}`);
+        if (typeof DecompressionStream !== 'function') throw new Error('This browser cannot expand gzip-compressed embedded assets.');
+        const stream = new Blob([stored]).stream().pipeThrough(new DecompressionStream('gzip'));
+        const expanded = new Uint8Array(await new Response(stream).arrayBuffer());
+        if (Number.isFinite(asset.originalBytes) && expanded.byteLength !== asset.originalBytes) {
+          throw new Error(`Embedded gzip asset size mismatch: expected ${asset.originalBytes}, got ${expanded.byteLength}`);
+        }
+        return expanded;
+      }
+
+      window.StandaloneAssets = Object.freeze({
+        manifest: BUILD_MANIFEST,
+        list() {
+          return Object.entries(assetBundle.dependencies || {}).flatMap(([dependencyId, dependency]) =>
+            Object.keys(dependency.assets || {}).map(assetKey => `${dependencyId}/${assetKey}`));
+        },
+        has(dependencyId, assetKey) {
+          return Boolean(assetBundle.dependencies?.[dependencyId]?.assets?.[assetKey]);
+        },
+        bytes(dependencyId, assetKey) {
+          const asset = getAsset(dependencyId, assetKey);
+          if (asset.compression && asset.compression !== 'none') {
+            throw new Error(`Embedded asset ${dependencyId}/${assetKey} is gzip-compressed; use await StandaloneAssets.bytesAsync().`);
+          }
+          return decodeBase64Bytes(asset.base64);
+        },
+        async bytesAsync(dependencyId, assetKey) {
+          const cacheKey = `${dependencyId}/${assetKey}`;
+          if (!assetByteCache.has(cacheKey)) assetByteCache.set(cacheKey, inflateAsset(getAsset(dependencyId, assetKey)));
+          return new Uint8Array(await assetByteCache.get(cacheKey));
+        },
+        text(dependencyId, assetKey) {
+          return new TextDecoder().decode(this.bytes(dependencyId, assetKey));
+        },
+        async textAsync(dependencyId, assetKey) {
+          return new TextDecoder().decode(await this.bytesAsync(dependencyId, assetKey));
+        },
+        blobUrl(dependencyId, assetKey) {
+          const asset = getAsset(dependencyId, assetKey);
+          const url = URL.createObjectURL(new Blob([this.bytes(dependencyId, assetKey)], { type: asset.mime || 'application/octet-stream' }));
+          blobUrls.add(url);
+          return url;
+        },
+        async blobUrlAsync(dependencyId, assetKey) {
+          const asset = getAsset(dependencyId, assetKey);
+          const url = URL.createObjectURL(new Blob([await this.bytesAsync(dependencyId, assetKey)], { type: asset.mime || 'application/octet-stream' }));
+          blobUrls.add(url);
+          return url;
+        },
+        async loadClassicScript(dependencyId, assetKey, globalName = '') {
+          const sourceUrl = await this.blobUrlAsync(dependencyId, assetKey);
+          try {
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = sourceUrl;
+              script.onload = resolve;
+              script.onerror = () => reject(new Error(`Failed to load embedded script: ${dependencyId}/${assetKey}`));
+              document.head.append(script);
+            });
+            return globalName ? window[globalName] : true;
+          } finally {
+            URL.revokeObjectURL(sourceUrl);
+            blobUrls.delete(sourceUrl);
+          }
+        },
+        async importModule(dependencyId, assetKey) {
+          const sourceUrl = await this.blobUrlAsync(dependencyId, assetKey);
+          try {
+            return await import(sourceUrl);
+          } finally {
+            URL.revokeObjectURL(sourceUrl);
+            blobUrls.delete(sourceUrl);
+          }
+        }
+      });
+
+      window.addEventListener('pagehide', () => {
+        blobUrls.forEach(url => URL.revokeObjectURL(url));
+        blobUrls.clear();
+      });
+
+      const translations = {
+        ja: {
+          brandMeta: '単一HTML・ローカル処理・GitHub Pages',
+          helpTitle: '使い方と注意事項', close: '閉じる',
+          helpBasicsTitle: '基本操作',
+          helpStep1: '作業領域へテキストを入力します。内容は入力のたびに端末内へ保存されます。',
+          helpStep2: '出力ファイル名を必要に応じて変更し、「コピー」または「テキスト保存」で入力内容を取り出せます。',
+          helpStep3: '「サンプルに戻す」や「消去」の直後は、トーストの「元に戻す」から取り消せます。',
+          helpPrivacyTitle: 'プライバシー',
+          helpPrivacyBody: '入力内容と操作はブラウザー内で処理され、このアプリから外部へ送信されません。必要なコードと依存ファイルも配布用HTMLに内包されます。',
+          helpNotesTitle: '注意事項',
+          helpNoteStorage: 'ブラウザーのサイトデータを削除すると、端末内に保存した入力内容も消える場合があります。必要な内容はファイルとして保存してください。',
+          helpNoteBrowser: '一部の機能はブラウザーの制限や端末性能の影響を受けます。重要な成果物は保存後に内容を確認してください。',
+          helpNoteTemplate: 'この画面はスターターの例です。新しいアプリを作る際は、機能と一緒にこのヘルプも実際の操作へ書き換えます。',
+          helpOffline: '配布物は dist/index.html ひとつです。ローカルで直接開くことも、GitHub Pagesで公開することもできます。',
+          introTitle: '単一HTMLアプリのスターター',
+          lead: 'PDF Organizerと同じ、固定依存・完全内包・実行時通信なしの構成から、新しいブラウザーアプリを作れます。',
+          localBadge: '実行時通信なし',
+          workspaceTitle: 'スターター作業領域',
+          workspaceBody: '入力内容はこのブラウザー内だけに保存され、このアプリから送信されません。',
+          characters: '文字', words: '単語', lines: '行', editorLabel: 'テキスト入力',
+          copy: 'コピー', download: 'テキスト保存', sample: 'サンプルに戻す', clear: '消去', savedLocally: '端末内に保存済み', outputFilename: '出力ファイル名', outputFilenameHint: '拡張子は自動で .txt が付きます', undo: '元に戻す', undone: '元に戻しました',
+          confirmTitle: '確認', confirmAction: '実行する', cancel: 'キャンセル',
+          guaranteesTitle: 'テンプレートの基本保証',
+          guaranteesBody: 'アプリ仕様で明示的に変更しない限り、この制約を維持します。',
+          card1Title: '配布物はひとつ', card1Body: 'リリース成果物は dist/index.html。直接開くことも、静的サイトとして公開することもできます。',
+          card2Title: '依存を固定して内包', card2Body: 'npmの外部素材はバージョンとtarball hashを固定し、検証してからHTMLへ内包します。',
+          card3Title: '実行時通信なし', card3Body: 'Content Security Policyで実行時通信を遮断し、ユーザーデータをページ内に保ちます。',
+          card4Title: 'LLM向けの作業契約', card4Body: 'AGENTS.mdとAPP_SPEC.mdで、実装方針、受入条件、完了報告を安定して伝えます。',
+          buildInfo: 'ビルド情報', appVersion: 'アプリバージョン', builtAt: '生成日時', dependencies: '内包依存数',
+          footer: '完全内包HTMLとして生成', copied: 'コピーしました', copyFailed: 'コピーできませんでした', downloaded: 'テキストを保存しました', cleared: '入力を消去しました', restored: 'サンプルを復元しました'
+        },
+        en: {
+          brandMeta: 'Single file · Local-first · GitHub Pages',
+          helpTitle: 'How to use & notes', close: 'Close',
+          helpBasicsTitle: 'Basics',
+          helpStep1: 'Enter text in the workspace. The content is saved locally as you type.',
+          helpStep2: 'Change the output filename if needed, then use Copy or Download text.',
+          helpStep3: 'After Restore sample or Clear, use Undo in the toast to reverse the change.',
+          helpPrivacyTitle: 'Privacy',
+          helpPrivacyBody: 'Your content and actions are processed in the browser and are not sent outside by this app. Required code and dependencies are embedded in the distributable HTML.',
+          helpNotesTitle: 'Notes',
+          helpNoteStorage: 'Clearing browser site data may also remove content saved locally. Download anything important as a file.',
+          helpNoteBrowser: 'Some features are affected by browser restrictions and device performance. Review important output after saving it.',
+          helpNoteTemplate: 'This screen is a starter example. When building a new app, update this help together with the real features and workflow.',
+          helpOffline: 'The deliverable is one dist/index.html file. It can open locally or be published with GitHub Pages.',
+          introTitle: 'Single HTML App Starter',
+          lead: 'Build a new browser app from the same pinned-dependency, fully embedded, no-runtime-network foundation used by PDF Organizer.',
+          localBadge: 'No runtime network',
+          workspaceTitle: 'Starter workspace',
+          workspaceBody: 'Text stays in this browser. It is never sent by this app.',
+          characters: 'Characters', words: 'Words', lines: 'Lines', editorLabel: 'Text editor',
+          copy: 'Copy', download: 'Download text', sample: 'Restore sample', clear: 'Clear', savedLocally: 'Saved locally', outputFilename: 'Output filename', outputFilenameHint: 'The .txt extension is added automatically', undo: 'Undo', undone: 'Restored',
+          confirmTitle: 'Confirm', confirmAction: 'Continue', cancel: 'Cancel',
+          guaranteesTitle: 'Template guarantees',
+          guaranteesBody: 'Keep these constraints unless the product specification explicitly changes them.',
+          card1Title: 'One deliverable', card1Body: 'The release artifact is dist/index.html. It opens directly and can be hosted as a static page.',
+          card2Title: 'Pinned dependencies', card2Body: 'Third-party npm assets are version-pinned, hashed, and embedded during the build.',
+          card3Title: 'No runtime network', card3Body: 'Content Security Policy blocks runtime connections. User data stays inside the page.',
+          card4Title: 'LLM-ready workflow', card4Body: 'AGENTS.md and APP_SPEC.md give coding agents a stable contract, acceptance criteria, and handoff format.',
+          buildInfo: 'Build information', appVersion: 'App version', builtAt: 'Built at', dependencies: 'Embedded dependencies',
+          footer: 'Generated as one self-contained HTML file', copied: 'Copied', copyFailed: 'Could not copy', downloaded: 'Text downloaded', cleared: 'Text cleared', restored: 'Sample restored'
+        }
+      };
+
+      const storageKeys = {
+        text: `${APP_CONFIG.slug}:starter-text`,
+        language: `${APP_CONFIG.slug}:language`
+      };
+      const sampleText = {
+        ja: 'この領域はサンプルです。\n\n新しいアプリを作るときは APP_SPEC.md に目的と受入条件を書き、LLMに AGENTS.md から読むよう指示してください。',
+        en: 'This workspace is a sample.\n\nFor a new app, describe the goal and acceptance criteria in APP_SPEC.md, then tell the LLM to start with AGENTS.md.'
+      };
+
+      const $ = selector => document.querySelector(selector);
+      const editor = $('#editor');
+      const outputFilename = $('#outputFilename');
+      let language = readStorage(storageKeys.language) || detectLanguage();
+
+      // Reusable Promise-based confirmation API. Canonical source: components/confirm-dialog.html.
+      const AppConfirm = (() => {
+        const dialog = $('#appConfirmDialog');
+        const title = $('#appConfirmTitle');
+        const message = $('#appConfirmMessage');
+        const closeButton = $('#appConfirmClose');
+        const cancelButton = $('#appConfirmCancel');
+        const okButton = $('#appConfirmOk');
+        let resolver = null;
+        let restoreFocus = null;
+
+        function finish(result) {
+          if (!dialog.open) return;
+          const currentResolver = resolver;
+          resolver = null;
+          dialog.close();
+          if (restoreFocus instanceof HTMLElement && restoreFocus.isConnected) restoreFocus.focus({ preventScroll: true });
+          restoreFocus = null;
+          if (currentResolver) currentResolver(result);
+        }
+
+        function ask({ title: heading, message: body, confirmLabel, cancelLabel, tone = 'default' } = {}) {
+          if (dialog.open) finish(false);
+          title.textContent = heading || translate('confirmTitle');
+          message.textContent = body || '';
+          cancelButton.textContent = cancelLabel || translate('cancel');
+          okButton.textContent = confirmLabel || translate('confirmAction');
+          okButton.classList.toggle('danger', tone === 'danger');
+          okButton.classList.toggle('primary', tone !== 'danger');
+          restoreFocus = document.activeElement;
+          return new Promise(resolve => {
+            resolver = resolve;
+            dialog.showModal();
+            requestAnimationFrame(() => cancelButton.focus({ preventScroll: true }));
+          });
+        }
+
+        closeButton.addEventListener('click', () => finish(false));
+        cancelButton.addEventListener('click', () => finish(false));
+        okButton.addEventListener('click', () => finish(true));
+        dialog.addEventListener('cancel', event => { event.preventDefault(); finish(false); });
+        dialog.addEventListener('click', event => {
+          const rect = dialog.getBoundingClientRect();
+          const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+          if (outside) finish(false);
+        });
+
+        return Object.freeze({ ask });
+      })();
+      window.AppConfirm = AppConfirm;
+
+      function readStorage(key) {
+        try { return localStorage.getItem(key); } catch { return null; }
+      }
+      function writeStorage(key, value) {
+        try { localStorage.setItem(key, value); } catch { /* Storage may be unavailable in private contexts. */ }
+      }
+      function detectLanguage() {
+        if (APP_CONFIG.defaultLanguage === 'ja' || APP_CONFIG.defaultLanguage === 'en') return APP_CONFIG.defaultLanguage;
+        return (navigator.language || '').toLowerCase().startsWith('ja') ? 'ja' : 'en';
+      }
+      function translate(key) { return translations[language]?.[key] ?? translations.en[key] ?? key; }
+
+      // Reusable toast / Undo API. Canonical source: components/toast.html.
+      const AppToast = (() => {
+        const root = $('#appToast');
+        const message = $('#appToastMessage');
+        const action = $('#appToastAction');
+        let timer = 0;
+        let actionHandler = null;
+        function dismiss() {
+          clearTimeout(timer);
+          timer = 0;
+          root.classList.remove('show');
+          actionHandler = null;
+        }
+        function show({ message: text = '', actionLabel = '', onAction = null, duration = 3200, tone = 'default' } = {}) {
+          clearTimeout(timer);
+          message.textContent = String(text);
+          root.dataset.tone = tone;
+          actionHandler = typeof onAction === 'function' ? onAction : null;
+          action.textContent = actionLabel || '';
+          action.hidden = !actionHandler || !actionLabel;
+          root.classList.add('show');
+          if (duration > 0) timer = window.setTimeout(dismiss, duration);
+          return Object.freeze({ dismiss });
+        }
+        action.addEventListener('click', () => {
+          const handler = actionHandler;
+          dismiss();
+          if (handler) handler();
+        });
+        return Object.freeze({ show, dismiss });
+      })();
+      window.AppToast = AppToast;
+      function showToast(message, options = {}) { AppToast.show({ message, ...options }); }
+      function applyLanguage() {
+        document.documentElement.lang = language;
+        document.querySelectorAll('[data-i18n]').forEach(element => { element.textContent = translate(element.dataset.i18n); });
+        document.querySelectorAll('[data-i18n-title]').forEach(element => { element.title = translate(element.dataset.i18nTitle); });
+        document.querySelectorAll('[data-i18n-aria-label]').forEach(element => { element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel)); });
+        $('#languageButton').textContent = language === 'ja' ? 'EN' : '日本語';
+        $('#languageButton').setAttribute('aria-label', language === 'ja' ? '英語に切り替え' : 'Switch to Japanese');
+        document.title = language === 'ja' ? APP_CONFIG.nameJa : APP_CONFIG.name;
+        $('#brandName').textContent = language === 'ja' ? APP_CONFIG.nameJa : APP_CONFIG.name;
+        $('#footerName').textContent = language === 'ja' ? APP_CONFIG.nameJa : APP_CONFIG.name;
+        if (!editor.value) editor.value = sampleText[language];
+        updateStats();
+      }
+      function updateStats() {
+        const value = editor.value;
+        const words = value.trim() ? (value.match(/[\p{L}\p{N}]+(?:['’_-][\p{L}\p{N}]+)*/gu) || []).length : 0;
+        $('#characterCount').textContent = new Intl.NumberFormat(language).format([...value].length);
+        $('#wordCount').textContent = new Intl.NumberFormat(language).format(words);
+        $('#lineCount').textContent = new Intl.NumberFormat(language).format(value ? value.split(/\r?\n/).length : 0);
+        $('#saveStatus').textContent = translate('savedLocally');
+      }
+      function saveText() {
+        writeStorage(storageKeys.text, editor.value);
+        updateStats();
+      }
+      async function copyText() {
+        try {
+          await navigator.clipboard.writeText(editor.value);
+          showToast(translate('copied'));
+        } catch {
+          editor.select();
+          const ok = document.execCommand('copy');
+          showToast(translate(ok ? 'copied' : 'copyFailed'));
+        }
+      }
+      function normalizedFilenameBase() {
+        const fallback = APP_CONFIG.slug || 'text';
+        const cleaned = outputFilename.value.trim().replace(/[\\/:*?"<>|\u0000-\u001f]/g, '-').replace(/\.+$/g, '').trim();
+        let base = cleaned.replace(/\.txt$/i, '') || fallback;
+        if (/^(con|prn|aux|nul|com[1-9]|lpt[1-9])$/i.test(base)) base = `${base}-file`;
+        if (!cleaned) outputFilename.value = fallback;
+        return base.slice(0, 120);
+      }
+      function downloadText() {
+        const url = URL.createObjectURL(new Blob([editor.value], { type: 'text/plain;charset=utf-8' }));
+        const anchor = document.createElement('a');
+        const filenameBase = normalizedFilenameBase();
+        outputFilename.value = filenameBase;
+        anchor.href = url;
+        anchor.download = `${filenameBase}.txt`;
+        anchor.click();
+        URL.revokeObjectURL(url);
+        showToast(translate('downloaded'), { tone: 'success' });
+      }
+
+      $('#languageButton').addEventListener('click', () => {
+        language = language === 'ja' ? 'en' : 'ja';
+        writeStorage(storageKeys.language, language);
+        applyLanguage();
+      });
+      const helpDialog = $('#helpDialog');
+      $('#helpButton').addEventListener('click', () => helpDialog.showModal());
+      $('#closeHelpButton').addEventListener('click', () => helpDialog.close());
+      helpDialog.addEventListener('click', event => {
+        const rect = helpDialog.getBoundingClientRect();
+        const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (outside) helpDialog.close();
+      });
+      editor.addEventListener('input', saveText);
+      outputFilename.addEventListener('blur', () => { outputFilename.value = normalizedFilenameBase(); });
+      $('#copyButton').addEventListener('click', copyText);
+      $('#downloadButton').addEventListener('click', downloadText);
+      $('#sampleButton').addEventListener('click', () => {
+        const before = editor.value;
+        editor.value = sampleText[language];
+        saveText();
+        showToast(translate('restored'), { actionLabel: translate('undo'), onAction: () => { editor.value = before; saveText(); editor.focus(); showToast(translate('undone')); } });
+      });
+      $('#clearButton').addEventListener('click', () => {
+        if (!editor.value) return;
+        const before = editor.value;
+        editor.value = '';
+        saveText();
+        editor.focus();
+        showToast(translate('cleared'), {
+          actionLabel: translate('undo'),
+          onAction: () => { editor.value = before; saveText(); editor.focus(); showToast(translate('undone')); },
+          duration: 5000
+        });
+      });
+
+      editor.value = readStorage(storageKeys.text) || sampleText[language];
+      outputFilename.value = APP_CONFIG.slug || 'text';
+      $('#versionBadge').textContent = `v${APP_CONFIG.version}`;
+      $('#buildVersion').textContent = APP_CONFIG.version;
+      $('#builtAt').textContent = BUILD_MANIFEST.generatedAtUtc || '—';
+      $('#dependencyCount').textContent = String(BUILD_MANIFEST.dependencies?.length || 0);
+      applyLanguage();
+    })();
+  </script>
+</body>
+</html>

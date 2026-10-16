@@ -1,0 +1,26 @@
+{
+  "$schema": "./schemas/app-config.schema.json",
+  "name": "Single HTML App Starter",
+  "nameJa": "単一HTMLアプリ スターター",
+  "slug": "single-html-app-starter",
+  "version": "1.3.0",
+  "description": "A reusable starter for privacy-friendly, fully self-contained browser apps.",
+  "descriptionJa": "プライバシーに配慮した完全内包型ブラウザーアプリの再利用テンプレートです。",
+  "defaultLanguage": "auto",
+  "repository": {
+    "owner": "OWNER",
+    "name": "single-html-app-template"
+  },
+  "build": {
+    "output": "dist/index.html",
+    "blockRuntimeNetwork": true,
+    "selfExtract": {
+      "enabled": true,
+      "output": "dist/index.self-extract.html"
+    },
+    "sizeBudget": {
+      "readableWarningMb": 25,
+      "selfExtractWarningMb": 12
+    }
+  }
+}
