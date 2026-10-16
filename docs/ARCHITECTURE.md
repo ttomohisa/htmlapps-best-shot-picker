@@ -124,3 +124,7 @@ The exporter snapshots selected File references before processing. Later selecti
 ## Best Shot Picker analysis
 
 See [GROUPING.md](GROUPING.md) for the versioned pair predicate, ID-owned group state, EXIF domains, atomic async commits and evidence limits. The builder injects `__BEST_SHOT_GROUPING_JS__` exactly once between the core and app sources, rejecting closing script tags in every injected source.
+
+## Relative technical hints
+
+`src/quality.js` is embedded between grouping and app source using a counted `__BEST_SHOT_QUALITY_JS__` placeholder. It measures a bounded oriented preview and derives optional relative candidates from complete current group membership. `src/app.js` sequentially resamples existing thumbnails; temporary canvases and decoded previews are released. Metrics commit only with the existing session/input/group revision guard. A failed metric is isolated without rejecting a valid photo. Candidates are derived after each group edit, never stored in Undo patches or written into Keep, comparison selection, or original File objects. See [QUALITY.md](QUALITY.md).

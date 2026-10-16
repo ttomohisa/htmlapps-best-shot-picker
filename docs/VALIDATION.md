@@ -20,7 +20,7 @@ The dot cloud browser accepts HTTPS pages but disallows direct `file://` navigat
 
 - Physical Android Chrome and iPhone Safari; real-device memory limits, download UX, and gestures.
 - Safari, Firefox, and Edge-specific behavior.
-- The later milestones (quality metrics, ML, faces, eye state, high-volume optimization, split ZIPs, CSV/JSON, final release gates) are not implemented or validated. v0.2 grouping evidence is recorded separately below.
+- The later milestones (ML, faces, eye state, high-volume optimization, split ZIPs, CSV/JSON, final release gates) are not implemented or validated. v0.2 grouping and v0.3 technical-hint evidence are recorded separately below.
 - No claim of measured grouping accuracy, AI quality, large-collection throughput, or v1.0 readiness is made.
 
 ## Acceptance mapping
@@ -42,3 +42,11 @@ Core + grouping unit tests: 45 pass locally. Exact-byte/EXIF tests also pass in 
 The HTTPS preview was exercised in cloud Chrome with four project-generated images: one exact-duplicate pair and two singletons; Keep; split; merge and Undo with selection preserved; Japanese/English; repeated-copy export warning; edited ZIP filename and actual download. Independent Python verification confirms CRC, STORE and all three selected original byte sequences. Desktop Japanese/English grouping screenshots and narrow-screen Organize screenshots from actual CI rendering were visually reviewed. Physical-device checks and non-Chromium engines remain unperformed. A subsequent optional HTTPS comparison navigation hit a browser-transport timeout; that extra interaction is not claimed as verified.
 
  The 50 synthetic feature cases are logic coverage only; the supplied plan’s 50 human-labeled photographic cases and ≤1% photographic false-group release gate remain unverified. See [GROUPING.md](GROUPING.md).
+
+## v0.3 development status
+
+Local Node core/grouping/quality and build-wiring tests pass (63 checks at the first v0.3 review snapshot). Quality tests use project-owned synthetic pixels, including controlled smoothing, tie/order invariance, missing metrics, mixed compositions, monochrome, low light, line-art-like and noise-dominated inputs, transparency, and conflicting local detail. These are algorithm and state checks, not photographic recommendation accuracy. The additional browser suite is prepared for both generated variants, with cancellation/retry/reset, Keep/Undo, exact-copy ties, partial failures, group edits, original-byte export, Japanese/English and narrow/short screens. Its result will be recorded after execution.
+
+The user merged v0.2 as main `27546aa`. Its automatic Pages build/deploy succeeded in [run 38868664830](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38868664830). The served readable HTML exactly matches that run’s artifact (SHA-256 `48d6569efbaa5f94683e95c15b641f135dd0e0c0fb2cf96d3bcf9413fe59e184`), and cloud Chrome displayed v0.2.0. A further production grouping check was interrupted by a disappearing/crashed browser target after synthetic intake started; it is not counted as a completed grouping pass. The merged tree is identical to the PR2 head that passed 45 unit and 76 browser checks.
+
+The 50 human-labeled photographic grouping cases, real-photo recommendation/human-preference agreement, physical Android/iPhone and other browser engines remain **Not tested**. No accuracy or v1.0 release claim is made.

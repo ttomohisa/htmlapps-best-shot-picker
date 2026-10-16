@@ -1,10 +1,10 @@
 {
   "name": "best-shot-picker-tests",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs",
-    "test:browser": "node tests/browser.test.cjs && node tests/grouping.browser.cjs",
+    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs",
+    "test:browser": "node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs",
     "test:grouping": "node tests/grouping-evaluation.cjs"
   },
   "devDependencies": {
