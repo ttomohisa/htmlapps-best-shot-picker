@@ -8,8 +8,9 @@ Date: 2026-10-16. Scope: manual-selection milestone only. Fixtures: project-crea
 - Independent Python `zipfile` extraction: original-byte hashes, CRC, names, and STORE pass.
 - Canonical PowerShell 7.6.7 syntax preflight and repository check: pass in the Linux executor, using a `tar.exe` name for installed tar.
 - Normal, self-extracting, and root HTML generation: pass; self-extract payload round-trip and canonical icon identity pass.
-- CI Chromium acceptance: pending. Runs `tests/browser.test.cjs` on both generated `file://` variants and records actual outcomes.
-- Hosted PR preview UI / runtime requests: pending.
+- CI Chromium acceptance: both generated `file://` variants pass. The 55a75bf run passed 44 browser acceptance checks, including original-byte downloads, oriented geometry, selection/Undo, comparison, Japanese/English, 320/360/390px layouts, short-height dialogs, deterministic cancel/retry/reset races, giant-image rejection, reload, and zero HTTP(S) requests. [Run evidence](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38854992829).
+- Hosted PR preview: synthetic JPEG/PNG/WebP intake, EXIF display dimensions, A/B comparison, Keep/Undo, Japanese/English, editable ZIP naming and download verified in the dot cloud Chrome browser. The downloaded two-entry ZIP passes independent Python CRC and exact original-byte checks. Actual Japanese/English screenshots are saved in `assets/`. Browser-extension diagnostic errors were observed; no application-origin errors were observed. No-runtime-request coverage is the automated file-mode CI check, not a claim about unrelated browser-extension traffic.
+- Independent review: export/header core and UI state/cancellation reviewed; modal Undo, short-screen overlap, off-screen Undo and focus-restoration findings resolved. The latest language-status correction has focused regression coverage.
 
 ## Environment distinction
 
