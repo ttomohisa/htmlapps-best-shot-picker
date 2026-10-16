@@ -124,4 +124,4 @@
   report.longTaskTotalMs=longTasks.reduce((s,t)=>s+t.duration,0);
   report.longTaskMaxMs=Math.max(0,...longTasks.map(t=>t.duration));
   document.querySelector('#result').textContent=JSON.stringify(report,null,2);window.burstExperiment.done=true;
-})().catch(error=>{window.burstExperiment={done:true,report:{status:'harness-error',error:{name:error.name,message:error.message}}};document.querySelector('#result').textContent=error.stack;});
+})().catch(error=>{window.burstExperiment={done:true,report:{status:'harness-error',error:{name:error.name,message:error.message,stack:error.stack}}};document.querySelector('#result').textContent=error.stack;});

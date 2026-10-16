@@ -87,3 +87,11 @@ test('backpressure also bounds callers waiting for initialization to one pixel b
  await assert.rejects(h.client.infer(pixels()),/already in progress/);assert.equal(h.worker.sent.length,1);
  h.client.cancel();await assert.rejects(pending,{name:'AbortError'});assert.equal(h.worker.terminated,1);
 });
+test('default browser timer methods keep the global receiver during setup and cleanup',async()=>{
+ const vm=require('node:vm'),fs=require('node:fs');
+ const context=vm.createContext({module:{exports:{}},Blob,ArrayBuffer});
+ vm.runInContext(`let timers=0;globalThis.setTimeout=function(){if(this!==globalThis)throw new TypeError('Illegal invocation');timers++;return 1;};globalThis.clearTimeout=function(){if(this!==globalThis)throw new TypeError('Illegal invocation');timers--;};globalThis.URL={createObjectURL:()=> 'blob:test',revokeObjectURL:()=>{}};globalThis.Worker=class{postMessage(){}terminate(){}};`,context);
+ vm.runInContext(fs.readFileSync('experiments/embedding/worker-client.js','utf8'),context);
+ const c=vm.runInContext(`new module.exports.EmbeddingWorkerClient({runtimeSource:'',workerSource:'',modelJson:{},weightData:new ArrayBuffer(1)})`,context);
+ assert.equal(vm.runInContext('timers',context),1);c.cancel();await assert.rejects(c.ready,{name:'AbortError'});assert.equal(vm.runInContext('timers',context),0);
+});

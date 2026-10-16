@@ -6,7 +6,7 @@ class EmbeddingWorkerClient {
  constructor(options){
   this.options=options;this.generation=++generationCounter;this.job=0;this.pending=null;this.closed=false;this.failure=null;this.worker=null;this.url=null;
   this.counts={createdWorkers:0,terminatedWorkers:0,createdURLs:0,revokedURLs:0};
-  this.URL=options.URLApi||URL;this.setTimer=options.setTimeoutFn||setTimeout;this.clearTimer=options.clearTimeoutFn||clearTimeout;
+  this.URL=options.URLApi||URL;this.setTimer=options.setTimeoutFn||((fn,ms)=>globalThis.setTimeout(fn,ms));this.clearTimer=options.clearTimeoutFn||(id=>globalThis.clearTimeout(id));
   try {
    const BlobClass=options.BlobCtor||Blob,WorkerClass=options.WorkerCtor||Worker;
    this.url=this.URL.createObjectURL(new BlobClass([options.workerSource,'\n;(function(WebAssembly){\n',options.runtimeSource,'\n}).call(self,undefined);'],{type:'text/javascript'}));this.counts.createdURLs++;
