@@ -42,7 +42,7 @@ The starter includes the canonical confirmation and toast APIs in the default so
 8. Calculate SHA-256 hashes for every original embedded asset.
 9. Optionally gzip each declared asset (`gzip` / `auto`), then Base64-encode the stored bytes exactly once.
 10. Embed the asset bundle JSON directly, avoiding a second Base64 wrapper around the whole bundle.
-11. Replace the three source placeholders exactly once.
+11. Replace the declared application-source and data placeholders with their required counts.
 12. Write and verify `dist/index.html`, then copy it byte-for-byte to the repository root using `repository.name` with a leading `htmlapps-` removed.
 13. Gzip that HTML, embed it into a small ASCII-only native `DecompressionStream` loader, inherit the readable HTML favicon, and write `dist/index.self-extract.html`.
 14. Verify that the loader stays ASCII-only and embedded-only, the favicon matches the readable HTML, and the gzip payload restores byte-for-byte.
@@ -115,7 +115,7 @@ Keep source in one HTML while it remains understandable. When an app grows subst
 
 ## Best Shot Picker source split
 
-The template retains the generic embedded asset loader. `src/core.js` contains the dependency-free byte-preserving ZIP and header utilities; `src/app.js` owns the temporary UI session, sequential thumbnail queue, explicit selections, and cancellation/generation guards. The canonical PowerShell builder injects both sources through separately counted placeholders before standalone verification. No external script files are needed at runtime.
+The template retains the generic embedded asset loader. `src/core.js` contains the dependency-free byte-preserving ZIP and header utilities; `src/app.js` owns the temporary UI session, sequential thumbnail queue, explicit selections, and cancellation/generation guards. The canonical PowerShell builder injects the application sources through separately counted placeholders before standalone verification. No external script files are needed at runtime.
 
 Browser-decoded `naturalWidth` / `naturalHeight` are the oriented display dimensions. Canvas thumbnails use those same dimensions and the browser-oriented image. Zoom uses those dimensions in CSS pixels; original File bytes never pass through canvas for export.
 
@@ -128,3 +128,20 @@ See [GROUPING.md](GROUPING.md) for the versioned pair predicate, ID-owned group 
 ## Relative technical hints
 
 `src/quality.js` is embedded between grouping and app source using a counted `__BEST_SHOT_QUALITY_JS__` placeholder. It measures a bounded oriented preview and derives optional relative candidates from complete current group membership. `src/app.js` sequentially resamples existing thumbnails; temporary canvases and decoded previews are released. Metrics commit only with the existing session/input/group revision guard. A failed metric is isolated without rejecting a valid photo. Candidates are derived after each group edit, never stored in Undo patches or written into Keep, comparison selection, or original File objects. See [QUALITY.md](QUALITY.md).
+
+
+## Optional similar-photo proposals (v0.5)
+
+The default `BestShotGrouping` path remains non-ML. The builder injects `src/similarity.js` and `src/embedding-worker-client.js` through counted `__BEST_SHOT_SIMILARITY_JS__` and `__BEST_SHOT_EMBEDDING_CLIENT_JS__` placeholders before the app. TFJS is not evaluated on the main page: its runtime, the model and `src/embedding-worker.js` are gzip-compressed assets in the existing `StandaloneAssets` bundle. Both generated forms contain the complete assets and notices. See [pinned model packaging](../assets/embedding/README.md).
+
+Only an explicit **Find similar-photo candidates** action decompresses model assets and starts one Blob CPU worker. The current eligible partition must have at least two automatic, unreviewed, nonpending groups, containing no more than 36 ready photos in total. Larger sets are rejected instead of truncated, and existing groups are indivisible. Normal comparison, Keep and saving do not wait for this optional path.
+
+`src/app.js` sequentially decodes the existing oriented, maximum-480px thumbnails, composites transparency on white, and transfers one bounded RGB input at a time. The worker resizes it to 224×224, normalizes to [0, 1], and computes a 256-dimensional unit feature vector with TFJS 4.22.0 / Google MobileNet V1 0.25 224 feature vector v2. Neither original files nor Keep state are sent to the worker. Model bytes use `tf.io.fromMemory`; no remote loader is used. A lexical `WebAssembly` parameter disables the runtime's optional long.js accelerator without changing global WebAssembly or the CSP. The CPU backend is selected explicitly.
+
+`BestShotSimilarity` uses cosine ≥0.85 plus the frozen visual guard: dHash distance ≤12, mean RGB distance ≤48, aspect-ratio relative difference ≤0.025 and luma deviation ≥12 on each image. Finite, versioned descriptors and complete vector shapes are required. Greedy complete-link checks every pair, including pairs within existing groups, and stages only merges of whole groups. It never weakens the normal grouping predicate or silently moves matching subsets.
+
+The proposal is a snapshot, not a group mutation. Its fingerprint covers the complete ordered partition, member IDs and manual/reviewed/pending flags. App-level session/input/group revision checks reject late async results; `apply()` repeats partition and eligibility checks immediately before a deliberate Apply. Applying one proposal creates one manual, unreviewed group and a normal group-edit Undo patch, then clears all proposals. Keep flags, File references and original-byte export remain independent. Undo restores affected memberships while preserving later-imported photos.
+
+Cancel, failure, timeout, new input, normal reanalysis, group edits, Undo, reset and page exit clear or invalidate candidate work. One worker request is active at a time, carrying generation and job IDs; mismatched replies cannot settle the active request. Initialization/inference/disposal timeouts are 30/10/5 seconds, with an app-wide 60-second search budget. Success disposes model tensors and closes the worker; all exit paths terminate/revoke remaining worker resources. Decompressed immutable asset caches may remain in page memory for reuse; per-search vectors are not persisted or attached to photo records.
+
+The normal builder checks the exact npm tarball lock, the reviewed runtime byte hash, and each local model/license asset's length and SHA-256 before embedding. Missing or changed assets fail the build. Asset provenance URLs are records, not runtime/build model downloads. Research image corpora and evaluation harnesses remain separate from the shipped app. The research 17/18 positive-pair result and zero observed false joins across 612 negatives use a frozen corpus/input pipeline; they do not establish accuracy for the product's 480px preprocessing. See [validation evidence](VALIDATION.md).

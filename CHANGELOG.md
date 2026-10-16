@@ -1,12 +1,23 @@
 # Changelog
 
-## Unreleased — approved icon and isolated embedding worker
+Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
+
+## 0.5.0 — development (2026-10-16)
+
+- Add an explicitly approved, experimental **Find similar-photo candidates** action; default grouping remains non-ML.
+- Search up to 36 eligible photos in whole automatic, unreviewed, nonpending groups using one local CPU worker. Keep the frozen cosine 0.85 plus visual-guard complete-link conditions.
+- Show candidate thumbnails for review and require Apply for each grouping. Preserve Keep choices and original bytes; support Undo and clear stale candidates on cancellation, additional input, reanalysis or group changes.
+- Embed pinned TensorFlow.js 4.22.0, MobileNet V1 0.25 224 feature vector v2, model weights and license notices in both HTML forms. Decompress lazily after opt-in, with no runtime network or CSP relaxation.
+- Keep prior research records and limited evidence separate from product accuracy claims. The product uses 480px thumbnails; historical 17/18 positive-pair recovery and zero observed false joins among 612 negatives do not guarantee its accuracy.
+- Retain the owner-provided shared header/favicon SVG and the bounded worker's timeout, stale-result and resource-cleanup protections.
+
+## Prior unreleased research — approved icon and isolated embedding worker
 
 - Replace the header icon and favicon with the owner-provided Best Shot Picker SVG, using the canonical shared asset.
 - Prototype a bounded CPU embedding worker with transferable inputs, cancellation, timeout and stale-result cleanup.
 - Compare the unchanged frozen corpus and main-thread timer responsiveness without adding a model to the app.
 
-## Unreleased — frozen external burst validation
+## Prior unreleased research — frozen external burst validation
 
 - Add an independent, hash-pinned HDR+ burst corpus and a fixed-protocol evaluator that cannot tune on external labels.
 - Record both grouping denominators, sequential browser costs, synthetic CPU stress, and failure fallback without shipping a model or changing app behavior.

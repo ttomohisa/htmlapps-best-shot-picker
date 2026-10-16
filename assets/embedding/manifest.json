@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "mobilenet-v1",
+  "name": "Google MobileNet V1 0.25 224 feature vector",
+  "version": "2",
+  "license": "Apache-2.0",
+  "homepage": "https://www.kaggle.com/models/google/mobilenet-v1/tfJs/025-224-feature-vector/2",
+  "source": {
+    "url": "https://www.kaggle.com/api/v1/models/google/mobilenet-v1/tfJs/025-224-feature-vector/2/download",
+    "sha256": "6f96026bd8521f7ceb8244cf71609bebd82515a96ea200600699ed0d6a9ca625",
+    "bytes": 788589,
+    "licenseEvidenceUrl": "https://www.kaggle.com/api/v1/models/list?search=mobilenet-v1&owner=google",
+    "licenseEvidence": {
+      "modelRef": "google/mobilenet-v1",
+      "instanceId": 1517,
+      "framework": "tfJs",
+      "slug": "025-224-feature-vector",
+      "versionNumber": 2,
+      "versionId": 1814,
+      "licenseName": "Apache 2.0"
+    }
+  },
+  "input": {
+    "name": "images",
+    "recommendedShape": [
+      1,
+      224,
+      224,
+      3
+    ],
+    "range": [
+      0,
+      1
+    ],
+    "dtype": "float32"
+  },
+  "output": {
+    "name": "module_apply_default/hub_output/feature_vector/SpatialSqueeze",
+    "dimensions": 256
+  },
+  "runtime": {
+    "id": "tfjs",
+    "key": "runtime",
+    "package": "@tensorflow/tfjs",
+    "version": "4.22.0",
+    "bytes": 1105894,
+    "sha256": "a1f9e32fd9b373cf394905050cf0c8c66238b34925846c065db00d2a34d1c040"
+  },
+  "assets": [
+    {
+      "key": "model",
+      "path": "model.json",
+      "mime": "application/json",
+      "compression": "gzip",
+      "bytes": 45887,
+      "sha256": "a654b6316e27c84d9ad55e61ab9397d37428159ea8aecb097ea9d6ca9af6927e"
+    },
+    {
+      "key": "weights",
+      "path": "group1-shard1of1.bin",
+      "mime": "application/octet-stream",
+      "compression": "gzip",
+      "bytes": 841360,
+      "sha256": "0f5796c21d7034b6fe0dd021b0e834a503c88fc2d581d75d92fd69aa4f82cd6a"
+    },
+    {
+      "key": "license",
+      "path": "LICENSE.TensorFlow.js.txt",
+      "mime": "text/plain",
+      "compression": "gzip",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "key": "notices",
+      "path": "THIRD_PARTY.TFJS.txt",
+      "mime": "text/plain",
+      "compression": "gzip",
+      "bytes": 14666,
+      "sha256": "26148ba6193dfbb8b576d50ad3ed1b940ca4648eba26872fe706798f84da0a86"
+    }
+  ]
+}

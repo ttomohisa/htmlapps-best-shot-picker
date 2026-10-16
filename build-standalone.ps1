@@ -15,6 +15,7 @@ $AppConfigPath = Join-Path $Root "app.config.json"
 $AppIconPath = Join-Path $Root "assets\favicon.svg"
 $DependenciesPath = Join-Path $Root "dependencies.json"
 $DependencyLockPath = Join-Path $Root "dependencies.lock.json"
+$EmbeddingManifestPath = Join-Path $Root "assets/embedding/manifest.json"
 $VerifyPath = Join-Path $Root "scripts\verify-standalone.ps1"
 $SelfExtractBuilderPath = Join-Path $Root "scripts\build-self-extract.ps1"
 $CacheRoot = Join-Path $Root ".cache"
@@ -55,7 +56,7 @@ function Get-SafeId([string]$Value) {
   return $Value
 }
 
-function Get-NpmPackage([string]$PackageName, [string]$Version) {
+function Get-NpmPackage([string]$PackageName, [string]$Version, [string]$ExpectedSha256) {
   if ([string]::IsNullOrWhiteSpace($PackageName) -or [string]::IsNullOrWhiteSpace($Version)) {
     throw "Every dependency requires package and version."
   }
@@ -89,6 +90,11 @@ function Get-NpmPackage([string]$PackageName, [string]$Version) {
     Write-Step "Using cached archive for $PackageName@$Version"
   }
 
+  $archiveSha256 = Get-Sha256FileHex $archivePath
+  if ($archiveSha256 -ne $ExpectedSha256) {
+    throw "Locked tarball SHA-256 mismatch for ${PackageName}@${Version}. Refusing to extract or build."
+  }
+
   if (-not (Test-Path $packageDir)) {
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $extractRoot
     New-Item -ItemType Directory -Force -Path $extractRoot | Out-Null
@@ -105,7 +111,7 @@ function Get-NpmPackage([string]$PackageName, [string]$Version) {
   return [ordered]@{
     Root = $packageDir
     Archive = $archivePath
-    ArchiveSha256 = (Get-Sha256FileHex $archivePath)
+    ArchiveSha256 = $archiveSha256
   }
 }
 
@@ -193,6 +199,12 @@ $appIconDataUri = "data:image/svg+xml;base64," + [Convert]::ToBase64String($appI
 $appConfig = Get-Json $AppConfigPath
 $dependencyConfig = Get-Json $DependenciesPath
 $dependencyLock = Get-Json $DependencyLockPath
+$embeddingManifest = Get-Json $EmbeddingManifestPath
+if ([int]$embeddingManifest.schemaVersion -ne 1 -or [string]$embeddingManifest.id -ne "mobilenet-v1") {
+  throw "Unsupported embedding asset manifest."
+}
+$runtimePin = $embeddingManifest.runtime
+$runtimePinVerified = $false
 $rootHtmlOutputPath = ""
 $rootHtmlOutputName = ""
 if (-not $OutputPathWasSpecified) {
@@ -255,7 +267,7 @@ foreach ($dependency in $dependencies) {
     throw "Dependency lock for '$id' has an invalid tarballSha256."
   }
 
-  $package = Get-NpmPackage ([string]$dependency.package) ([string]$dependency.version)
+  $package = Get-NpmPackage ([string]$dependency.package) ([string]$dependency.version) ([string]$lockedDependency.tarballSha256)
   if ($package.ArchiveSha256 -ne [string]$lockedDependency.tarballSha256) {
     throw "Locked tarball SHA-256 mismatch for '$id'. Expected $([string]$lockedDependency.tarballSha256), got $($package.ArchiveSha256). Refusing to build."
   }
@@ -282,6 +294,17 @@ foreach ($dependency in $dependencies) {
       $shaAlgorithm.Dispose()
     }
     $sha = ($hashBytes | ForEach-Object { $_.ToString("x2") }) -join ""
+
+    # The approved runtime is pinned independently from its npm tarball so a
+    # modified extraction cache cannot silently replace the reviewed bytes.
+    if ($id -eq [string]$runtimePin.id -and $key -eq [string]$runtimePin.key) {
+      if ([string]$dependency.package -ne [string]$runtimePin.package -or [string]$dependency.version -ne [string]$runtimePin.version) {
+        throw "Embedding runtime package/version does not match its reviewed manifest."
+      }
+      if ($sha -ne [string]$runtimePin.sha256) { throw "Embedding runtime SHA-256 mismatch. Refusing to build." }
+      if ($bytes.Length -ne [long]$runtimePin.bytes) { throw "Embedding runtime size mismatch. Refusing to build." }
+      $runtimePinVerified = $true
+    }
 
     $compressionSetting = "none"
     if ($asset.PSObject.Properties.Name -contains "compression") { $compressionSetting = ([string]$asset.compression).ToLowerInvariant() }
@@ -338,6 +361,71 @@ foreach ($dependency in $dependencies) {
   }
 }
 
+# Non-npm model files are checked in and explicitly hash-pinned. No model
+# downloader is part of either the build or the browser runtime.
+if (-not $runtimePinVerified) { throw "The approved embedding runtime asset is missing." }
+$modelAssets = [ordered]@{}
+$modelManifestAssets = @()
+$modelKeys = @{}
+$localAssetRoot = Split-Path -Parent $EmbeddingManifestPath
+foreach ($asset in @($embeddingManifest.assets)) {
+  $key = Get-SafeId ([string]$asset.key)
+  if ($modelKeys.ContainsKey($key)) { throw "Duplicate model asset key: $key" }
+  $modelKeys[$key] = $true
+  if ([string]$asset.sha256 -notmatch '^[a-f0-9]{64}$') { throw "Invalid model asset SHA-256: $key" }
+  if ([long]$asset.bytes -le 0) { throw "Invalid model asset size: $key" }
+  if ([string]$asset.compression -ne "gzip") { throw "Model asset compression must be gzip: $key" }
+  $assetPath = Get-RelativeAssetPath $localAssetRoot ([string]$asset.path)
+  $bytes = Get-AssetBytes $assetPath $false
+  $sha = Get-Sha256FileHex $assetPath
+  if ($sha -ne [string]$asset.sha256) { throw "Model asset SHA-256 mismatch: $key. Refusing to build." }
+  if ($bytes.Length -ne [long]$asset.bytes) { throw "Model asset size mismatch: $key. Refusing to build." }
+  $storedBytes = Compress-GzipBytes $bytes
+  $modelAssets[$key] = [ordered]@{
+    mime = [string]$asset.mime; compression = "gzip"; originalBytes = $bytes.Length
+    storedBytes = $storedBytes.Length; base64 = [Convert]::ToBase64String($storedBytes)
+  }
+  $modelManifestAssets += [ordered]@{
+    key = $key; path = "assets/embedding/" + [string]$asset.path; mime = [string]$asset.mime
+    compression = "gzip"; bytes = $bytes.Length; storedBytes = $storedBytes.Length; sha256 = $sha
+  }
+}
+if ($modelKeys.Count -ne 4) { throw "The model requires exactly four reviewed local assets." }
+foreach ($requiredKey in @("model", "weights", "license", "notices")) {
+  if (-not $modelKeys.ContainsKey($requiredKey)) { throw "Required model asset is missing: $requiredKey" }
+}
+$modelId = [string]$embeddingManifest.id
+if ($ids.ContainsKey($modelId)) { throw "Reserved model dependency id: $modelId" }
+$assetBundle.dependencies[$modelId] = [ordered]@{
+  package = [string]$embeddingManifest.name; version = [string]$embeddingManifest.version; assets = $modelAssets
+}
+$manifestDependencies += [ordered]@{
+  id = $modelId; package = [string]$embeddingManifest.name; version = [string]$embeddingManifest.version
+  license = [string]$embeddingManifest.license; homepage = [string]$embeddingManifest.homepage
+  source = $embeddingManifest.source; localAssets = $true; locked = $true; assets = $modelManifestAssets
+}
+
+# First-party worker code is embedded as inert compressed data. Only the
+# explicit user-triggered client decodes it and constructs an isolated worker.
+$workerPath = Join-Path $Root "src/embedding-worker.js"
+$workerBytes = Get-AssetBytes $workerPath $false
+$workerStoredBytes = Compress-GzipBytes $workerBytes
+if ($ids.ContainsKey("embedding-worker")) { throw "Reserved dependency id: embedding-worker" }
+$assetBundle.dependencies["embedding-worker"] = [ordered]@{
+  package = "best-shot-picker-embedding-worker"; version = [string]$appConfig.version
+  assets = [ordered]@{ worker = [ordered]@{
+    mime = "text/javascript"; compression = "gzip"; originalBytes = $workerBytes.Length
+    storedBytes = $workerStoredBytes.Length; base64 = [Convert]::ToBase64String($workerStoredBytes)
+  } }
+}
+$manifestDependencies += [ordered]@{
+  id = "embedding-worker"; package = "best-shot-picker-embedding-worker"; version = [string]$appConfig.version
+  license = "MIT"; firstParty = $true; assets = @([ordered]@{
+    key = "worker"; path = "src/embedding-worker.js"; mime = "text/javascript"; compression = "gzip"
+    bytes = $workerBytes.Length; storedBytes = $workerStoredBytes.Length; sha256 = (Get-Sha256FileHex $workerPath)
+  })
+}
+
 $manifest = [ordered]@{
   schemaVersion = 2
   builder = "single-html-app-template/1.3"
@@ -356,12 +444,16 @@ $assetBundleJson = ConvertTo-SafeJson $assetBundle 50
 $coreSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/core.js"), [System.Text.Encoding]::UTF8)
 $groupingSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/grouping.js"), [System.Text.Encoding]::UTF8)
 $qualitySource = [System.IO.File]::ReadAllText((Join-Path $Root "src/quality.js"), [System.Text.Encoding]::UTF8)
+$similaritySource = [System.IO.File]::ReadAllText((Join-Path $Root "src/similarity.js"), [System.Text.Encoding]::UTF8)
+$embeddingClientSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/embedding-worker-client.js"), [System.Text.Encoding]::UTF8)
 $appSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/app.js"), [System.Text.Encoding]::UTF8)
-if ($coreSource -match '(?i)</script' -or $appSource -match '(?i)</script' -or $groupingSource -match '(?i)</script' -or $qualitySource -match '(?i)</script') { throw "App source must not contain closing script tags." }
+if ($coreSource -match '(?i)</script' -or $appSource -match '(?i)</script' -or $groupingSource -match '(?i)</script' -or $qualitySource -match '(?i)</script' -or $similaritySource -match '(?i)</script' -or $embeddingClientSource -match '(?i)</script') { throw "App source must not contain closing script tags." }
 $replacements = [ordered]@{
   "__BEST_SHOT_CORE_JS__" = $coreSource
   "__BEST_SHOT_GROUPING_JS__" = $groupingSource
   "__BEST_SHOT_QUALITY_JS__" = $qualitySource
+  "__BEST_SHOT_SIMILARITY_JS__" = $similaritySource
+  "__BEST_SHOT_EMBEDDING_CLIENT_JS__" = $embeddingClientSource
   "__BEST_SHOT_APP_JS__" = $appSource
   "__APP_CONFIG_JSON__" = ConvertTo-SafeJson $appConfig 20
   "__BUILD_MANIFEST_JSON__" = ConvertTo-SafeJson $manifest 40
@@ -372,6 +464,8 @@ $replacementExpectedCounts = @{
   "__BEST_SHOT_CORE_JS__" = 1
   "__BEST_SHOT_GROUPING_JS__" = 1
   "__BEST_SHOT_QUALITY_JS__" = 1
+  "__BEST_SHOT_SIMILARITY_JS__" = 1
+  "__BEST_SHOT_EMBEDDING_CLIENT_JS__" = 1
   "__BEST_SHOT_APP_JS__" = 1
   "__APP_CONFIG_JSON__" = 1
   "__BUILD_MANIFEST_JSON__" = 1
