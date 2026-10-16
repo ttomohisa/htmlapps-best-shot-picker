@@ -54,8 +54,10 @@
     script.textContent='(function(WebAssembly){\n'+runtime+'\n}).call(window, undefined);';
     document.head.append(script);script.remove();
     report.globalWebAssemblyUnchanged=window.WebAssembly===nativeWebAssembly;
-    report.backend=hash.includes('webgl')?'webgl':'cpu';
-    if (!await tf.setBackend(report.backend)) throw new Error('Requested backend unavailable: '+report.backend);
+    report.backend=hash.includes('webgl')?'webgl':'cpu';report.phase='selecting-backend';
+    if(hash.includes('webgl-software')) {tf.env().set('SOFTWARE_WEBGL_ENABLED',true);report.softwareWebGLAllowed=true;}
+    if(report.backend==='webgl') report.webglDiagnostics=Object.fromEntries(['HAS_WEBGL','WEBGL_VERSION','SOFTWARE_WEBGL_ENABLED'].map(key=>[key,tf.env().get(key)]));
+    if (!await tf.setBackend(report.backend)) {report.backendUnavailable=true;throw new Error('Requested backend unavailable: '+report.backend);}
     await tf.ready();report.actualBackend=tf.getBackend();report.phase='initializing-model';
     const json=JSON.parse(new TextDecoder().decode(await unpack('modelJson')));
     const bytes=hash.includes('broken')?new Uint8Array(1):await unpack('weights');
