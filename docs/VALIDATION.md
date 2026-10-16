@@ -20,7 +20,7 @@ The dot cloud browser accepts HTTPS pages but disallows direct `file://` navigat
 
 - Physical Android Chrome and iPhone Safari; real-device memory limits, download UX, and gestures.
 - Safari, Firefox, and Edge-specific behavior.
-- The later milestones (automatic grouping, quality metrics, ML, faces, eye state, high-volume optimization, split ZIPs, CSV/JSON, final release gates) are not implemented or validated.
+- The later milestones (quality metrics, ML, faces, eye state, high-volume optimization, split ZIPs, CSV/JSON, final release gates) are not implemented or validated. v0.2 grouping evidence is recorded separately below.
 - No claim of measured grouping accuracy, AI quality, large-collection throughput, or v1.0 readiness is made.
 
 ## Acceptance mapping
@@ -37,4 +37,8 @@ At a10cff89, canonical build and all 52 Chromium checks pass. The badge reads �
 
 ## v0.2 development status
 
-Core + grouping unit tests: 45 pass locally. Exact-byte/EXIF tests also pass in UTC, America/New_York and Asia/Tokyo. Canonical build passes. New group browser coverage and PR preview verification are pending. The 50 synthetic feature cases are logic coverage only; the supplied plan’s 50 human-labeled photographic cases and ≤1% photographic false-group release gate remain unverified. See [GROUPING.md](GROUPING.md).
+Core + grouping unit tests: 45 pass locally. Exact-byte/EXIF tests also pass in UTC, America/New_York and Asia/Tokyo. Canonical build passes. CI at c32d5822 passes 52 existing and 24 grouping browser checks across both file:// variants, plus Windows/Linux canonical builds. Short-screen Undo is exercised in both Japanese and English on each variant. Grouping checks cover exact-duplicate evidence, split/move/merge/review and Undo, later-input and Keep preservation, focus-independent Save preview scope, held-digest cancellation/retry/reset, original-byte ZIP, 320/390px short-screen dialogs and no HTTP(S) runtime requests. The same-head normal preview deployment/probe passes.
+
+The HTTPS preview was exercised in cloud Chrome with four project-generated images: one exact-duplicate pair and two singletons; Keep; split; merge and Undo with selection preserved; Japanese/English; repeated-copy export warning; edited ZIP filename and actual download. Independent Python verification confirms CRC, STORE and all three selected original byte sequences. Desktop Japanese/English grouping screenshots and narrow-screen Organize screenshots from actual CI rendering were visually reviewed. Physical-device checks and non-Chromium engines remain unperformed. A subsequent optional HTTPS comparison navigation hit a browser-transport timeout; that extra interaction is not claimed as verified.
+
+ The 50 synthetic feature cases are logic coverage only; the supplied plan’s 50 human-labeled photographic cases and ≤1% photographic false-group release gate remain unverified. See [GROUPING.md](GROUPING.md).
