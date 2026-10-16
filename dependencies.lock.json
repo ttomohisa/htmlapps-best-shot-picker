@@ -1,5 +1,12 @@
 {
   "$schema": "./schemas/dependencies-lock.schema.json",
   "schemaVersion": 1,
-  "dependencies": []
+  "dependencies": [
+    {
+      "id": "tfjs",
+      "package": "@tensorflow/tfjs",
+      "version": "4.22.0",
+      "tarballSha256": "56505c191e24116787477b3bb5bb1cc0cf1c2bdce8112b9c402a8a2d31cf2f00"
+    }
+  ]
 }

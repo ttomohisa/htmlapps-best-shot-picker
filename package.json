@@ -1,10 +1,10 @@
 {
   "name": "best-shot-picker-tests",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs",
-    "test:browser": "node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs",
+    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs tests/similarity.test.cjs tests/similarity-integration.test.cjs tests/embedding-packaging.test.cjs tests/embedding-product-client.test.cjs",
+    "test:browser": "node tests/similarity.browser.cjs && node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs",
     "test:grouping": "node tests/grouping-evaluation.cjs",
     "experiment:embedding:build": "node experiments/embedding/build.cjs",
     "experiment:embedding:test": "node experiments/embedding/browser.cjs",

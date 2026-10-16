@@ -74,7 +74,7 @@ test('already aborted inference never transfers pixels and closes the worker',as
 test('research builder retains the earlier restrictive policy and is isolated from production',()=>{
  const fs=require('node:fs');const build=fs.readFileSync('experiments/embedding/burst-build.cjs','utf8');
  assert(build.includes("connect-src 'none'"));assert(!/unsafe-eval|wasm-unsafe-eval/.test(build));
- for(const file of ['build-standalone.ps1','dependencies.json','src/app.js'])assert(!/embedding\/worker|worker-client/.test(fs.readFileSync(file,'utf8')));
+ for(const file of ['build-standalone.ps1','dependencies.json','src/app.js'])assert(!/experiments\/embedding/.test(fs.readFileSync(file,'utf8')));
 });
 test('inference abort while waiting for initialization immediately settles and terminates',async()=>{
  for(const preAborted of [false,true]){

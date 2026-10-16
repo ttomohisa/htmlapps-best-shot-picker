@@ -1,5 +1,7 @@
 # Isolated offline image-embedding feasibility experiment
 
+> **Current scope — 2026-10-16:** v0.5 product integration is approved only as an explicit, bounded similar-photo candidate search with review, Apply and Undo; default grouping remains non-ML. Earlier “adoption unapproved” or “not integrated” statements below describe their historical research stage. Those evaluations remain unchanged evidence and do not validate the product’s 480px thumbnail preprocessing or physical-phone cost. Product acceptance results must be recorded separately when actually run; this scope update does not claim those checks have passed. See [APP_SPEC.md](../../APP_SPEC.md#19-v05任意候補検索の承認済み実装範囲2026-10-16).
+
 This developer experiment is not included in the distributed Best Shot Picker app, its normal build, Pages, or PR preview. It does not read user photos. The production grouping thresholds stay unchanged, and every Keep choice remains explicit.
 
 ## Decision and gates

@@ -1,6 +1,6 @@
 # Third-party notices
 
-Best Shot Picker v0.1.0 has no third-party runtime dependencies, model weights, or WASM assets. The original-byte ZIP writer and synthetic image fixtures are project code under the repository's MIT license.
+The optional similar-photo candidate feature bundles the pinned runtime and model below. They are used only after the user starts that feature. The original-byte ZIP writer, synthetic image fixtures, worker adapter and ordinary grouping code are project code under the repository's MIT license. No WASM asset is included.
 
 The app foundation comes from ttomohisa/htmlapps-template (MIT); its copyright and license remain in LICENSE.
 
@@ -9,9 +9,17 @@ Development-only browser tests use Playwright 1.57.0 (Apache-2.0), distributed t
 The optional fixture regeneration script uses Pillow. Pillow is not a runtime or build dependency, and no Pillow code is embedded in the distributed HTML.
 
 
+## Bundled opt-in embedding runtime and model
+
+- TensorFlow.js 4.22.0 ES2017 UMD: Copyright 2024 Google LLC. Apache-2.0. Source: https://github.com/tensorflow/tfjs/tree/tfjs-v4.22.0 . The exact npm tarball is pinned in `dependencies.lock.json`; `dependencies.json` declares the unmodified `dist/tf.es2017.min.js` asset. Its additional reviewed file hash is in `assets/embedding/manifest.json`.
+- Google MobileNet V1 0.25 224 feature-vector TFJS model, version 2: Apache-2.0. Source: https://www.kaggle.com/models/google/mobilenet-v1/tfJs/025-224-feature-vector/2 . Google's official Kaggle model-instance metadata identifies instance 1517, version 1814 and Apache 2.0; the evidence URL, upstream archive hash, input/output contract and exact local model/weight hashes are preserved in `assets/embedding/manifest.json`. The unmodified 45,887-byte model JSON and 841,360-byte weights are checked in. They are not downloaded at runtime or silently refreshed during a build.
+- Full Apache-2.0 text: `assets/embedding/LICENSE.TensorFlow.js.txt`. Additional bundled long 4.0.0 (Apache-2.0), seedrandom 3.0.5 (MIT, Copyright 2019 David Bau) and Alea (MIT, Copyright 2010 Johannes Baagoe) notices are preserved verbatim in `assets/embedding/THIRD_PARTY.TFJS.txt`.
+
+The runtime, model, license and notices are embedded into both single-HTML release variants. The builder rejects missing files, size changes and SHA-256 mismatches. Runtime and model bytes stay unchanged; the first-party worker adapter explicitly selects CPU execution. Its lexical `WebAssembly` argument is undefined so the bundled long.js JavaScript arithmetic is selected. Global browser WebAssembly and the restrictive Content Security Policy are not changed. TFJS code is never loaded on the main UI thread, and no image, model or embedding is sent to a server.
+
 ## Development-only embedding experiment
 
-The distributed Best Shot Picker HTML has no third-party runtime dependency. `experiments/embedding/` is a separate developer experiment and is not included in the app build or deployed preview.
+`experiments/embedding/` contains separate developer harnesses and research records. Those harnesses, research photos, and MediaPipe assets are not included in the app build or deployed preview; the explicitly approved TFJS runtime/model listed above are now also packaged for the opt-in product feature.
 
 - MediaPipe Tasks Vision 0.10.35: Google / MediaPipe, Apache-2.0. Exact npm tarball and individual JS/WASM SHA-256 values are locked in `experiments/embedding/dependencies.json`.
 - MobileNetV3 Small image embedder float32 model v1: MediaPipe; its embedded TFLITE_METADATA license explicitly identifies Apache License Version 2.0. The same manifest records the official model URL and SHA-256.
@@ -22,7 +30,7 @@ The distributed Best Shot Picker HTML has no third-party runtime dependency. `ex
 ### Extended TFJS feasibility experiment (development only)
 
 - TensorFlow.js 4.22.0 ES2017 UMD, Apache-2.0. Official npm tarball and exact asset are pinned in `experiments/embedding/tfjs.dependencies.json`.
-- Google MobileNet V1 0.25 224 feature-vector TFJS model version 2, Apache-2.0, independently verified from the official Google/Kaggle model-instance metadata (instance 1517, version 1814). Model and runtime are not distributed in the app.
+- Google MobileNet V1 0.25 224 feature-vector TFJS model version 2, Apache-2.0, independently verified from the official Google/Kaggle model-instance metadata (instance 1517, version 1814). The research harness is not distributed in the app; the same reviewed runtime/model are now used by the opt-in product feature above.
 - Included long 4.0.0 (Apache-2.0), seedrandom 3.0.5 (MIT, Copyright 2019 David Bau) and Alea (MIT, Copyright 2010 Johannes Baagøe) notices are preserved in `experiments/embedding/THIRD_PARTY.TFJS.txt`, with the full Apache text in `LICENSE.TensorFlow.js.txt`.
 - The research pilot downloads 51 unmodified published JPEGs from Lukas Murmann, Michael Gharbi, Miika Aittala and Fredo Durand, *A Multi-Illumination Dataset of Indoor Object Appearance*, ICCV 2019. Source: https://projects.csail.mit.edu/illumination/ . Image data: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ . Source URLs, exact hashes and selection are recorded in `photo-pilot.json`. No image files are committed or included in the app; input resizing occurs only during evaluation in memory.
 
