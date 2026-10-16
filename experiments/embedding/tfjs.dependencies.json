@@ -1,0 +1,29 @@
+{
+  "purpose": "Isolated CPU/WebGL embedding alternative; never a production dependency",
+  "runtime": {
+    "package": "@tensorflow/tfjs", "version": "4.22.0", "license": "Apache-2.0",
+    "url": "https://registry.npmjs.org/@tensorflow/tfjs/-/tfjs-4.22.0.tgz",
+    "sha256": "56505c191e24116787477b3bb5bb1cc0cf1c2bdce8112b9c402a8a2d31cf2f00",
+    "bytes": 30566337,
+    "asset": "package/dist/tf.es2017.min.js",
+    "assetSha256": "a1f9e32fd9b373cf394905050cf0c8c66238b34925846c065db00d2a34d1c040",
+    "assetBytes": 1105894
+  },
+  "model": {
+    "name": "Google MobileNet V1 0.25 224 feature vector", "version": 2,
+    "url": "https://www.kaggle.com/api/v1/models/google/mobilenet-v1/tfJs/025-224-feature-vector/2/download",
+    "sha256": "6f96026bd8521f7ceb8244cf71609bebd82515a96ea200600699ed0d6a9ca625",
+    "bytes": 788589, "license": "Apache-2.0",
+    "licenseEvidenceUrl": "https://www.kaggle.com/api/v1/models/list?search=mobilenet-v1&owner=google",
+    "licenseEvidence": {"modelRef":"google/mobilenet-v1","instanceId":1517,"framework":"tfJs","slug":"025-224-feature-vector","versionNumber":2,"versionId":1814,"licenseName":"Apache 2.0"},
+    "jsonSha256": "a654b6316e27c84d9ad55e61ab9397d37428159ea8aecb097ea9d6ca9af6927e",
+    "weightsSha256": "0f5796c21d7034b6fe0dd021b0e834a503c88fc2d581d75d92fd69aa4f82cd6a",
+    "weightsBytes": 841360,
+    "input": {"name":"images","recommendedShape":[1,224,224,3],"range":[0,1],"dtype":"float32"},
+    "output": {"name":"module_apply_default/hub_output/feature_vector/SpatialSqueeze","dimensions":256}
+  },
+  "licenseText": {
+    "url":"https://raw.githubusercontent.com/tensorflow/tfjs/tfjs-v4.22.0/LICENSE",
+    "sha256":"cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+}

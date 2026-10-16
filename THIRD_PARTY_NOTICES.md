@@ -18,3 +18,10 @@ The distributed Best Shot Picker HTML has no third-party runtime dependency. `ex
 - The pinned upstream Apache license text is included at `experiments/embedding/LICENSE.Apache-2.0.txt` and embedded in generated experimental HTML. Upstream JS/WASM/model bytes are unmodified; the version-specific byte-loading adapter and test harness are project code.
 
 [Runtime source/license](https://github.com/google-ai-edge/mediapipe/tree/v0.10.35) · [Model overview](https://developers.google.com/edge/mediapipe/solutions/vision/image_embedder)
+
+### Extended TFJS feasibility experiment (development only)
+
+- TensorFlow.js 4.22.0 ES2017 UMD, Apache-2.0. Official npm tarball and exact asset are pinned in `experiments/embedding/tfjs.dependencies.json`.
+- Google MobileNet V1 0.25 224 feature-vector TFJS model version 2, Apache-2.0, independently verified from the official Google/Kaggle model-instance metadata (instance 1517, version 1814). Model and runtime are not distributed in the app.
+- Included long 4.0.0 (Apache-2.0), seedrandom 3.0.5 (MIT, Copyright 2019 David Bau) and Alea (MIT, Copyright 2010 Johannes Baagøe) notices are preserved in `experiments/embedding/THIRD_PARTY.TFJS.txt`, with the full Apache text in `LICENSE.TensorFlow.js.txt`.
+- The research pilot downloads 51 unmodified published JPEGs from Lukas Murmann, Michael Gharbi, Miika Aittala and Fredo Durand, *A Multi-Illumination Dataset of Indoor Object Appearance*, ICCV 2019. Source: https://projects.csail.mit.edu/illumination/ . Image data: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ . Source URLs, exact hashes and selection are recorded in `photo-pilot.json`. No image files are committed or included in the app; input resizing occurs only during evaluation in memory.

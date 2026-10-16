@@ -492,3 +492,5 @@ v0.3の参考候補は、既存の向き補正済みサムネイルを長辺160p
 製品のグループ化は非MLのままとし、閾値を緩めない。不正なhash・RGB配列・寸法比・数値は利用不能な特徴量として扱い、例外や誤結合を避ける。撮影日時のdomainがwall/instant以外なら信頼時刻として使わない。厳密重複、人の編集・選択、原本保存は維持する。
 
 MediaPipe 0.10.35とMobileNetV3 Small v1の固定・ハッシュ検証済み資産を使う技術検証は `experiments/embedding/` に隔離する。通常のアプリビルド、Pages配信、PRプレビューには含めない。合成素材を使い、コサイン類似度と同じ画像に対する既存方式、初期化・推論時間、容量、CSPとネットワーク、モデル失敗時のフォールバックを記録する。単一HTML/自己展開の制約も実測し、失敗を合格と言い換えない。実写真の改善、誤混入率、実機性能が未測定である以上、モデル採用は未承認のままにする。
+
+The v0.4 investigation also compares a smaller, isolated TensorFlow.js CPU/WebGL feature-vector model under the unchanged default CSP. Public, licensed, non-person staged-photo lighting cases may provide an exploratory scene-disjoint development/holdout comparison. These results must not be equated with the planned consumer-burst, human-preference or physical-device release gates. No experimental model or photograph is included in the production app until adoption gates are explicitly met.

@@ -113,3 +113,35 @@ jobs:
             test-results/embedding/*.json
             test-results/embedding/*.png
           retention-days: 14
+
+  tfjs-alternative:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build isolated pinned TFJS candidate and licensed photo pilot
+        run: npm run experiment:tfjs:build
+      - name: Wrap both experiments with unchanged canonical CSP
+        shell: pwsh
+        run: |
+          ./scripts/check-powershell-syntax.ps1
+          ./scripts/build-self-extract.ps1 -InputPath test-results/embedding-tfjs/index.html -OutputPath test-results/embedding-tfjs/index.self-extract.html
+          ./scripts/verify-self-extract.ps1 -Path test-results/embedding-tfjs/index.self-extract.html -ExpectedSourcePath test-results/embedding-tfjs/index.html
+          ./scripts/build-self-extract.ps1 -InputPath test-results/embedding-tfjs/photo-pilot.html -OutputPath test-results/embedding-tfjs/photo-pilot.self-extract.html
+          ./scripts/verify-self-extract.ps1 -Path test-results/embedding-tfjs/photo-pilot.self-extract.html -ExpectedSourcePath test-results/embedding-tfjs/photo-pilot.html
+      - name: Compare runtime, restrictive CSP, and held-out photo groups
+        run: npm run experiment:tfjs:test
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: tfjs-alternative-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            test-results/embedding-tfjs/*.json
+            test-results/embedding-tfjs/*.png
+          retention-days: 14
