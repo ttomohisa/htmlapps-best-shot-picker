@@ -225,6 +225,30 @@ async function faceVisible(page, slot, relativeCenter) {
   }, { slot, relativeCenter });
   assert(visible.inside, `Chosen face center must be visible in ${slot}: ${JSON.stringify(visible)}`);
 }
+async function keyboardReachable(page, selector, stage) {
+  // Native focus and the mobile tab both honor the page's smooth scrolling.
+  // Locator.focus() does not wait for that animation. Observe the same actual
+  // hit target with a bounded wait; never scroll it into place from the test.
+  try {
+    await page.waitForFunction(selector => {
+      const button = document.querySelector(selector);
+      if (!button || document.activeElement !== button) return false;
+      const r = button.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      return r.width > 0 && r.height > 0 && r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight && (hit === button || button.contains(hit));
+    }, selector, { timeout: 5000 });
+  } catch (error) {
+    const detail = await page.evaluate(({ selector, stage }) => {
+      const button = document.querySelector(selector), r = button?.getBoundingClientRect();
+      const hit = r && document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+      const rect = node => { const box = node?.getBoundingClientRect(); return box ? { top: box.top, bottom: box.bottom, left: box.left, right: box.right } : null; };
+      return { stage, selector, language: document.documentElement.lang, viewport: { width: innerWidth, height: innerHeight }, scrollY, button: rect(button), activeElement: document.activeElement?.id, hit: hit?.id || hit?.className || hit?.tagName || null, header: rect(document.querySelector('.app-header')), navigation: rect(document.querySelector('#appMobileBottomBar')) };
+    }, { selector, stage });
+    // This helper is used only with synthetic fixtures, never real photographs.
+    await fs.writeFile(path.join(root, 'test-results', 'face.synthetic.focus-failure.json'), JSON.stringify(detail, null, 2) + '\n');
+    await page.screenshot({ path: path.join(root, 'test-results', 'face.synthetic.focus-failure.png') });
+    assert.fail('Keyboard-focused face control must become unobstructed without test scrolling: ' + JSON.stringify(detail) + '; ' + error.message);
+  }
+}
 async function verifySession(session) {
   await cleaned(session.page);
   assert.deepEqual(session.errors, [], 'No uncaught page error');
@@ -330,17 +354,18 @@ async function syntheticAcceptance(browser, variant) {
         for (const slot of ['A', 'B']) {
           await page.locator('#slot' + slot).click();
           const choice = page.locator(`#faceChoices${slot} [data-face-index="0"]`);
-          await choice.focus(); await page.keyboard.press('Enter');
+          await choice.focus();
+          await keyboardReachable(page, `#faceChoices${slot} [data-face-index="0"]`, `${variant}: choose face`);
+          await page.keyboard.press('Enter');
           assert.equal(await choice.getAttribute('aria-pressed'), 'true');
           await faceVisible(page, slot, [0.275, 0.34]);
           if (slot === 'A') await page.screenshot({ path: path.join(root, 'test-results', `face.synthetic.${variant}.${language}.${width}.png`) });
-          await page.locator('#wholeImage' + slot).focus(); await page.keyboard.press('Space');
+          await page.locator('#wholeImage' + slot).focus();
+          await keyboardReachable(page, '#wholeImage' + slot, `${variant}: before Whole image`);
+          await page.keyboard.press('Space');
           assert.equal(await page.locator('#faceChoices' + slot + ' [aria-pressed="true"]').count(), 0);
           assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${language} ${width}px must not horizontally overflow`);
-          assert(await page.locator('#wholeImage' + slot).evaluate(button => {
-            const r = button.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
-            return r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight && (hit === button || button.contains(hit));
-          }), 'Keyboard-focused Whole image stays reachable above fixed navigation');
+          await keyboardReachable(page, '#wholeImage' + slot, `${variant}: after Whole image`);
         }
       }
     }
