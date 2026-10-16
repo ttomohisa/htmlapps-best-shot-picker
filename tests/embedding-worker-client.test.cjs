@@ -95,3 +95,13 @@ test('default browser timer methods keep the global receiver during setup and cl
  const c=vm.runInContext(`new module.exports.EmbeddingWorkerClient({runtimeSource:'',workerSource:'',modelJson:{},weightData:new ArrayBuffer(1)})`,context);
  assert.equal(vm.runInContext('timers',context),1);c.cancel();await assert.rejects(c.ready,{name:'AbortError'});assert.equal(vm.runInContext('timers',context),0);
 });
+test('retained worker evidence reproduces frozen scoring and distinguishes throughput from responsiveness',()=>{
+ const r=require('../experiments/embedding/worker-results-2026-10-16.json'),b=require('../experiments/embedding/burst-results-2026-10-16.json'),E=require('../experiments/embedding/evaluate.js'),photos=require('../experiments/embedding/burst-holdout.json');
+ assert.deepEqual(E.evaluateFrozen(photos.images,r.photoPairs,r.protocol),r.evaluation);assert.deepEqual(r.evaluation,b.evaluation);assert.equal(r.photoPairs.length,630);
+ assert(r.photoPairs.every((p,i)=>p.cosine===b.photoPairs[i].cosine));assert.equal(r.productionModelIncluded,false);assert.equal(r.realDevicePerformance,'NOT MEASURED');
+ for(const run of r.executions){const d=run.workerCleanup;assert.equal(d.createdWorkers,d.terminatedWorkers);assert.equal(d.createdURLs,d.revokedURLs);assert.equal(d.pendingRequests,0);assert.deepEqual(run.httpRequests,[]);
+  if(run.status==='inference-completed'){assert.equal(run.maxCosineDifferenceFromFrozenMainThread,0);assert.equal(run.remainingTensors,0);}
+  if(run.lifecycle){assert.equal(run.lifecycle.remainingTensors,0);for(const key of ['evalBlocked','wasmBlocked','fetchBlocked'])assert.equal(run.workerSecurityControls[key],true);}
+ }
+ assert.match(r.interpretation.stress,/not calibrated/);assert.match(r.interpretation.cleanup,/promise rejection latency/);
+});
