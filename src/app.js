@@ -136,7 +136,25 @@
   const mobile = window.AppMobileBottomBar.mount($('#appMobileBottomBar'), { initialPage: 'photos', pageTopOffset: 76 });
   const ready = () => state.photos;
   const kept = () => ready().filter(photo => photo.kept);
-  const byId = id => ready().find(photo => photo.id === id);
+  // Session-owned indexes avoid a linear photo search inside every group/card row.
+  const photoIndex=new Map(),photoGroups=new Map(),groupPositions=new Map(),cardViews=new Map();
+  let keyedRows=new WeakMap(),qualityViews=new WeakMap();
+  const byId = id => photoIndex.get(id);
+  function syncKeyedChildren(parent,entries,keyOf,create,update){
+    let rows=keyedRows.get(parent);if(!rows){parent.replaceChildren();rows=new Map();keyedRows.set(parent,rows);}
+    const keys=new Set(entries.map(keyOf));
+    for(const [key,node] of rows){if(!keys.has(key)){node.remove();rows.delete(key);}}
+    entries.forEach((entry,index)=>{
+      const key=keyOf(entry);let node=rows.get(key);
+      // A reset may remove nodes outside this helper. Never reuse their handlers.
+      if(!node||node.parentNode!==parent){node=create(entry,key);rows.set(key,node);}
+      update(node,entry,key);
+      if(parent.children[index]!==node)parent.insertBefore(node,parent.children[index]||null);
+    });
+  }
+  function setTextIfChanged(node,text){if(node.textContent!==text)node.textContent=text;}
+  function setAttributeIfChanged(node,name,value){value=String(value);if(node.getAttribute(name)!==value)node.setAttribute(name,value);}
+
   const sizeText = bytes => new Intl.NumberFormat(language,{maximumFractionDigits:1}).format(bytes >= 1048576 ? bytes/1048576 : bytes/1024)+(bytes >= 1048576 ? ' MB':' KB');
   const summary = () => `${ready().length} ${translate('loaded')} · ${kept().length} ${translate('selected')}`;
   function el(tag, className, text) { const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node; }
@@ -167,17 +185,24 @@
     revealToast();
   }
   function renderGrid() {
-    const grid=$('#photoGrid');
+    const grid=$('#photoGrid'),filter=state.groups.find(g=>g.id===state.groupFilter),visible=filter?new Set(filter.ids):null;
     for(const photo of ready()){
-      let card=document.getElementById(`photo-${photo.id}`);
-      if(!card){
-        card=el('article','photo-card');card.id=`photo-${photo.id}`;
+      let view=cardViews.get(photo.id);
+      if(!view){
+        const card=el('article','photo-card');card.id=`photo-${photo.id}`;
         const open=el('button','photo-open');open.type='button';open.dataset.id=photo.id;
         const image=el('img');image.src=photo.thumbnailUrl;image.alt='';image.loading='lazy';open.append(image);open.addEventListener('click',event=>openPreview(photo.id,event.currentTarget,comparisonPhotos()));
-        const info=el('div','photo-info');const name=el('span','photo-name',photo.name);name.title=photo.name;const details=el('p','photo-details',`${photo.width} × ${photo.height} · ${sizeText(photo.size)}`);const keep=el('button','button keep-button');keep.type='button';keep.addEventListener('click',()=>selectPhoto(photo,'grid'));info.append(name,details,keep,el('p','photo-quality'),el('p','photo-analysis'));card.append(open,info);grid.append(card);
+        const info=el('div','photo-info'),name=el('span','photo-name',photo.name),details=el('p','photo-details'),keep=el('button','button keep-button'),quality=el('p','photo-quality'),analysis=el('p','photo-analysis');
+        name.title=photo.name;keep.type='button';keep.addEventListener('click',()=>selectPhoto(photo,'grid'));info.append(name,details,keep,quality,analysis);card.append(open,info);grid.append(card);
+        view={card,open,details,keep,quality,analysis,language:null,kept:null,status:null};cardViews.set(photo.id,view);
       }
-      card.hidden=!!state.groupFilter&&!state.groups.find(g=>g.id===state.groupFilter)?.ids.includes(photo.id);card.querySelector('.photo-analysis').textContent=photoAnalysisLabel(photo);
-      renderPhotoQuality(card.querySelector('.photo-quality'),photo);card.classList.toggle('kept',photo.kept);card.querySelector('.photo-open').setAttribute('aria-label',`${translate('view')}: ${photo.name}`);const button=card.querySelector('.keep-button');button.textContent=translate(photo.kept?'kept':'keep');button.setAttribute('aria-pressed',String(photo.kept));button.setAttribute('aria-label',`${translate(photo.kept?'unkeep':'keep')}: ${photo.name}`);card.querySelector('.photo-details').textContent=`${photo.width} × ${photo.height} · ${sizeText(photo.size)}`;
+      const languageChanged=view.language!==language,hidden=!!visible&&!visible.has(photo.id);
+      if(view.card.hidden!==hidden)view.card.hidden=hidden;
+      if(languageChanged||view.status!==photo.duplicateStatus){setTextIfChanged(view.analysis,photoAnalysisLabel(photo));view.status=photo.duplicateStatus;}
+      renderPhotoQuality(view.quality,photo);
+      if(languageChanged){setAttributeIfChanged(view.open,'aria-label',`${translate('view')}: ${photo.name}`);setTextIfChanged(view.details,`${photo.width} × ${photo.height} · ${sizeText(photo.size)}`);}
+      if(languageChanged||view.kept!==photo.kept){view.card.classList.toggle('kept',photo.kept);setTextIfChanged(view.keep,translate(photo.kept?'kept':'keep'));setAttributeIfChanged(view.keep,'aria-pressed',photo.kept);setAttributeIfChanged(view.keep,'aria-label',`${translate(photo.kept?'unkeep':'keep')}: ${photo.name}`);view.kept=photo.kept;}
+      view.language=language;
     }
   }
   function getFullUrl(photo) { if(!state.fullUrls.has(photo.id))state.fullUrls.set(photo.id,URL.createObjectURL(photo.file));return state.fullUrls.get(photo.id); }
@@ -193,7 +218,7 @@
     syncFacePair();
     ['A','B'].forEach((slot,index)=>{
       const photo=byId(state.pair[index]);const select=$(`#select${slot}`);const previous=select.value;
-      if(Array.from(select.options).map(o=>o.value).join('|')!==candidates.map(p=>p.id).join('|')){select.replaceChildren(...candidates.map(item=>{const option=el('option','',item.name);option.value=item.id;return option;}));}
+      setOptions(select,candidates.map(item=>[item.id,item.name]),photo?.id||'');
       select.value=photo?.id||'';select.disabled=!photo;
       const img=$(`#image${slot}`);if(photo){const url=getFullUrl(photo);if(img.src!==url){img.src=url;$('#viewport'+slot).scrollTo(0,0);}img.alt=photo.name;renderComparisonImage(img,$('#viewport'+slot),photo,index);}else{img.removeAttribute('src');img.alt='';}
       $(`#dimensions${slot}`).textContent=photo?`${photo.width} × ${photo.height}`:'';renderPhotoQuality($(`#quality${slot}`),photo,true);
@@ -350,13 +375,16 @@
   window.addEventListener('pageshow',event=>{if(event.persisted)renderCompare();});
   function renderSave() {
     const selected=kept();const duplicates=selected.map(p=>p.duplicateSetId).filter(Boolean);$('#duplicateWarning').hidden=new Set(duplicates).size===duplicates.length;$('#saveSummary').textContent=`${selected.length} ${translate('selected')} · ${sizeText(selected.reduce((sum,p)=>sum+p.size,0))}`;
-    $('#selectedList').replaceChildren(...selected.map(photo=>{const row=el('li');const image=el('img');image.src=photo.thumbnailUrl;image.alt='';const open=el('button');open.type='button';open.append(el('span','',photo.name));open.title=photo.name;open.addEventListener('click',event=>openPreview(photo.id,event.currentTarget,kept()));const remove=el('button','button remove-selection',translate('unkeep'));remove.type='button';remove.setAttribute('aria-label',`${translate('unkeep')}: ${photo.name}`);remove.addEventListener('click',()=>selectPhoto(photo,'save'));row.append(image,open,remove);return row;}));
+    syncKeyedChildren($('#selectedList'),selected,photo=>photo.id,photo=>{const row=el('li'),image=el('img'),open=el('button'),remove=el('button','button remove-selection');image.src=photo.thumbnailUrl;image.alt='';image.loading='lazy';open.type='button';open.append(el('span','',photo.name));open.title=photo.name;open.addEventListener('click',event=>openPreview(photo.id,event.currentTarget,kept()));remove.type='button';remove.addEventListener('click',()=>selectPhoto(photo,'save'));row.append(image,open,remove);return row;},(row,photo)=>{const remove=row.querySelector('.remove-selection');setTextIfChanged(remove,translate('unkeep'));setAttributeIfChanged(remove,'aria-label',`${translate('unkeep')}: ${photo.name}`);});
     $('#saveEmpty').hidden=!!selected.length;$('#downloadButton').disabled=!selected.length||!!state.exporting;$('#mobileSaveLabel').textContent=`${translate('save')}${selected.length?` (${selected.length})`:''}`;
   }
-  function groupLabel(group){if(!group)return translate('allPhotos');const index=state.groups.indexOf(group)+1;return `${translate(group.ids.length===1?'single':'group')} ${index} · ${group.ids.length} ${translate('loaded')} · ${group.ids.filter(id=>byId(id)?.kept).length} ${translate('selected')} · ${translate(group.manual?'manual':'automatic')}${group.reviewed?' · '+translate('reviewed'):''}`;}
+  function groupLabel(group){if(!group)return translate('allPhotos');const index=groupPositions.get(group.id)||state.groups.indexOf(group)+1;return `${translate(group.ids.length===1?'single':'group')} ${index} · ${group.ids.length} ${translate('loaded')} · ${group.ids.filter(id=>byId(id)?.kept).length} ${translate('selected')} · ${translate(group.manual?'manual':'automatic')}${group.reviewed?' · '+translate('reviewed'):''}`;}
   function comparisonPhotos(){const group=state.groups.find(g=>g.id===state.groupFilter);return group?group.ids.map(byId).filter(Boolean):ready();}
   function photoAnalysisLabel(photo){const status={pending:'pending','unique-size':'uniqueSize',checked:'checked',duplicate:'identical','skipped-large':'skippedLarge',unavailable:'unavailable',failed:'analysisFailedFile'}[photo.duplicateStatus]||'pending';const time=photo.captureTime;const text=time?`${translate(time.source==='exif-original'?'captureOriginal':'captureDigitized')}: ${time.display}${time.domain==='wall'?' ('+translate('unknownZone')+')':''}`:`${translate('modified')}: ${new Date(photo.timestamp).toLocaleString(language)}`;return `${translate(status)} · ${text}`;}
-  function setOptions(select,entries,value){select.replaceChildren(...entries.map(([id,text])=>{const option=el('option','',text);option.value=id;return option;}));if(entries.some(([id])=>id===value))select.value=value;}
+  function setOptions(select,entries,value){
+    syncKeyedChildren(select,entries,entry=>entry[0],([id])=>{const option=el('option');option.value=id;return option;},(option,[id,text])=>setTextIfChanged(option,text));
+    select.value=entries.some(([id])=>id===value)?value:(entries[0]?.[0]||'');
+  }
   // Candidates are derived from current group membership, never stored in Undo patches or Keep state.
   function qualityResult(group){
     if(!group||group.ids.length<2)return{candidateId:null,status:'single',reasons:[]};
@@ -371,17 +399,20 @@
     return translate({single:'qualitySingle',pending:'qualityPending',failed:'qualityFailed',incomparable:'qualityIncomparable',uncertain:'qualityUncertain','near-tie':'qualityTie'}[result.status]||'qualityNone');
   }
   function renderPhotoQuality(node,photo,details=false){
+    const group=photo?photoGroups.get(photo.id):null,result=state.qualityResults.get(group?.id);
+    const signature=JSON.stringify([language,photo?.id,photo?.qualityStatus,details,details?photo?.qualityMetrics:null,result?.candidateId,result?.reasons]);
+    if(qualityViews.get(node)===signature)return;qualityViews.set(node,signature);
     node.replaceChildren();node.classList.remove('is-candidate');node.hidden=!photo;if(!photo)return;
-    const group=state.groups.find(g=>g.ids.includes(photo.id)),result=state.qualityResults.get(group?.id);
     if(result?.candidateId===photo.id){node.append(el('strong','quality-badge',translate('qualityCandidate')),el('span','',result.reasons.map(qualityReason).join(' · ')));node.classList.add('is-candidate');}
     else if(photo.qualityStatus==='failed')node.append(el('span','',translate('qualityFailed')));
     if(details&&photo.qualityMetrics){const m=photo.qualityMetrics;node.append(el('span','quality-measures',`${translate('qualityHighlights')}: ${(m.highlightRatio*100).toFixed(1)}% · ${translate('qualityDarks')}: ${(m.darkRatio*100).toFixed(1)}%`));}
     node.hidden=!node.childNodes.length;
   }
   function renderGroups(){
+    photoGroups.clear();groupPositions.clear();state.groups.forEach((group,index)=>{groupPositions.set(group.id,index+1);group.ids.forEach(id=>photoGroups.set(id,group));});
     state.qualityResults=new Map(state.groups.map(g=>[g.id,qualityResult(g)]));$('#groupTools').hidden=!ready().length;if(!state.groups.some(g=>g.id===state.groupFilter))state.groupFilter='';
     setOptions($('#groupFilter'),[['',translate('allPhotos')],...state.groups.map(g=>[g.id,groupLabel(g)])],state.groupFilter);
-    $('#groupList').replaceChildren(...state.groups.map(group=>{const button=el('button','button group-chip'+(state.groupFilter===group.id?' active':''),groupLabel(group));button.type='button';button.dataset.groupId=group.id;button.setAttribute('aria-pressed',String(state.groupFilter===group.id));button.addEventListener('click',()=>{state.groupFilter=state.groupFilter===group.id?'':group.id;render();$('#groupFilter').focus({preventScroll:true});});return button;}));
+    syncKeyedChildren($('#groupList'),state.groups,group=>group.id,group=>{const button=el('button','button group-chip');button.type='button';button.dataset.groupId=group.id;button.addEventListener('click',()=>{state.groupFilter=state.groupFilter===group.id?'':group.id;render();$('#groupFilter').focus({preventScroll:true});});return button;},(button,group)=>{setTextIfChanged(button,groupLabel(group));const active=state.groupFilter===group.id;if(button.classList.contains('active')!==active)button.classList.toggle('active',active);setAttributeIfChanged(button,'aria-pressed',active);});
     const active=state.groups.find(g=>g.id===state.groupFilter),candidateCount=[...state.qualityResults.values()].filter(r=>r.candidateId).length;$('#qualitySummary').textContent=active?qualityMessage(state.qualityResults.get(active.id)):candidateCount?`${candidateCount} ${translate(candidateCount===1?'qualityCountSingle':'qualityCount')}. ${translate('qualityNote')}`:translate('qualityNone');
     const duplicateSets=new Set(ready().map(p=>p.duplicateSetId).filter(Boolean));$('#groupSummary').textContent=`${state.groups.filter(g=>g.ids.length>1).length} ${translate('group')} · ${state.groups.filter(g=>g.ids.length===1).length} ${translate('single')} · ${duplicateSets.size} ${translate('identical')}`;
     $('#organizeButton').disabled=!state.groups.length||!!state.load;$('#analyzeButton').disabled=!!state.analysis||!!state.load;$('#regroupButton').disabled=!!state.analysis||!!state.load;$('#analysisResult').textContent=state.analysisMessage?translate(state.analysisMessage):'';
@@ -585,7 +616,7 @@
     if(state.load||!state.queue.length)return;
     const job={controller:new AbortController(),generation:state.generation,done:0,total:state.queue.length};state.load=job;$('#loadProgress').hidden=false;render();
     try{
-      while(state.queue.length){assertCurrent(job.generation,job.controller.signal);const file=state.queue.shift();try{const photo=await decodePhoto(file,job.generation,job.controller.signal);assertCurrent(job.generation,job.controller.signal);state.photos.push(photo);state.groups.push({id:`g-${photo.id}`,ids:[photo.id],manual:false,reviewed:false,pending:true});}catch(error){if(job.generation!==state.generation)break;state.failures.push({file,code:error.name==='AbortError'?'CANCELLED':error.code||'INVALID_IMAGE'});if(error.name==='AbortError')break;}job.done++;render();await new Promise(resolve=>setTimeout(resolve,0));}
+      while(state.queue.length){assertCurrent(job.generation,job.controller.signal);const file=state.queue.shift();try{const photo=await decodePhoto(file,job.generation,job.controller.signal);assertCurrent(job.generation,job.controller.signal);state.photos.push(photo);photoIndex.set(photo.id,photo);state.groups.push({id:`g-${photo.id}`,ids:[photo.id],manual:false,reviewed:false,pending:true});}catch(error){if(job.generation!==state.generation)break;state.failures.push({file,code:error.name==='AbortError'?'CANCELLED':error.code||'INVALID_IMAGE'});if(error.name==='AbortError')break;}job.done++;render();await new Promise(resolve=>setTimeout(resolve,0));}
     }catch(error){if(error.name!=='AbortError')showToast(translate('invalid'));}
     finally{
       if(job.generation===state.generation){if(job.controller.signal.aborted){state.failures.push(...state.queue.splice(0).map(file=>({file,code:'CANCELLED'})));$('#loadStatus').textContent=translate('cancelled');}else $('#loadStatus').textContent=translate('readFinished');}
@@ -604,7 +635,7 @@
     catch(error){if(job.generation===state.generation)setExportMessage(error.name==='AbortError'?'exportCancelled':error.code==='ZIP_LIMIT'?'zipLimit':'exportFailed');}
     finally{if(state.exporting===job){state.exporting=null;$('#exportProgress').hidden=true;renderSave();}}
   }
-  function resetSession(){ invalidateFaces();invalidateSimilarity('');state.similarityMessage='';$('#toastHost').append($('#appToast'));stopAnalysis();state.qualityResults.clear();state.groups=[];state.groupFilter='';state.analysisMessage='';state.inputRevision++;state.groupingRevision++;if($('#groupDialog').open)$('#groupDialog').close();state.generation++;state.load?.controller.abort();state.exporting?.controller.abort();state.load=null;state.exporting=null;state.queue=[];state.photos.forEach(photo=>URL.revokeObjectURL(photo.thumbnailUrl));state.photos=[];state.failures=[];state.pair=[null,null];state.previewId=null;state.previewIds=[];state.fullUrls.forEach(url=>URL.revokeObjectURL(url));state.fullUrls.clear();$('#photoGrid').replaceChildren();$('#selectA').replaceChildren();$('#selectB').replaceChildren();['#imageA','#imageB','#previewImage'].forEach(selector=>$(selector).removeAttribute('src'));$('#loadProgress').hidden=true;$('#exportProgress').hidden=true;setExportMessage('');if($('#previewDialog').open)$('#previewDialog').close();AppToast.dismiss();mobile.showPage('photos');render();}
+  function resetSession(){ invalidateFaces();invalidateSimilarity('');state.similarityMessage='';$('#toastHost').append($('#appToast'));stopAnalysis();state.qualityResults.clear();state.groups=[];state.groupFilter='';state.analysisMessage='';state.inputRevision++;state.groupingRevision++;if($('#groupDialog').open)$('#groupDialog').close();state.generation++;state.load?.controller.abort();state.exporting?.controller.abort();state.load=null;state.exporting=null;state.queue=[];state.photos.forEach(photo=>URL.revokeObjectURL(photo.thumbnailUrl));state.photos=[];photoIndex.clear();photoGroups.clear();groupPositions.clear();cardViews.clear();keyedRows=new WeakMap();qualityViews=new WeakMap();state.failures=[];state.pair=[null,null];state.previewId=null;state.previewIds=[];state.fullUrls.forEach(url=>URL.revokeObjectURL(url));state.fullUrls.clear();$('#photoGrid').replaceChildren();$('#selectA').replaceChildren();$('#selectB').replaceChildren();['#imageA','#imageB','#previewImage'].forEach(selector=>$(selector).removeAttribute('src'));$('#loadProgress').hidden=true;$('#exportProgress').hidden=true;setExportMessage('');if($('#previewDialog').open)$('#previewDialog').close();AppToast.dismiss();mobile.showPage('photos');render();}
   $('#addButton').addEventListener('click',()=>$('#fileInput').click());$('#fileInput').addEventListener('change',event=>{addFiles(event.target.files);event.target.value='';});$('#folderButton').hidden=!('webkitdirectory' in document.createElement('input'));$('#folderButton').addEventListener('click',()=>$('#folderInput').click());$('#folderInput').addEventListener('change',event=>{addFiles(event.target.files);event.target.value='';});
   const drop=$('#dropZone');['dragenter','dragover'].forEach(type=>drop.addEventListener(type,event=>{event.preventDefault();drop.classList.add('drag-over');}));['dragleave','drop'].forEach(type=>drop.addEventListener(type,()=>drop.classList.remove('drag-over')));drop.addEventListener('drop',event=>{event.preventDefault();addFiles(event.dataTransfer.files);});window.addEventListener('dragover',event=>event.preventDefault());window.addEventListener('drop',event=>event.preventDefault());
   $('#cancelLoadButton').addEventListener('click',()=>state.load?.controller.abort());$('#retryButton').addEventListener('click',()=>{const files=state.failures.map(item=>item.file);state.failures=[];addFiles(files);});$('#cancelExportButton').addEventListener('click',()=>state.exporting?.controller.abort());$('#downloadButton').addEventListener('click',exportZip);

@@ -20,6 +20,12 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+      - name: Check out immutable pre-optimization baseline
+        uses: actions/checkout@v6
+        with:
+          ref: f6f4f0b0a951f92dd09ff2f3a1adc28aa125b88c
+          path: baseline-source
+          persist-credentials: false
       - uses: actions/setup-node@v6
         with:
           node-version: '22'
@@ -34,6 +40,17 @@ jobs:
           export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
           pwsh -NoLogo -NoProfile -File scripts/check-powershell-syntax.ps1
           pwsh -NoLogo -NoProfile -File scripts/check-repository.ps1
+      - name: Build the same canonical baseline
+        shell: bash
+        run: |
+          export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
+          pwsh -NoLogo -NoProfile -File baseline-source/scripts/check-repository.ps1
+      - name: Measure baseline with the current identical harness
+        run: node tests/performance.browser.cjs
+        env:
+          BSP_PERF_DIST_DIR: baseline-source/dist
+          BSP_PERF_LABEL: baseline
+          BSP_PERF_COUNTS: '100,500'
       - name: Measure bounded synthetic sessions
         run: node tests/performance.browser.cjs
         env:
