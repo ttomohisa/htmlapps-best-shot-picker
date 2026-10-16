@@ -13,8 +13,9 @@
  async function unpack(key){const compressed=Uint8Array.from(atob(data.assets[key]),c=>c.charCodeAt(0));return new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());}
  async function image(name){const fixture=data.fixtures[name],img=new Image();img.src=`data:${fixture.mime};base64,${fixture.base64}`;await img.decode();return img;}
  function feature(img){const canvas=document.createElement('canvas');canvas.width=9;canvas.height=8;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,9,8);const result=BestShotGrouping.features(ctx.getImageData(0,0,9,8).data,9,8,img.naturalWidth/img.naturalHeight);canvas.width=canvas.height=0;return result;}
- const samples=[];for(const name of Object.keys(data.fixtures)){const img=await image(name);samples.push({id:name,img,features:feature(img),captureTime:{valueMs:0,domain:'wall'}});}
- report.baselineGroups=(await BestShotGrouping.groupPhotos(samples)).map(group=>group.ids);
+ const baselineStart=performance.now();const samples=[];for(const name of Object.keys(data.fixtures)){const img=await image(name);samples.push({id:name,img,features:feature(img),captureTime:{valueMs:0,domain:'wall'}});}
+ report.baselinePreparationMs=performance.now()-baselineStart;const baselineGroupStart=performance.now();
+ report.baselineGroups=(await BestShotGrouping.groupPhotos(samples)).map(group=>group.ids);report.baselineGroupingMs=performance.now()-baselineGroupStart;
  let embedder;report.phase='loading-embedded-assets';
  try{
   const moduleUrl=URL.createObjectURL(new Blob([await unpack('module')],{type:'text/javascript'}));let vision;try{vision=await import(moduleUrl);}finally{URL.revokeObjectURL(moduleUrl);}

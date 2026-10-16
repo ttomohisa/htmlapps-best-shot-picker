@@ -40,3 +40,11 @@ npm run experiment:embedding:test
 ```
 
 The generated files stay under ignored `test-results/embedding/`, and downloaded assets under ignored `.cache/embedding-evaluation/`. CI publishes only JSON measurements and actual test-page screenshots, not the large experimental model HTML. Browser evidence distinguishes readable SIMD/scalar, a deliberately broken model, and the canonical self-extract wrapper. See [validation](../../docs/VALIDATION.md) for completed results and limitations.
+
+## Recorded decision (October 16, 2026)
+
+[The retained CI measurements](results-2026-10-16.json) from head `159beb1` show readable `file://` inference works in both SIMD and scalar Chromium paths, with no HTTP(S) requests, intercepted network attempts, page errors or CSP violations. The deliberately invalid model preserves the baseline groups. The canonical self-extract wrapper builds successfully in CI but **blocks WASM compilation with its outer CSP**; fallback groups remain intact. This is an observed model-adoption blocker.
+
+The experiment is 14,130,687 bytes readable and 14,170,041 bytes wrapped, compared with the model-free application's roughly 170 KB / 70 KB. Four synthetic images are too few to justify this size or change grouping. On this one Linux x64 CI Chromium run, initialization was about 304 ms; ten warm inferences had p50/p95 of 5.5/7.9 ms SIMD and 14.1/14.6 ms scalar. These are runner measurements, not phone performance or throughput guarantees. The two intended synthetic pairs already pass non-ML grouping, so these results demonstrate no additional grouping benefit.
+
+Subsequent checks also record baseline image-decode/feature-preparation and grouping time separately, and assert SIMD/scalar cosine agreement. Those timings measure different phases and must not be presented as a controlled end-to-end speedup. Keep the production model excluded until the wrapper, real-photo benefit, false-group and physical-device gates are resolved.
