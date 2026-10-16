@@ -77,7 +77,11 @@ jobs:
           export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
           pwsh -NoLogo -NoProfile -File scripts/check-powershell-syntax.ps1
           pwsh -NoLogo -NoProfile -File scripts/check-repository.ps1
+      - name: Acquire the fixed consented adult-photo corpus for local-file parity only
+        run: python experiments/face-detection/photo-acquire.py --acquire
       - run: npm run test:browser
+        env:
+          BSP_FACE_LONDON_PARITY: '1'
       - uses: actions/upload-artifact@v7
         if: always()
         with:

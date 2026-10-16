@@ -1,0 +1,3507 @@
+{
+  "observedAtUtc": "2026-10-16T22:15:19.216Z",
+  "node": "v24.19.0",
+  "status": "evaluation-completed",
+  "scope": "Fixed London Set v5 adult consented-photo sample, local CPU research only. No broad accuracy or human-expert ground-truth claim.",
+  "license": "CC BY 4.0, creator consent metadata verified by parent. No image pixels included in report or public artifacts.",
+  "frozen": {
+    "acceptanceSha256": "ac2074ceff2962ac117766bf3d487597fa7a5fababd4f1c6a7c4e552ffa5fc92",
+    "frontalSampleSha256": "a7149304901a97c6b77c6fc1f415dcd23991871eea9a69ab053a1235a0a97f74",
+    "evaluationSampleSha256": "db0aac83623a858a30402f0b6d61a81dc1be4417ec5c4db69116bf06c94d5625",
+    "labelsSha256": "29452e00fda41ced48018b28e4ae33ab40bae38799c7c2e015a9ca01a09175d2",
+    "modelPins": {
+      "acceptance": "ac2074ceff2962ac117766bf3d487597fa7a5fababd4f1c6a7c4e552ffa5fc92",
+      "frontalSample": "a7149304901a97c6b77c6fc1f415dcd23991871eea9a69ab053a1235a0a97f74",
+      "evaluationSample": "db0aac83623a858a30402f0b6d61a81dc1be4417ec5c4db69116bf06c94d5625",
+      "runtime": "a1f9e32fd9b373cf394905050cf0c8c66238b34925846c065db00d2a34d1c040",
+      "wrapper": "fd4d7802308ce764cfb9c5702885fff681537fe6b3f478de7babf12834d6d49f",
+      "model": "c131145fade749f714d39811f282e973760a69cb9e1a9c22f91e132bd8dcd396",
+      "weights": "e9b69ee1c1f8cd33c58120bcd75bf8c56bfba20c880f447e9d293ec102059d4b",
+      "package": "61124203f7e2ffba31197d414d48ef61949440b5b632cd39b8a9a74accf84945",
+      "packageSha512": "sha512-4Ld/vFF8MrdFdrMWhlLKZD4hMW0PNY9OkYeqoCPNZ+LwFyenxAqVaNaWrR8JKp37vw9Nuzp4ILbkal5zPUnA0g=="
+    }
+  },
+  "candidate": {
+    "modelType": "short",
+    "runtime": "tfjs",
+    "backend": "cpu",
+    "maxFaces": 6,
+    "scoreThreshold": 0.5,
+    "nmsThreshold": 0.3,
+    "flipHorizontal": false,
+    "longestInputEdge": 1024
+  },
+  "criterion": {
+    "frontalRequiredUseful": 11,
+    "frontalImages": 12,
+    "boxIouMinimum": 0.5,
+    "bothCreatorEyeCentersRequiredForFrontal": true,
+    "poseCriterion": "Exploratory box IoU only where creator eye labels are unavailable; no guessed eye points.",
+    "extraCandidates": "Reported as unwanted. No threshold tuning or candidate/model substitution.",
+    "invalidBoxes": "Rejected before useful-crop scoring; no clamping hides raw invalid geometry."
+  },
+  "interpretation": {
+    "independentSubjects": 12,
+    "totalPhotographs": 24,
+    "poseSubjects": 6,
+    "poseRows": "Exploratory stress photographs of repeated frontal subjects, not independent sample additions.",
+    "annotations": "Blinded assistant visual boxes and creator eye-center landmarks, not human-expert ground truth.",
+    "preprocessing": "Pillow RGB/BILINEAR is not verified browser canvas parity.",
+    "timing": "Node VM CPU only; not browser or phone speed.",
+    "memory": "TFJS logical live tensors after input disposal; not peak or process/native memory.",
+    "overallAdoptionApproved": false
+  },
+  "rows": [
+    {
+      "file": "neutral_front/001_03.jpg",
+      "sha256": "bccc0f2594c27555d370988cc186c8706f65c15e2b95e2bf7ace01df3702e709",
+      "subject": "001",
+      "pose": "frontal",
+      "sourceSha256": "bccc0f2594c27555d370988cc186c8706f65c15e2b95e2bf7ace01df3702e709",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "96e4da88aeefc4dea3511613fe79e3aaeab23e74735591f1328352ccfeda2374",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 178.90745999999996,
+      "inferenceMs": 541.6650619999999,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 335.6322021484375,
+            "xMax": 712.8271484375,
+            "yMin": 381.67559814453125,
+            "yMax": 758.8063354492188,
+            "width": 377.1949462890625,
+            "height": 377.1307373046875
+          },
+          "originalBox": {
+            "xMin": 442.4838602542877,
+            "yMin": 503.1856030225754,
+            "xMax": 939.7623538970947,
+            "yMax": 1000.3794461488724
+          },
+          "validBox": true,
+          "boxIou": 0.7215813555282684,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 565.485768020153,
+              "y": 649.9238133430481,
+              "name": "rightEye"
+            },
+            {
+              "x": 765.9518301486969,
+              "y": 637.0512619614601,
+              "name": "leftEye"
+            },
+            {
+              "x": 657.2859138250351,
+              "y": 769.7958648204803,
+              "name": "noseTip"
+            },
+            {
+              "x": 669.9579834938049,
+              "y": 864.5123898983002,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 480.94995617866516,
+              "y": 695.9092408418655,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 907.6651632785797,
+              "y": 670.7999423146248,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/001_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 455,
+          "yMin": 365,
+          "xMax": 910,
+          "yMax": 995
+        },
+        "eyeCenters": [
+          {
+            "x": 565,
+            "y": 632
+          },
+          {
+            "x": 778,
+            "y": 624
+          }
+        ],
+        "notes": "Hairline is slightly irregular; central face unobscured. Hair mass, loose outer strands, ears and neck excluded from intended extent.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/001_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 565,
+              "y": 632
+            },
+            {
+              "x": 778,
+              "y": 624
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/010_03.jpg",
+      "sha256": "fe7c68d73e9521b0e4e198042b652e9488a820b6ec750c5fdf69e2da7cb9ef30",
+      "subject": "010",
+      "pose": "frontal",
+      "sourceSha256": "fe7c68d73e9521b0e4e198042b652e9488a820b6ec750c5fdf69e2da7cb9ef30",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "23cf316a421f10595c5d0e199fb0698736df63e762f989634f7e9efd55545cf3",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 192.89840299999992,
+      "inferenceMs": 464.61196299999983,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 360.1434631347656,
+            "xMax": 711.3240966796875,
+            "yMin": 354.8922424316406,
+            "yMax": 706.072265625,
+            "width": 351.1806335449219,
+            "height": 351.1800231933594
+          },
+          "originalBox": {
+            "xMin": 474.79851096868515,
+            "yMin": 467.8755149245262,
+            "xMax": 937.7807915210724,
+            "yMax": 930.856990814209
+          },
+          "validBox": true,
+          "boxIou": 0.6798102637782815,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 567.4792796373367,
+              "y": 585.8006045222282,
+              "name": "rightEye"
+            },
+            {
+              "x": 779.4595420360565,
+              "y": 556.8164929747581,
+              "name": "leftEye"
+            },
+            {
+              "x": 669.0306097269058,
+              "y": 659.9075049161911,
+              "name": "noseTip"
+            },
+            {
+              "x": 685.6963813304901,
+              "y": 771.4360892772675,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 485.56711077690125,
+              "y": 676.456680893898,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 924.4550138711929,
+              "y": 626.1455878615379,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/010_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 470,
+          "yMin": 300,
+          "xMax": 915,
+          "yMax": 950
+        },
+        "eyeCenters": [
+          {
+            "x": 584,
+            "y": 563
+          },
+          {
+            "x": 779,
+            "y": 561
+          }
+        ],
+        "notes": "Side-part hair makes the upper corners approximate; central face unobscured. Ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/010_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 584,
+              "y": 563
+            },
+            {
+              "x": 779,
+              "y": 561
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/020_03.jpg",
+      "sha256": "df23d0ebb268059f562459c17dea4864615f126fae75d4e7fa3abd114172f038",
+      "subject": "020",
+      "pose": "frontal",
+      "sourceSha256": "df23d0ebb268059f562459c17dea4864615f126fae75d4e7fa3abd114172f038",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "570bc14cf10ace60f3f2206770ccc914e233ae0686c3739c5faaa0e05622f95c",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 131.50726200000008,
+      "inferenceMs": 468.1626920000001,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 347.51129150390625,
+            "xMax": 717.7417602539062,
+            "yMin": 394.593017578125,
+            "yMax": 764.759033203125,
+            "width": 370.23046875,
+            "height": 370.166015625
+          },
+          "originalBox": {
+            "xMin": 458.14476907253265,
+            "yMin": 520.2154040336609,
+            "xMax": 946.2415784597397,
+            "yMax": 1008.2272410392761
+          },
+          "validBox": true,
+          "boxIou": 0.7263048982366944,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 567.8142607212067,
+              "y": 646.989731490612,
+              "name": "rightEye"
+            },
+            {
+              "x": 773.2673406600952,
+              "y": 631.0846075415611,
+              "name": "leftEye"
+            },
+            {
+              "x": 654.1692540049553,
+              "y": 745.204085111618,
+              "name": "noseTip"
+            },
+            {
+              "x": 668.5583934187889,
+              "y": 855.235755443573,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 488.85423839092255,
+              "y": 720.7601219415665,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 929.269552230835,
+              "y": 695.058873295784,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/020_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 465,
+          "yMin": 365,
+          "xMax": 930,
+          "yMax": 1005
+        },
+        "eyeCenters": [
+          {
+            "x": 575,
+            "y": 633
+          },
+          {
+            "x": 786,
+            "y": 635
+          }
+        ],
+        "notes": "Hairline and lower chin boundary are slightly soft; central face unobscured. Outer hair, ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/020_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 575,
+              "y": 633
+            },
+            {
+              "x": 786,
+              "y": 635
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/032_03.jpg",
+      "sha256": "a9b07dec972d93f84449120fbd085f1ef4a4d4f76addac69751d9b596919df0b",
+      "subject": "032",
+      "pose": "frontal",
+      "sourceSha256": "a9b07dec972d93f84449120fbd085f1ef4a4d4f76addac69751d9b596919df0b",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "2b1b71c3c3c6b1fdf1d588f5c0da2a0b284b5db138a3f53088ca358a61b2ed9d",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 109.2984620000002,
+      "inferenceMs": 560.3418530000004,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 311.2738952636719,
+            "xMax": 689.434814453125,
+            "yMin": 358.4437255859375,
+            "yMax": 736.5238037109375,
+            "width": 378.1609191894531,
+            "height": 378.080078125
+          },
+          "originalBox": {
+            "xMin": 410.3708580136299,
+            "yMin": 472.55764603614807,
+            "xMax": 908.9228510856628,
+            "yMax": 971.0030615329742
+          },
+          "validBox": true,
+          "boxIou": 0.7168988036004417,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 577.6674762368202,
+              "y": 586.865696310997,
+              "name": "rightEye"
+            },
+            {
+              "x": 778.3257722854614,
+              "y": 593.282076716423,
+              "name": "leftEye"
+            },
+            {
+              "x": 685.6778740882874,
+              "y": 693.2787179946899,
+              "name": "noseTip"
+            },
+            {
+              "x": 678.1837284564972,
+              "y": 811.35114133358,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 448.6064985394478,
+              "y": 661.354449391365,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 874.9409794807434,
+              "y": 670.5324321985245,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/032_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 435,
+          "yMin": 310,
+          "xMax": 905,
+          "yMax": 975
+        },
+        "eyeCenters": [
+          {
+            "x": 568,
+            "y": 586
+          },
+          {
+            "x": 774,
+            "y": 576
+          }
+        ],
+        "notes": "Clear central face; fine hairline transition and chin shadow make top/bottom approximate. Ears excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/032_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 568,
+              "y": 586
+            },
+            {
+              "x": 774,
+              "y": 576
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/043_03.jpg",
+      "sha256": "3c50efd3353c63f4dcf0f7b1a5a32457a2cf8f2a868867c175796d2eae536bbb",
+      "subject": "043",
+      "pose": "frontal",
+      "sourceSha256": "3c50efd3353c63f4dcf0f7b1a5a32457a2cf8f2a868867c175796d2eae536bbb",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "90c5590f06a1e3ab7ef7e151501030579c0c42f685f4680dbaa216fdc24a4d6b",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 207.2350449999999,
+      "inferenceMs": 589.179811,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 317.8166809082031,
+            "xMax": 704.1693115234375,
+            "yMin": 387.4260559082031,
+            "yMax": 773.7117919921875,
+            "width": 386.3526306152344,
+            "height": 386.2857360839844
+          },
+          "originalBox": {
+            "xMin": 418.9966008067131,
+            "yMin": 510.76677292585373,
+            "xMax": 928.3482134342194,
+            "yMax": 1020.0301945209503
+          },
+          "validBox": true,
+          "boxIou": 0.7090180219104375,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 569.143845140934,
+              "y": 626.3016521930695,
+              "name": "rightEye"
+            },
+            {
+              "x": 784.9087178707123,
+              "y": 627.3763597011566,
+              "name": "leftEye"
+            },
+            {
+              "x": 680.1130682229996,
+              "y": 735.6322199106216,
+              "name": "noseTip"
+            },
+            {
+              "x": 675.5557805299759,
+              "y": 855.4467380046844,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 443.49347054958344,
+              "y": 703.0233442783356,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 897.7704674005508,
+              "y": 708.1265151500702,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/043_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 430,
+          "yMin": 340,
+          "xMax": 910,
+          "yMax": 1015
+        },
+        "eyeCenters": [
+          {
+            "x": 559,
+            "y": 615
+          },
+          {
+            "x": 783,
+            "y": 617
+          }
+        ],
+        "notes": "Hairline transition and lower chin shadow are approximate; central face unobscured. Ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/043_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 559,
+              "y": 615
+            },
+            {
+              "x": 783,
+              "y": 617
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/068_03.jpg",
+      "sha256": "3751fbcf6a2591dc3c2db21f1bf1d6f1100d3cc0f9db6a81cca67401e7b2388c",
+      "subject": "068",
+      "pose": "frontal",
+      "sourceSha256": "3751fbcf6a2591dc3c2db21f1bf1d6f1100d3cc0f9db6a81cca67401e7b2388c",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "8399e18b23e3b6626c47d27d682ba1bddf38338bd31bc7a07da6adbf8f39d884",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 167.53506199999993,
+      "inferenceMs": 534.6948879999995,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 349.07318115234375,
+            "xMax": 701.7057495117188,
+            "yMin": 351.5426025390625,
+            "yMax": 704.1746826171875,
+            "width": 352.632568359375,
+            "height": 352.632080078125
+          },
+          "originalBox": {
+            "xMin": 460.2039009332657,
+            "yMin": 463.45948576927185,
+            "xMax": 925.1003533601761,
+            "yMax": 928.3552944660187
+          },
+          "validBox": true,
+          "boxIou": 0.7014876752898614,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 561.6471245884895,
+              "y": 583.4315165877342,
+              "name": "rightEye"
+            },
+            {
+              "x": 770.0143307447433,
+              "y": 568.3430045843124,
+              "name": "leftEye"
+            },
+            {
+              "x": 655.0635159015656,
+              "y": 675.3824561834335,
+              "name": "noseTip"
+            },
+            {
+              "x": 665.2669608592987,
+              "y": 779.5598834753036,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 476.6302853822708,
+              "y": 652.8654992580414,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 908.4785163402557,
+              "y": 630.367049574852,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/068_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 470,
+          "yMin": 325,
+          "xMax": 900,
+          "yMax": 950
+        },
+        "eyeCenters": [
+          {
+            "x": 578,
+            "y": 560
+          },
+          {
+            "x": 779,
+            "y": 571
+          }
+        ],
+        "notes": "Side hair/sideburn boundaries make lateral limits approximate; central face unobscured. Outer hair, ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/068_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 578,
+              "y": 560
+            },
+            {
+              "x": 779,
+              "y": 571
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/091_03.jpg",
+      "sha256": "836f8f1d0c10a4a13cde14c246a0d7cb5bf4dfe40c088c46f23edd5b4562e3fd",
+      "subject": "091",
+      "pose": "frontal",
+      "sourceSha256": "836f8f1d0c10a4a13cde14c246a0d7cb5bf4dfe40c088c46f23edd5b4562e3fd",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "456d7865a411ba1b84abc2a0f4dd464ed8952469bbcefa609f060cde64b5f603",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 119.68828900000062,
+      "inferenceMs": 453.27257499999996,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 315.8161315917969,
+            "xMax": 691.684326171875,
+            "yMin": 380.9765930175781,
+            "yMax": 756.789306640625,
+            "width": 375.8681945800781,
+            "height": 375.8127136230469
+          },
+          "originalBox": {
+            "xMin": 416.3591578602791,
+            "yMin": 502.26406306028366,
+            "xMax": 911.8885159492493,
+            "yMax": 997.7202773094177
+          },
+          "validBox": true,
+          "boxIou": 0.719336939575182,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 576.7207100987434,
+              "y": 637.344279885292,
+              "name": "rightEye"
+            },
+            {
+              "x": 780.8443665504456,
+              "y": 640.5663907527924,
+              "name": "leftEye"
+            },
+            {
+              "x": 688.5481059551239,
+              "y": 759.9263548851013,
+              "name": "noseTip"
+            },
+            {
+              "x": 682.2463899850845,
+              "y": 858.617028594017,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 442.9615080356598,
+              "y": 681.8331956863403,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 878.9847314357758,
+              "y": 686.4959746599197,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/091_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 435,
+          "yMin": 355,
+          "xMax": 910,
+          "yMax": 980
+        },
+        "eyeCenters": [
+          {
+            "x": 578,
+            "y": 621
+          },
+          {
+            "x": 783,
+            "y": 620
+          }
+        ],
+        "notes": "A few fine strands cross forehead/left cheek; boundary chosen around visible face, excluding outer hair and ears. Chin transition is soft.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/091_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 578,
+              "y": 621
+            },
+            {
+              "x": 783,
+              "y": 620
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/103_03.jpg",
+      "sha256": "5569f6ca06e682912a9ff3fe552a346c9524f0635bc275be4557622465a1445a",
+      "subject": "103",
+      "pose": "frontal",
+      "sourceSha256": "5569f6ca06e682912a9ff3fe552a346c9524f0635bc275be4557622465a1445a",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "4dbf759a999882215aa0ce17a11568f27ed9a70d9ffde064cef137b0b1f10a04",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 128.41890800000056,
+      "inferenceMs": 463.19635799999924,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 330.1038818359375,
+            "xMax": 705.1395263671875,
+            "yMin": 347.12799072265625,
+            "yMax": 722.1630249023438,
+            "width": 375.03564453125,
+            "height": 375.0350341796875
+          },
+          "originalBox": {
+            "xMin": 435.1955473423004,
+            "yMin": 457.6394408941269,
+            "xMax": 929.6273052692413,
+            "yMax": 952.0703941583633
+          },
+          "validBox": true,
+          "boxIou": 0.6975421501299887,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 556.7919507622719,
+              "y": 589.8000195622444,
+              "name": "rightEye"
+            },
+            {
+              "x": 775.9667426347733,
+              "y": 555.7917952537537,
+              "name": "leftEye"
+            },
+            {
+              "x": 675.6263494491577,
+              "y": 673.1718063354492,
+              "name": "noseTip"
+            },
+            {
+              "x": 688.5847985744476,
+              "y": 786.8304938077927,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 451.0287344455719,
+              "y": 677.7950763702393,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 906.6511273384094,
+              "y": 617.3787072300911,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/103_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 450,
+          "yMin": 310,
+          "xMax": 900,
+          "yMax": 970
+        },
+        "eyeCenters": [
+          {
+            "x": 579,
+            "y": 566
+          },
+          {
+            "x": 765,
+            "y": 556
+          }
+        ],
+        "notes": "Hair/sideburn boundary and lower chin shadow are approximate; central face unobscured. Ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/103_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 579,
+              "y": 566
+            },
+            {
+              "x": 765,
+              "y": 556
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/117_03.jpg",
+      "sha256": "7f0c9d763c45db9d51245841152ab6ea64da99e0cda939e90db3b5f627a26cf7",
+      "subject": "117",
+      "pose": "frontal",
+      "sourceSha256": "7f0c9d763c45db9d51245841152ab6ea64da99e0cda939e90db3b5f627a26cf7",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "929e0a6221bd2dbfa2e8b63df41c2505954308b565798acbfecb93c74626ba4a",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 222.81228499999997,
+      "inferenceMs": 453.1096260000004,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 327.96807861328125,
+            "xMax": 690.7804565429688,
+            "yMin": 348.5947265625,
+            "yMax": 711.40673828125,
+            "width": 362.8123779296875,
+            "height": 362.81201171875
+          },
+          "originalBox": {
+            "xMin": 432.37979114055634,
+            "yMin": 459.5731258392334,
+            "xMax": 910.6968909502029,
+            "yMax": 937.8897428512573
+          },
+          "validBox": true,
+          "boxIou": 0.6819315848364833,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 565.6315729022026,
+              "y": 574.3832856416702,
+              "name": "rightEye"
+            },
+            {
+              "x": 772.8553533554077,
+              "y": 563.8603091239929,
+              "name": "leftEye"
+            },
+            {
+              "x": 672.5852876901627,
+              "y": 668.0911660194397,
+              "name": "noseTip"
+            },
+            {
+              "x": 670.3363761305809,
+              "y": 779.6848475933075,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 446.34628146886826,
+              "y": 648.3913734555244,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 880.1451355218887,
+              "y": 637.0507791638374,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/117_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 465,
+          "yMin": 325,
+          "xMax": 885,
+          "yMax": 960
+        },
+        "eyeCenters": [
+          {
+            "x": 581,
+            "y": 562
+          },
+          {
+            "x": 771,
+            "y": 569
+          }
+        ],
+        "notes": "Hair/sideburn transition makes lateral limits approximate; central face unobscured. Ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/117_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 581,
+              "y": 562
+            },
+            {
+              "x": 771,
+              "y": 569
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/127_03.jpg",
+      "sha256": "f252f75df60764d89cdf9c6d37c833d5f295c5dc36814e84d78302cb3a5aab07",
+      "subject": "127",
+      "pose": "frontal",
+      "sourceSha256": "f252f75df60764d89cdf9c6d37c833d5f295c5dc36814e84d78302cb3a5aab07",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "6bce04d169979f30e689bcc65a69e313c2db968530aac75b597990150da12e4b",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 99.22813399999995,
+      "inferenceMs": 472.1512309999998,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 331.62652587890625,
+            "xMax": 713.0237426757812,
+            "yMin": 375.60809326171875,
+            "yMax": 756.9358520507812,
+            "width": 381.397216796875,
+            "height": 381.3277587890625
+          },
+          "originalBox": {
+            "xMin": 437.20293939113617,
+            "yMin": 495.18645107746124,
+            "xMax": 940.0215357542038,
+            "yMax": 997.9134768247604
+          },
+          "validBox": true,
+          "boxIou": 0.7500390678438469,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 558.4736958146095,
+              "y": 653.048238158226,
+              "name": "rightEye"
+            },
+            {
+              "x": 759.743857383728,
+              "y": 640.0280714035034,
+              "name": "leftEye"
+            },
+            {
+              "x": 645.7283824682236,
+              "y": 780.240386724472,
+              "name": "noseTip"
+            },
+            {
+              "x": 658.8929057121277,
+              "y": 869.3046391010284,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 478.7076026201248,
+              "y": 689.6505743265152,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 905.3198128938675,
+              "y": 666.7113706469536,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/127_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 440,
+          "yMin": 350,
+          "xMax": 925,
+          "yMax": 995
+        },
+        "eyeCenters": [
+          {
+            "x": 566,
+            "y": 636
+          },
+          {
+            "x": 764,
+            "y": 631
+          }
+        ],
+        "notes": "Fine hairline and side-hair transitions make perimeter approximate; central face unobscured. Ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/127_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 566,
+              "y": 636
+            },
+            {
+              "x": 764,
+              "y": 631
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/137_03.jpg",
+      "sha256": "df59b02ba323f8898aab568407406d9a467e54d49f0ed3e7317a734ef94131d1",
+      "subject": "137",
+      "pose": "frontal",
+      "sourceSha256": "df59b02ba323f8898aab568407406d9a467e54d49f0ed3e7317a734ef94131d1",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "84ac00498db7563c87cab532a345c693e5336e1ff2a7b54595ec16fabe525136",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 154.53836199999932,
+      "inferenceMs": 572.5386399999998,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 331.1038818359375,
+            "xMax": 706.2286376953125,
+            "yMin": 347.3970642089844,
+            "yMax": 722.521240234375,
+            "width": 375.124755859375,
+            "height": 375.1241760253906
+          },
+          "originalBox": {
+            "xMin": 436.5139067173004,
+            "yMin": 457.9941764473915,
+            "xMax": 931.0631453990936,
+            "yMax": 952.5426506996155
+          },
+          "validBox": true,
+          "boxIou": 0.7257542067722008,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 565.0520950555801,
+              "y": 597.6649940013885,
+              "name": "rightEye"
+            },
+            {
+              "x": 784.365651011467,
+              "y": 579.4824331998825,
+              "name": "leftEye"
+            },
+            {
+              "x": 685.9167784452438,
+              "y": 703.0115157365799,
+              "name": "noseTip"
+            },
+            {
+              "x": 693.9953505992889,
+              "y": 804.7655403614044,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 451.7185315489769,
+              "y": 656.1782151460648,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 908.6870849132538,
+              "y": 617.2128260135651,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/137_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 445,
+          "yMin": 340,
+          "xMax": 910,
+          "yMax": 990
+        },
+        "eyeCenters": [
+          {
+            "x": 570,
+            "y": 581
+          },
+          {
+            "x": 791,
+            "y": 579
+          }
+        ],
+        "notes": "Soft hairline transition and chin shadow make top/bottom approximate; central face unobscured. Ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/137_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 570,
+              "y": 581
+            },
+            {
+              "x": 791,
+              "y": 579
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_front/173_03.jpg",
+      "sha256": "b567453adce09a9dd99e97390729d9731fde2617e02d3c84edd94e56d55e470e",
+      "subject": "173",
+      "pose": "frontal",
+      "sourceSha256": "b567453adce09a9dd99e97390729d9731fde2617e02d3c84edd94e56d55e470e",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "6ea8f501c38659bce136830d30fa36ac0e9138db1c67495fa14ee5f4d8fafbb4",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 177.47579099999984,
+      "inferenceMs": 463.0680289999991,
+      "rawFaceCount": 1,
+      "usefulCrop": true,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": true,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 314.3882751464844,
+            "xMax": 692.3043212890625,
+            "yMin": 363.078125,
+            "yMax": 740.9232177734375,
+            "width": 377.9160461425781,
+            "height": 377.8450927734375
+          },
+          "originalBox": {
+            "xMin": 414.4767299294472,
+            "yMin": 478.6674499511719,
+            "xMax": 912.7058923244476,
+            "yMax": 976.803070306778
+          },
+          "validBox": true,
+          "boxIou": 0.6970977476300307,
+          "creatorEyesInside": [
+            true,
+            true
+          ],
+          "iouPass": true,
+          "usefulCrop": true,
+          "originalKeypoints": [
+            {
+              "x": 573.764218389988,
+              "y": 599.5509222149849,
+              "name": "rightEye"
+            },
+            {
+              "x": 770.711812376976,
+              "y": 607.4310645461082,
+              "name": "leftEye"
+            },
+            {
+              "x": 673.132498562336,
+              "y": 713.5731160640717,
+              "name": "noseTip"
+            },
+            {
+              "x": 666.45677536726,
+              "y": 825.1978576183319,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 456.4206585288048,
+              "y": 661.3354191184044,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 874.8782962560654,
+              "y": 676.4591753482819,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_front/173_03.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 450,
+          "yMin": 330,
+          "xMax": 895,
+          "yMax": 985
+        },
+        "eyeCenters": [
+          {
+            "x": 570,
+            "y": 594
+          },
+          {
+            "x": 768,
+            "y": 593
+          }
+        ],
+        "notes": "Hairline/sideburn borders and lower chin shadow make perimeter approximate; central face unobscured. Outer hair, ears and neck excluded.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin and cheek-to-cheek rectangle; outer hair, ears and neck excluded from intended extent. Rectangular upper corners may include incidental hair.",
+        "provenance-manual-landmarks": {
+          "source": "neutral_front/173_03.tem",
+          "creatorLabels": "Creator-provided template eye centers: first two coordinate pairs after the 189-point count header, retained in creator order.",
+          "templatePointIndicesZeroBased": [
+            0,
+            1
+          ],
+          "points": [
+            {
+              "x": 570,
+              "y": 594
+            },
+            {
+              "x": 768,
+              "y": 593
+            }
+          ],
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance."
+        },
+        "limitations": "Development-only, small fixed frontal-photo sample. Approximate machine-assisted geometry, not independent human-expert gold labels or evidence of broad accuracy. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:12:29.416381+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_3quarter/001_02.jpg",
+      "sha256": "f2d5853c66e6c4c6dc3f5a8e27ffc2e59ef10cd43eccf8cd2bc48e57588c438a",
+      "subject": "001",
+      "pose": "three-quarter",
+      "sourceSha256": "f2d5853c66e6c4c6dc3f5a8e27ffc2e59ef10cd43eccf8cd2bc48e57588c438a",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "390cadbb6730a19ab5a3b07569db7d2f8f5705a8cfa13df4941778fca5b9232d",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 124.32193400000142,
+      "inferenceMs": 491.73337399999946,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 304.523681640625,
+            "xMax": 672.2109375,
+            "yMin": 367.4800109863281,
+            "yMax": 735.1162109375,
+            "width": 367.687255859375,
+            "height": 367.6361999511719
+          },
+          "originalBox": {
+            "xMin": 401.47165060043335,
+            "yMin": 484.4707176089287,
+            "xMax": 886.2155914306641,
+            "yMax": 969.1473484039307
+          },
+          "validBox": true,
+          "boxIou": 0.7221031410223299,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 467.8341954946518,
+              "y": 628.4350141882896,
+              "name": "rightEye"
+            },
+            {
+              "x": 604.8600867390633,
+              "y": 613.5368049144745,
+              "name": "leftEye"
+            },
+            {
+              "x": 456.79575204849243,
+              "y": 741.6990548372269,
+              "name": "noseTip"
+            },
+            {
+              "x": 501.4422208070755,
+              "y": 838.4819537401199,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 515.7195121049881,
+              "y": 666.200490295887,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 857.9057067632675,
+              "y": 638.9797165989876,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_3quarter/001_02.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 400,
+          "yMin": 345,
+          "xMax": 850,
+          "yMax": 975
+        },
+        "eyeCenters": null,
+        "notes": "Irregular hairline and near-ear cheek boundary are approximate; fine strands near the outer jaw. Far-side face is foreshortened.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "three-quarter",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_3quarter/020_02.jpg",
+      "sha256": "124dbd5d18b64ee0dd10c5584e4a151edc809ae8c059f635251e05014ce820d6",
+      "subject": "020",
+      "pose": "three-quarter",
+      "sourceSha256": "124dbd5d18b64ee0dd10c5584e4a151edc809ae8c059f635251e05014ce820d6",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "88ff968cdd84803082fe3b236d415a3a2d8f8c7c4b7fcee847e48a07adee055d",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 161.2432039999985,
+      "inferenceMs": 522.8951420000012,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 313.3374938964844,
+            "xMax": 660.5623779296875,
+            "yMin": 367.3729553222656,
+            "yMax": 714.548583984375,
+            "width": 347.2248840332031,
+            "height": 347.1756286621094
+          },
+          "originalBox": {
+            "xMin": 413.09142261743546,
+            "yMin": 484.32957977056503,
+            "xMax": 870.8586037158966,
+            "yMax": 942.0318245887756
+          },
+          "validBox": true,
+          "boxIou": 0.6732066529004125,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 471.5756356716156,
+              "y": 606.6746816039085,
+              "name": "rightEye"
+            },
+            {
+              "x": 618.5255527496338,
+              "y": 600.3980711102486,
+              "name": "leftEye"
+            },
+            {
+              "x": 456.97108805179596,
+              "y": 704.258742928505,
+              "name": "noseTip"
+            },
+            {
+              "x": 489.9734437465668,
+              "y": 804.647496342659,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 504.3507143855095,
+              "y": 655.156534910202,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 863.4738922119141,
+              "y": 661.8887051939964,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_3quarter/020_02.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 390,
+          "yMin": 340,
+          "xMax": 850,
+          "yMax": 965
+        },
+        "eyeCenters": null,
+        "notes": "Hairline and near-ear cheek boundary are approximate; visible central face unobscured. Far-side face is foreshortened.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "three-quarter",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_3quarter/043_02.jpg",
+      "sha256": "8a7f8b4d1f28ddfc56d42b8ee94e5ba929dfa161c459d45cd3af30b0d43f5ec7",
+      "subject": "043",
+      "pose": "three-quarter",
+      "sourceSha256": "8a7f8b4d1f28ddfc56d42b8ee94e5ba929dfa161c459d45cd3af30b0d43f5ec7",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "1d457b3ca0bca804788a177da0f662061e8f214127d2a857a52b441f4b2bd658",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 120.88946700000088,
+      "inferenceMs": 549.297294,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 297.9442138671875,
+            "xMax": 653.3367309570312,
+            "yMin": 369.53741455078125,
+            "yMax": 724.8754272460938,
+            "width": 355.39251708984375,
+            "height": 355.3380126953125
+          },
+          "originalBox": {
+            "xMin": 392.79754757881165,
+            "yMin": 487.1831148862839,
+            "xMax": 861.3326042890549,
+            "yMax": 955.6463152170181
+          },
+          "validBox": true,
+          "boxIou": 0.6636173307139006,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 461.5039139986038,
+              "y": 596.355727314949,
+              "name": "rightEye"
+            },
+            {
+              "x": 614.7723644971848,
+              "y": 604.0052533149719,
+              "name": "leftEye"
+            },
+            {
+              "x": 437.72673457860947,
+              "y": 686.7796987295151,
+              "name": "noseTip"
+            },
+            {
+              "x": 460.1521208882332,
+              "y": 800.9693831205368,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 490.134496986866,
+              "y": 664.3266320228577,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 864.0975058078766,
+              "y": 705.9707432985306,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_3quarter/043_02.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 380,
+          "yMin": 325,
+          "xMax": 870,
+          "yMax": 1000
+        },
+        "eyeCenters": null,
+        "notes": "Near-ear cheek/jaw transition and chin-to-neck shadow are approximate. Far-side face is foreshortened.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "three-quarter",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_3quarter/091_02.jpg",
+      "sha256": "3a756950d4278f9ef1c20908c03f201281dd70babcb82e5af29d05da7680cb81",
+      "subject": "091",
+      "pose": "three-quarter",
+      "sourceSha256": "3a756950d4278f9ef1c20908c03f201281dd70babcb82e5af29d05da7680cb81",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "eaf9f6a66778c306659ca3c08ad5aad88bd8998606b56fa6d8d24c77baa36d3f",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 98.4466709999997,
+      "inferenceMs": 478.7650159999994,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 301.3891296386719,
+            "xMax": 661.0069580078125,
+            "yMin": 395.2335205078125,
+            "yMax": 754.81005859375,
+            "width": 359.6178283691406,
+            "height": 359.5765380859375
+          },
+          "originalBox": {
+            "xMin": 397.33918458223343,
+            "yMin": 521.0598170757294,
+            "xMax": 871.4447200298309,
+            "yMax": 995.1109170913696
+          },
+          "validBox": true,
+          "boxIou": 0.699412198855324,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 454.77492213249207,
+              "y": 660.5816513299942,
+              "name": "rightEye"
+            },
+            {
+              "x": 605.929845571518,
+              "y": 650.3910809755325,
+              "name": "leftEye"
+            },
+            {
+              "x": 456.7977637052536,
+              "y": 772.6559579372406,
+              "name": "noseTip"
+            },
+            {
+              "x": 498.25567603111267,
+              "y": 865.4413729906082,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 487.41855919361115,
+              "y": 699.7718632221222,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 856.4025163650513,
+              "y": 677.6876538991928,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_3quarter/091_02.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 375,
+          "yMin": 370,
+          "xMax": 855,
+          "yMax": 1000
+        },
+        "eyeCenters": null,
+        "notes": "Fine strands cross forehead; near-ear cheek boundary and lower chin transition are approximate. Far-side face is foreshortened.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "three-quarter",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_3quarter/117_02.jpg",
+      "sha256": "cbcf11eb1b776fe909ef9704feb5396f8dfc714d691f551380119c210929fe38",
+      "subject": "117",
+      "pose": "three-quarter",
+      "sourceSha256": "cbcf11eb1b776fe909ef9704feb5396f8dfc714d691f551380119c210929fe38",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "fb7f231525d4b0a869fd56b070488d35a37e78344bc0052724bf494a5cfad5a8",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 187.28562299999976,
+      "inferenceMs": 546.2768479999995,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 323.16546630859375,
+            "xMax": 686.8958129882812,
+            "yMin": 342.5818176269531,
+            "yMax": 706.3123779296875,
+            "width": 363.7303466796875,
+            "height": 363.7305603027344
+          },
+          "originalBox": {
+            "xMin": 426.0482221841812,
+            "yMin": 451.6459509730339,
+            "xMax": 905.5755347013474,
+            "yMax": 931.1735451221466
+          },
+          "validBox": true,
+          "boxIou": 0.684499329511728,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 491.4210721850395,
+              "y": 589.4830629229546,
+              "name": "rightEye"
+            },
+            {
+              "x": 591.5165260434151,
+              "y": 559.1710567474365,
+              "name": "leftEye"
+            },
+            {
+              "x": 440.08874148130417,
+              "y": 681.3285917043686,
+              "name": "noseTip"
+            },
+            {
+              "x": 492.07341223955154,
+              "y": 786.6588592529297,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 574.1889595985413,
+              "y": 645.6975638866425,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 873.5357969999313,
+              "y": 607.5147092342377,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_3quarter/117_02.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 415,
+          "yMin": 335,
+          "xMax": 845,
+          "yMax": 950
+        },
+        "eyeCenters": null,
+        "notes": "Side hair/sideburns partly cover the lateral temple; cheek/ear-root boundary is approximate. Far-side face is foreshortened.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "three-quarter",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_3quarter/137_02.jpg",
+      "sha256": "f33c03781e1b9285e436b40612af952c36cec95b2592972176a95d0423ad0f66",
+      "subject": "137",
+      "pose": "three-quarter",
+      "sourceSha256": "f33c03781e1b9285e436b40612af952c36cec95b2592972176a95d0423ad0f66",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "70d8353295cc3c1036e208561c9df27a5e7e9265c1d9cdc2db21d1b4fb27dc1f",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 255.41065399999934,
+      "inferenceMs": 538.6307309999993,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 313.5557861328125,
+            "xMax": 689.7752685546875,
+            "yMin": 333.79400634765625,
+            "yMax": 710.0137329101562,
+            "width": 376.219482421875,
+            "height": 376.2197265625
+          },
+          "originalBox": {
+            "xMin": 413.37921023368835,
+            "yMin": 440.0604575872421,
+            "xMax": 909.371691942215,
+            "yMax": 936.0532611608505
+          },
+          "validBox": true,
+          "boxIou": 0.6761141717724389,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 472.8103503584862,
+              "y": 583.4214180707932,
+              "name": "rightEye"
+            },
+            {
+              "x": 599.7305631637573,
+              "y": 560.9157666563988,
+              "name": "leftEye"
+            },
+            {
+              "x": 438.58993649482727,
+              "y": 683.0048650503159,
+              "name": "noseTip"
+            },
+            {
+              "x": 489.40575420856476,
+              "y": 790.2405738830566,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 548.918728530407,
+              "y": 629.587733745575,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 880.8791488409042,
+              "y": 602.585868537426,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_3quarter/137_02.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 390,
+          "yMin": 325,
+          "xMax": 860,
+          "yMax": 970
+        },
+        "eyeCenters": null,
+        "notes": "Hairline and near-ear cheek/jaw transition are approximate; chin shadow is soft. Far-side face is foreshortened.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "three-quarter",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_profile/001_01.jpg",
+      "sha256": "bd79b979d377cc9e6da75e1136f46f0eaf1d5051b45ed4c1062a35e348ed1a4b",
+      "subject": "001",
+      "pose": "profile",
+      "sourceSha256": "bd79b979d377cc9e6da75e1136f46f0eaf1d5051b45ed4c1062a35e348ed1a4b",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "f44f5d058bd0f0f292a6e0e7465c07d38459a491d3cf5d7c58e31332e801797e",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 124.65105199999925,
+      "inferenceMs": 491.1832290000002,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 205.24911499023438,
+            "xMax": 559.961669921875,
+            "yMin": 411.0466003417969,
+            "yMax": 765.7589111328125,
+            "width": 354.7125549316406,
+            "height": 354.7123107910156
+          },
+          "originalBox": {
+            "xMin": 270.5920949578285,
+            "yMin": 541.9071391224861,
+            "xMax": 738.2307171821594,
+            "yMax": 1009.5454394817352
+          },
+          "validBox": true,
+          "boxIou": 0.689636045409387,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 411.99977695941925,
+              "y": 671.1837664246559,
+              "name": "rightEye"
+            },
+            {
+              "x": 395.3301429748535,
+              "y": 685.8534514904022,
+              "name": "leftEye"
+            },
+            {
+              "x": 285.56867837905884,
+              "y": 780.9669971466064,
+              "name": "noseTip"
+            },
+            {
+              "x": 358.2971513271332,
+              "y": 869.1076576709747,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 685.3030622005463,
+              "y": 694.9454963207245,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 686.9130313396454,
+              "y": 722.9916125535965,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_profile/001_01.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 295,
+          "yMin": 440,
+          "xMax": 685,
+          "yMax": 1025
+        },
+        "eyeCenters": null,
+        "notes": "Profile hides the far-side face; no hidden landmark guessed. Hair partly covers temple; posterior cheek/ear-root extent is ambiguous. Profile crop IoU is exploratory only.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "profile",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_profile/020_01.jpg",
+      "sha256": "6465fbf3c6debfe63b8303539ae894d0a776e00c64d53675e9f7f24162be32fe",
+      "subject": "020",
+      "pose": "profile",
+      "sourceSha256": "6465fbf3c6debfe63b8303539ae894d0a776e00c64d53675e9f7f24162be32fe",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "7b4a7353d88f2e43535fac5dc2d2e4d2f33b06f98b1306aa00d5691748b1f71f",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 123.07585199999994,
+      "inferenceMs": 525.9952639999992,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 201.23410034179688,
+            "xMax": 560.1832275390625,
+            "yMin": 317.7142333984375,
+            "yMax": 676.6632690429688,
+            "width": 358.9491271972656,
+            "height": 358.94903564453125
+          },
+          "originalBox": {
+            "xMin": 265.2988627552986,
+            "yMin": 418.8615381717682,
+            "xMax": 738.5228097438812,
+            "yMax": 892.0853644609451
+          },
+          "validBox": true,
+          "boxIou": 0.739448431168348,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 397.10989594459534,
+              "y": 552.1974474191666,
+              "name": "rightEye"
+            },
+            {
+              "x": 415.56177735328674,
+              "y": 567.997482419014,
+              "name": "leftEye"
+            },
+            {
+              "x": 255.48833459615707,
+              "y": 643.5514479875565,
+              "name": "noseTip"
+            },
+            {
+              "x": 297.53367081284523,
+              "y": 742.4520581960678,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 616.6365265846252,
+              "y": 639.0026092529297,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 722.3996222019196,
+              "y": 678.9471119642258,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_profile/020_01.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 290,
+          "yMin": 320,
+          "xMax": 710,
+          "yMax": 900
+        },
+        "eyeCenters": null,
+        "notes": "Profile hides the far-side face; no hidden landmark guessed. Fine hair partly covers temple; posterior cheek/ear-root and chin/neck limits are approximate. Profile crop IoU is exploratory only.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "profile",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_profile/043_01.jpg",
+      "sha256": "fb37287c77a01a8f65ad5f4ec9fcf1df7876b3a88c1435763d540ad371e46a21",
+      "subject": "043",
+      "pose": "profile",
+      "sourceSha256": "fb37287c77a01a8f65ad5f4ec9fcf1df7876b3a88c1435763d540ad371e46a21",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "cdb4f29ee023b861a0cb2225e62ff0da22c68c59fdf32571d731d6c49eb0f90c",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 151.5931099999998,
+      "inferenceMs": 454.7764160000006,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 232.55258178710938,
+            "xMax": 562.5263671875,
+            "yMin": 394.74420166015625,
+            "yMax": 724.7178344726562,
+            "width": 329.9737854003906,
+            "height": 329.9736328125
+          },
+          "originalBox": {
+            "xMin": 306.5878763794899,
+            "yMin": 520.4147189855576,
+            "xMax": 741.611909866333,
+            "yMax": 955.4385513067245
+          },
+          "validBox": true,
+          "boxIou": 0.644267987260871,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 418.62170845270157,
+              "y": 641.5993362665176,
+              "name": "rightEye"
+            },
+            {
+              "x": 431.7074954509735,
+              "y": 651.8202424049377,
+              "name": "leftEye"
+            },
+            {
+              "x": 291.4876766502857,
+              "y": 734.0068817138672,
+              "name": "noseTip"
+            },
+            {
+              "x": 345.19160985946655,
+              "y": 824.2712080478668,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 633.5899248719215,
+              "y": 697.3427474498749,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 725.35160779953,
+              "y": 723.8553375005722,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_profile/043_01.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 320,
+          "yMin": 350,
+          "xMax": 710,
+          "yMax": 975
+        },
+        "eyeCenters": null,
+        "notes": "Profile hides the far-side face; no hidden landmark guessed. Posterior cheek/ear-root and jaw/neck transition are ambiguous. Profile crop IoU is exploratory only.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "profile",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_profile/091_01.jpg",
+      "sha256": "86c0161a5e7e39698f3f01825649af3eca5940766eca31204dc8b932c7ba9b11",
+      "subject": "091",
+      "pose": "profile",
+      "sourceSha256": "86c0161a5e7e39698f3f01825649af3eca5940766eca31204dc8b932c7ba9b11",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "68c9b32f03970345e73a4d31da276c5e618634b69e67e4e1580c92543eee68de",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 127.24650299999848,
+      "inferenceMs": 454.58043200000066,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 214.2051239013672,
+            "xMax": 578.25390625,
+            "yMin": 373.4140319824219,
+            "yMax": 737.4627685546875,
+            "width": 364.0487823486328,
+            "height": 364.0487365722656
+          },
+          "originalBox": {
+            "xMin": 282.399333268404,
+            "yMin": 492.2938898205757,
+            "xMax": 762.3464584350586,
+            "yMax": 972.2409546375275
+          },
+          "validBox": true,
+          "boxIou": 0.7102448096585046,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 397.50933051109314,
+              "y": 633.4582015872002,
+              "name": "rightEye"
+            },
+            {
+              "x": 395.1076939702034,
+              "y": 651.769146323204,
+              "name": "leftEye"
+            },
+            {
+              "x": 271.27732560038567,
+              "y": 753.4716725349426,
+              "name": "noseTip"
+            },
+            {
+              "x": 345.89673578739166,
+              "y": 839.7433429956436,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 648.8207414746284,
+              "y": 659.5454066991806,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 714.1074120998383,
+              "y": 686.3879084587097,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_profile/091_01.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 285,
+          "yMin": 370,
+          "xMax": 715,
+          "yMax": 990
+        },
+        "eyeCenters": null,
+        "notes": "Profile hides the far-side face; no hidden landmark guessed. Fine hair near temple and cheek/ear-root boundary add uncertainty; lower chin transition is soft. Profile crop IoU is exploratory only.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "profile",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_profile/117_01.jpg",
+      "sha256": "ae1f89ec0641414c3722d6d322fdfc9143b6275b15662e76cc9b180a6e70fbb9",
+      "subject": "117",
+      "pose": "profile",
+      "sourceSha256": "ae1f89ec0641414c3722d6d322fdfc9143b6275b15662e76cc9b180a6e70fbb9",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "aea10de4e9244910a003205ae205ff699664188dde91f538dec1361e10c1c118",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 108.02930100000049,
+      "inferenceMs": 554.698977,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 243.0996551513672,
+            "xMax": 569.1586303710938,
+            "yMin": 381.42724609375,
+            "yMax": 707.486083984375,
+            "width": 326.05897521972656,
+            "height": 326.058837890625
+          },
+          "originalBox": {
+            "xMin": 320.492709428072,
+            "yMin": 502.85818576812744,
+            "xMax": 750.3556162118912,
+            "yMax": 932.7209115028381
+          },
+          "validBox": true,
+          "boxIou": 0.6661484548884631,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 429.3199807405472,
+              "y": 629.3019577860832,
+              "name": "rightEye"
+            },
+            {
+              "x": 447.9253113269806,
+              "y": 628.5771578550339,
+              "name": "leftEye"
+            },
+            {
+              "x": 330.77462911605835,
+              "y": 731.6713482141495,
+              "name": "noseTip"
+            },
+            {
+              "x": 384.3067869544029,
+              "y": 813.111823797226,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 612.07175552845,
+              "y": 657.5365260243416,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 707.6019555330276,
+              "y": 664.8121252655983,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_profile/117_01.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 310,
+          "yMin": 390,
+          "xMax": 710,
+          "yMax": 975
+        },
+        "eyeCenters": null,
+        "notes": "Profile hides the far-side face; no hidden landmark guessed. Sideburns obscure part of temple; posterior cheek/ear-root and lower jaw limits are approximate. Profile crop IoU is exploratory only.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "profile",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    },
+    {
+      "file": "neutral_left_profile/137_01.jpg",
+      "sha256": "67335d115cce51387a76c41533634e7092c20678b5d0b216162bcf89ddff232c",
+      "subject": "137",
+      "pose": "profile",
+      "sourceSha256": "67335d115cce51387a76c41533634e7092c20678b5d0b216162bcf89ddff232c",
+      "width": 1350,
+      "height": 1350,
+      "inputWidth": 1024,
+      "inputHeight": 1024,
+      "orientation": null,
+      "pillowVersion": "12.3.0",
+      "rgbSha256": "0037b1ed30001d303be9ee52a7c0e685aa72133e1d40cbee96b7b3efd7f58253",
+      "interpolation": "Pillow RGB conversion, resize BILINEAR, longest edge at most 1024, no EXIF rotation, no color-profile conversion",
+      "decodeAndResizeMs": 146.5323840000001,
+      "inferenceMs": 500.0840189999999,
+      "rawFaceCount": 1,
+      "usefulCrop": null,
+      "exploratoryBoxMatch": true,
+      "eyeCriterionEvaluated": false,
+      "candidates": [
+        {
+          "index": 0,
+          "rawInputBox": {
+            "xMin": 243.8794403076172,
+            "xMax": 578.60302734375,
+            "yMin": 380.16217041015625,
+            "yMax": 714.8856811523438,
+            "width": 334.7235870361328,
+            "height": 334.7235107421875
+          },
+          "originalBox": {
+            "xMin": 321.5207464993,
+            "yMin": 501.1903613805771,
+            "xMax": 762.8067255020142,
+            "yMax": 942.4762398004532
+          },
+          "validBox": true,
+          "boxIou": 0.6460708149236346,
+          "creatorEyesInside": null,
+          "iouPass": true,
+          "usefulCrop": null,
+          "originalKeypoints": [
+            {
+              "x": 432.1939140558243,
+              "y": 622.5658848881721,
+              "name": "rightEye"
+            },
+            {
+              "x": 440.2382478117943,
+              "y": 646.437893807888,
+              "name": "leftEye"
+            },
+            {
+              "x": 326.8074609339237,
+              "y": 746.8369871377945,
+              "name": "noseTip"
+            },
+            {
+              "x": 391.9521287083626,
+              "y": 824.180281162262,
+              "name": "mouthCenter"
+            },
+            {
+              "x": 643.5992047190666,
+              "y": 614.2266020178795,
+              "name": "rightEarTragion"
+            },
+            {
+              "x": 720.9484130144119,
+              "y": 662.3132050037384,
+              "name": "leftEarTragion"
+            }
+          ],
+          "invalidReason": null
+        }
+      ],
+      "annotation": {
+        "file": "neutral_left_profile/137_01.jpg",
+        "width": 1350,
+        "height": 1350,
+        "box": {
+          "xMin": 335,
+          "yMin": 350,
+          "xMax": 725,
+          "yMax": 975
+        },
+        "eyeCenters": null,
+        "notes": "Profile hides the far-side face; no hidden landmark guessed. Hairline and posterior cheek/ear-root boundary are approximate; lower chin transition is soft. Profile crop IoU is exploratory only.",
+        "annotationMethod": "Machine-assisted visual annotation after direct inspection of each original image, without accessing detector outputs.",
+        "boxConvention": "Original-image pixel coordinates, origin at top left. Approximate visible forehead-to-chin rectangle spanning the visible face including nose and cheek. Outer hair, ears and neck excluded from intended extent; rectangular corners or the posterior cheek boundary may include incidental hair/ear-root pixels. No invisible face extent extrapolated.",
+        "provenance-manual-landmarks": null,
+        "landmarkAvailability": "No creator .tem acquired for this image. No eye centers annotated or guessed; dual-eye containment is not evaluable for this row.",
+        "datasetProvenance": {
+          "datasetCreators": [
+            "Lisa DeBruine",
+            "Benedict Jones"
+          ],
+          "dataset": "Face Research Lab London Set, version 5",
+          "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+          "license": "CC BY 4.0",
+          "adultAndConsentBasis": "Dataset creator metadata states 102 adult faces and signed consent for lab-based and web-based studies. Not inferred from appearance.",
+          "sourcePoseLabel": "profile",
+          "sourcePoseLabelBasis": "Fixed evaluation-sample.json and creator archive/folder names; not a demographic, identity or eye-state label."
+        },
+        "limitations": "Development-only, fixed pose-stress sample sharing six dataset records with the frontal sample; not 12 additional independent subjects. Approximate machine-assisted geometry, not independent human-expert gold labels or broad accuracy. Profile crop IoU is exploratory and is not equivalent to frontal dual-eye crop coverage. No identity, demographic, emotion or eye-state labels.",
+        "frozenAt": "2026-10-16T22:14:38.018760+00:00"
+      },
+      "memory": {
+        "unreliable": true,
+        "reasons": [
+          "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+        ],
+        "numTensors": 96,
+        "numDataBuffers": 96,
+        "numBytes": 416428
+      }
+    }
+  ],
+  "actualBackend": "cpu",
+  "baselineMemory": {
+    "unreliable": true,
+    "reasons": [
+      "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+    ],
+    "numTensors": 0,
+    "numDataBuffers": 0,
+    "numBytes": 0
+  },
+  "loadedMemory": {
+    "numTensors": 96,
+    "numDataBuffers": 96,
+    "numBytes": 416428,
+    "unreliable": true,
+    "reasons": [
+      "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+    ]
+  },
+  "initializationMs": 18.201806999999974,
+  "byPose": {
+    "frontal": {
+      "images": 12,
+      "independentSubjects": 12,
+      "usefulCropAssessedImages": 12,
+      "usefulCropImages": 12,
+      "unassessedUsefulCropImages": 0,
+      "exploratoryBoxMatchImages": 12,
+      "missedUsefulCropFiles": [],
+      "missedExploratoryBoxMatchFiles": [],
+      "zeroCandidateImages": 0,
+      "unwantedCandidateCount": 0,
+      "imagesWithExtraCandidates": [],
+      "rejectedInvalidCandidateCount": 0
+    },
+    "three-quarter": {
+      "images": 6,
+      "independentSubjects": 6,
+      "usefulCropAssessedImages": 0,
+      "usefulCropImages": 0,
+      "unassessedUsefulCropImages": 6,
+      "exploratoryBoxMatchImages": 6,
+      "missedUsefulCropFiles": [],
+      "missedExploratoryBoxMatchFiles": [],
+      "zeroCandidateImages": 0,
+      "unwantedCandidateCount": 0,
+      "imagesWithExtraCandidates": [],
+      "rejectedInvalidCandidateCount": 0
+    },
+    "profile": {
+      "images": 6,
+      "independentSubjects": 6,
+      "usefulCropAssessedImages": 0,
+      "usefulCropImages": 0,
+      "unassessedUsefulCropImages": 6,
+      "exploratoryBoxMatchImages": 6,
+      "missedUsefulCropFiles": [],
+      "missedExploratoryBoxMatchFiles": [],
+      "zeroCandidateImages": 0,
+      "unwantedCandidateCount": 0,
+      "imagesWithExtraCandidates": [],
+      "rejectedInvalidCandidateCount": 0
+    }
+  },
+  "bySubject": [
+    {
+      "subject": "001",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/001_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "three-quarter",
+          "file": "neutral_left_3quarter/001_02.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "profile",
+          "file": "neutral_left_profile/001_01.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "010",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/010_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "020",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/020_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "three-quarter",
+          "file": "neutral_left_3quarter/020_02.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "profile",
+          "file": "neutral_left_profile/020_01.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "032",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/032_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "043",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/043_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "three-quarter",
+          "file": "neutral_left_3quarter/043_02.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "profile",
+          "file": "neutral_left_profile/043_01.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "068",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/068_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "091",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/091_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "three-quarter",
+          "file": "neutral_left_3quarter/091_02.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "profile",
+          "file": "neutral_left_profile/091_01.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "103",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/103_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "117",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/117_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "three-quarter",
+          "file": "neutral_left_3quarter/117_02.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "profile",
+          "file": "neutral_left_profile/117_01.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "127",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/127_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "137",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/137_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "three-quarter",
+          "file": "neutral_left_3quarter/137_02.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        },
+        {
+          "pose": "profile",
+          "file": "neutral_left_profile/137_01.jpg",
+          "usefulCrop": null,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": false,
+          "rawFaceCount": 1
+        }
+      ]
+    },
+    {
+      "subject": "173",
+      "poses": [
+        {
+          "pose": "frontal",
+          "file": "neutral_front/173_03.jpg",
+          "usefulCrop": true,
+          "exploratoryBoxMatch": true,
+          "eyeCriterionEvaluated": true,
+          "rawFaceCount": 1
+        }
+      ]
+    }
+  ],
+  "frontalUsabilityCriterionMet": true,
+  "tensorCountsStable": true,
+  "afterDispose": {
+    "numTensors": 0,
+    "numDataBuffers": 0,
+    "numBytes": 0,
+    "unreliable": true,
+    "reasons": [
+      "The reported memory is an upper bound. Due to automatic garbage collection, the true allocated memory may be less."
+    ]
+  },
+  "networkAttempts": [],
+  "technicalLifecyclePassed": true
+}

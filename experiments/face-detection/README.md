@@ -44,3 +44,15 @@ One official MediaPipe portrait and its upstream golden box are used only for po
 Node VM technical results are separate from browser validation. Both models execute without dynamic string/WASM generation, with normal disposal returning to zero tensors. The short synthetic-inference range was 449–643 ms; full was 2819–3286 ms in the development Node environment. These are not phone estimates or peak-memory measurements. TFJS logical tensor memory is not process-memory reclamation.
 
 The official portrait positive path detected one face at original and resized dimensions with both models, stable tensor counts, and normal disposal to zero. No broad accuracy conclusion follows from that single regression fixture. Browser and frozen photographic results will be recorded after actual execution, not inferred from this probe.
+
+### Fixed photograph result (2026-10-16)
+
+The frozen short-model evaluation completed on Node 24.19.0:
+
+- Frontal: 12/12 useful crops (box IoU ≥0.5 and both creator-labelled eye centers inside), meeting the predeclared ≥11/12 criterion.
+- Three-quarter: 6/6 exploratory box matches. Profile: 6/6 exploratory box matches. Eye containment is unassessed for these pose photographs because creator eye labels were unavailable.
+- All 24 photos produced exactly one finite, in-bounds candidate; no extra candidates were observed. These are positive single-face images, so this is not a measured negative-image false-positive rate.
+- Minimum observed box IoU across this sample: 0.6443. Inference range: 453–589 ms. Input conversion/resizing used Pillow RGB/BILINEAR to a 1024-pixel long edge; browser-canvas parity is not established by this run.
+- Live tensors remained at the loaded baseline; normal disposal returned to zero. No network attempts were observed.
+
+Independent review rechecked source/label hashes, original eye points, deterministic sampling and scoring arithmetic. This does not replace expert labels or expand the small controlled evaluation's scope. Actual browser and end-to-end product gates are still required.

@@ -16,6 +16,7 @@ $AppIconPath = Join-Path $Root "assets\favicon.svg"
 $DependenciesPath = Join-Path $Root "dependencies.json"
 $DependencyLockPath = Join-Path $Root "dependencies.lock.json"
 $EmbeddingManifestPath = Join-Path $Root "assets/embedding/manifest.json"
+$FaceManifestPath = Join-Path $Root "assets/face-detection/manifest.json"
 $VerifyPath = Join-Path $Root "scripts\verify-standalone.ps1"
 $SelfExtractBuilderPath = Join-Path $Root "scripts\build-self-extract.ps1"
 $CacheRoot = Join-Path $Root ".cache"
@@ -202,6 +203,15 @@ $dependencyLock = Get-Json $DependencyLockPath
 $embeddingManifest = Get-Json $EmbeddingManifestPath
 if ([int]$embeddingManifest.schemaVersion -ne 1 -or [string]$embeddingManifest.id -ne "mobilenet-v1") {
   throw "Unsupported embedding asset manifest."
+}
+$faceManifest = Get-Json $FaceManifestPath
+if ([int]$faceManifest.schemaVersion -ne 1 -or [string]$faceManifest.id -ne "face-detection" -or [string]$faceManifest.modelType -ne "short") {
+  throw "Unsupported face asset manifest."
+}
+foreach ($field in @("id", "key", "package", "version", "bytes", "sha256")) {
+  if ([string]$faceManifest.runtime.$field -ne [string]$embeddingManifest.runtime.$field) {
+    throw "Face runtime must reuse the exact reviewed embedding runtime."
+  }
 }
 $runtimePin = $embeddingManifest.runtime
 $runtimePinVerified = $false
@@ -426,6 +436,61 @@ $manifestDependencies += [ordered]@{
   })
 }
 
+# Short face model and its unchanged detector bundle are checked-in assets.
+# Their provenance is recorded separately; the build never acquires a model.
+$faceAssets = [ordered]@{}
+$faceManifestAssets = @()
+$faceKeys = @{}
+$faceAssetRoot = Split-Path -Parent $FaceManifestPath
+foreach ($asset in @($faceManifest.assets)) {
+  $key = Get-SafeId ([string]$asset.key)
+  if ($faceKeys.ContainsKey($key)) { throw "Duplicate face asset key: $key" }
+  $faceKeys[$key] = $true
+  if ([string]$asset.sha256 -notmatch '^[a-f0-9]{64}$') { throw "Invalid face asset SHA-256: $key" }
+  if ([long]$asset.bytes -le 0) { throw "Invalid face asset size: $key" }
+  if ([string]$asset.compression -ne "gzip") { throw "Face asset compression must be gzip: $key" }
+  $assetPath = Get-RelativeAssetPath $faceAssetRoot ([string]$asset.path)
+  $bytes = Get-AssetBytes $assetPath $false
+  $sha = Get-Sha256FileHex $assetPath
+  if ($sha -ne [string]$asset.sha256) { throw "Face asset SHA-256 mismatch: $key. Refusing to build." }
+  if ($bytes.Length -ne [long]$asset.bytes) { throw "Face asset size mismatch: $key. Refusing to build." }
+  $storedBytes = Compress-GzipBytes $bytes
+  $faceAssets[$key] = [ordered]@{
+    mime = [string]$asset.mime; compression = "gzip"; originalBytes = $bytes.Length
+    storedBytes = $storedBytes.Length; base64 = [Convert]::ToBase64String($storedBytes)
+  }
+  $faceManifestAssets += [ordered]@{
+    key = $key; path = "assets/face-detection/" + [string]$asset.path; mime = [string]$asset.mime
+    compression = "gzip"; bytes = $bytes.Length; storedBytes = $storedBytes.Length; sha256 = $sha
+  }
+}
+if ($faceKeys.Count -ne 5) { throw "The face model requires exactly five reviewed local assets." }
+foreach ($requiredKey in @("model", "weights", "detector", "license", "notices")) {
+  if (-not $faceKeys.ContainsKey($requiredKey)) { throw "Required face asset is missing: $requiredKey" }
+}
+$faceWorkerPath = Join-Path $Root "src/face-worker.js"
+$faceWorkerBytes = Get-AssetBytes $faceWorkerPath $false
+$faceWorkerStoredBytes = Compress-GzipBytes $faceWorkerBytes
+$faceAssets["worker"] = [ordered]@{
+  mime = "text/javascript"; compression = "gzip"; originalBytes = $faceWorkerBytes.Length
+  storedBytes = $faceWorkerStoredBytes.Length; base64 = [Convert]::ToBase64String($faceWorkerStoredBytes)
+}
+$faceManifestAssets += [ordered]@{
+  key = "worker"; path = "src/face-worker.js"; mime = "text/javascript"; compression = "gzip"
+  bytes = $faceWorkerBytes.Length; storedBytes = $faceWorkerStoredBytes.Length
+  sha256 = (Get-Sha256FileHex $faceWorkerPath); firstParty = $true; license = "MIT"
+}
+if ($ids.ContainsKey("face-detection")) { throw "Reserved dependency id: face-detection" }
+$assetBundle.dependencies["face-detection"] = [ordered]@{
+  package = [string]$faceManifest.name; version = [string]$faceManifest.version; assets = $faceAssets
+}
+$manifestDependencies += [ordered]@{
+  id = "face-detection"; package = [string]$faceManifest.name; version = [string]$faceManifest.version
+  license = [string]$faceManifest.license; homepage = [string]$faceManifest.homepage
+  source = $faceManifest.source; detectorPackage = $faceManifest.package
+  localAssets = $true; locked = $true; assets = $faceManifestAssets
+}
+
 $manifest = [ordered]@{
   schemaVersion = 2
   builder = "single-html-app-template/1.3"
@@ -446,14 +511,18 @@ $groupingSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/grouping.j
 $qualitySource = [System.IO.File]::ReadAllText((Join-Path $Root "src/quality.js"), [System.Text.Encoding]::UTF8)
 $similaritySource = [System.IO.File]::ReadAllText((Join-Path $Root "src/similarity.js"), [System.Text.Encoding]::UTF8)
 $embeddingClientSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/embedding-worker-client.js"), [System.Text.Encoding]::UTF8)
+$faceClientSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/face-worker-client.js"), [System.Text.Encoding]::UTF8)
+$faceGeometrySource = [System.IO.File]::ReadAllText((Join-Path $Root "src/face-geometry.js"), [System.Text.Encoding]::UTF8)
 $appSource = [System.IO.File]::ReadAllText((Join-Path $Root "src/app.js"), [System.Text.Encoding]::UTF8)
-if ($coreSource -match '(?i)</script' -or $appSource -match '(?i)</script' -or $groupingSource -match '(?i)</script' -or $qualitySource -match '(?i)</script' -or $similaritySource -match '(?i)</script' -or $embeddingClientSource -match '(?i)</script') { throw "App source must not contain closing script tags." }
+if ($coreSource -match '(?i)</script' -or $appSource -match '(?i)</script' -or $groupingSource -match '(?i)</script' -or $qualitySource -match '(?i)</script' -or $similaritySource -match '(?i)</script' -or $embeddingClientSource -match '(?i)</script' -or $faceClientSource -match '(?i)</script' -or $faceGeometrySource -match '(?i)</script') { throw "App source must not contain closing script tags." }
 $replacements = [ordered]@{
   "__BEST_SHOT_CORE_JS__" = $coreSource
   "__BEST_SHOT_GROUPING_JS__" = $groupingSource
   "__BEST_SHOT_QUALITY_JS__" = $qualitySource
   "__BEST_SHOT_SIMILARITY_JS__" = $similaritySource
   "__BEST_SHOT_EMBEDDING_CLIENT_JS__" = $embeddingClientSource
+  "__BEST_SHOT_FACE_CLIENT_JS__" = $faceClientSource
+  "__BEST_SHOT_FACE_GEOMETRY_JS__" = $faceGeometrySource
   "__BEST_SHOT_APP_JS__" = $appSource
   "__APP_CONFIG_JSON__" = ConvertTo-SafeJson $appConfig 20
   "__BUILD_MANIFEST_JSON__" = ConvertTo-SafeJson $manifest 40
@@ -466,6 +535,8 @@ $replacementExpectedCounts = @{
   "__BEST_SHOT_QUALITY_JS__" = 1
   "__BEST_SHOT_SIMILARITY_JS__" = 1
   "__BEST_SHOT_EMBEDDING_CLIENT_JS__" = 1
+  "__BEST_SHOT_FACE_CLIENT_JS__" = 1
+  "__BEST_SHOT_FACE_GEOMETRY_JS__" = 1
   "__BEST_SHOT_APP_JS__" = 1
   "__APP_CONFIG_JSON__" = 1
   "__BUILD_MANIFEST_JSON__" = 1

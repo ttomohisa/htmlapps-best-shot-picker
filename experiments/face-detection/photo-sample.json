@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Explicit development/CI reproduction of a frozen 24-photo face-box evaluation. Photos are local-file test inputs only, never product assets, HTTPS preview uploads, or public artifacts. Acquisition requires --acquire.",
+  "dataset": {
+    "title": "Face Research Lab London Set",
+    "version": 5,
+    "creators": [
+      "Lisa DeBruine",
+      "Benedict Jones"
+    ],
+    "doi": "https://doi.org/10.6084/m9.figshare.5047666.v5",
+    "sourceUrl": "https://figshare.com/articles/dataset/Face_Research_Lab_London_Set/5047666/5",
+    "metadataUrl": "https://api.figshare.com/v2/articles/5047666/versions/5",
+    "license": {
+      "value": 1,
+      "name": "CC BY 4.0",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "adultConsentEvidence": "Version-5 creator metadata describes 102 adult participants and signed consent for lab/web studies using original or altered images and for illustrating research. This is the publisher statement, not an independent consent audit.",
+    "sourceMetadataSnapshotSha256": "d68420ed4613a9c9a87307c182631e6ee569d1aec27acb3138e9ed8b3b8b8e1f",
+    "attribution": "DeBruine, Lisa; Jones, Benedict (2017). Face Research Lab London Set. figshare. Dataset. https://doi.org/10.6084/m9.figshare.5047666.v5",
+    "dataMinimization": "Only the three named image archives are eligible. Extract only these 24 JPEGs. Demographic and ratings data are not acquired or read. Creator landmark sidecars in image archives are not extracted; frozen eye coordinates already accompany the retained labels."
+  },
+  "archives": [
+    {
+      "name": "neutral_front.zip",
+      "url": "https://ndownloader.figshare.com/files/8541961",
+      "bytes": 33860607,
+      "md5": "236c1c94defbb34a79074b195841cfd6",
+      "sha256": "9fe8aa6f722008edfdec2dd956572316a107590573b1239c080ae0a89d2fa001",
+      "selectedJpegs": 12
+    },
+    {
+      "name": "neutral_left_3quarter.zip",
+      "url": "https://ndownloader.figshare.com/files/8545675",
+      "bytes": 24176189,
+      "md5": "1b9168282a6497eb3380b68017bbf2be",
+      "sha256": "bd9868d810672cf099217fa9da6df58c3b94ef7584aa5443cd3c18ed7ec49503",
+      "selectedJpegs": 6
+    },
+    {
+      "name": "neutral_left_profile.zip",
+      "url": "https://ndownloader.figshare.com/files/8545678",
+      "bytes": 25457035,
+      "md5": "4b41c3b02ee08c659898d6db3cf11c53",
+      "sha256": "227b62a37ea4be7f2f42181f7ed5b8390ea2a605d02c84ec9540dc4f950b7b8a",
+      "selectedJpegs": 6
+    }
+  ],
+  "selection": {
+    "method": "Twelve indices evenly spaced over lexicographically sorted neutral-front filenames, fixed before inference. Every other selected subject supplies one left three-quarter and one left-profile image.",
+    "independentSubjects": 12,
+    "frontalImages": 12,
+    "repeatedPoseSubjects": 6,
+    "poseImages": 12,
+    "frontalFiles": [
+      "neutral_front/001_03.jpg",
+      "neutral_front/010_03.jpg",
+      "neutral_front/020_03.jpg",
+      "neutral_front/032_03.jpg",
+      "neutral_front/043_03.jpg",
+      "neutral_front/068_03.jpg",
+      "neutral_front/091_03.jpg",
+      "neutral_front/103_03.jpg",
+      "neutral_front/117_03.jpg",
+      "neutral_front/127_03.jpg",
+      "neutral_front/137_03.jpg",
+      "neutral_front/173_03.jpg"
+    ],
+    "images": [
+      {
+        "file": "neutral_front/001_03.jpg",
+        "sha256": "bccc0f2594c27555d370988cc186c8706f65c15e2b95e2bf7ace01df3702e709",
+        "subject": "001",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/010_03.jpg",
+        "sha256": "fe7c68d73e9521b0e4e198042b652e9488a820b6ec750c5fdf69e2da7cb9ef30",
+        "subject": "010",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/020_03.jpg",
+        "sha256": "df23d0ebb268059f562459c17dea4864615f126fae75d4e7fa3abd114172f038",
+        "subject": "020",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/032_03.jpg",
+        "sha256": "a9b07dec972d93f84449120fbd085f1ef4a4d4f76addac69751d9b596919df0b",
+        "subject": "032",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/043_03.jpg",
+        "sha256": "3c50efd3353c63f4dcf0f7b1a5a32457a2cf8f2a868867c175796d2eae536bbb",
+        "subject": "043",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/068_03.jpg",
+        "sha256": "3751fbcf6a2591dc3c2db21f1bf1d6f1100d3cc0f9db6a81cca67401e7b2388c",
+        "subject": "068",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/091_03.jpg",
+        "sha256": "836f8f1d0c10a4a13cde14c246a0d7cb5bf4dfe40c088c46f23edd5b4562e3fd",
+        "subject": "091",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/103_03.jpg",
+        "sha256": "5569f6ca06e682912a9ff3fe552a346c9524f0635bc275be4557622465a1445a",
+        "subject": "103",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/117_03.jpg",
+        "sha256": "7f0c9d763c45db9d51245841152ab6ea64da99e0cda939e90db3b5f627a26cf7",
+        "subject": "117",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/127_03.jpg",
+        "sha256": "f252f75df60764d89cdf9c6d37c833d5f295c5dc36814e84d78302cb3a5aab07",
+        "subject": "127",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/137_03.jpg",
+        "sha256": "df59b02ba323f8898aab568407406d9a467e54d49f0ed3e7317a734ef94131d1",
+        "subject": "137",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_front/173_03.jpg",
+        "sha256": "b567453adce09a9dd99e97390729d9731fde2617e02d3c84edd94e56d55e470e",
+        "subject": "173",
+        "pose": "frontal"
+      },
+      {
+        "file": "neutral_left_3quarter/001_02.jpg",
+        "sha256": "f2d5853c66e6c4c6dc3f5a8e27ffc2e59ef10cd43eccf8cd2bc48e57588c438a",
+        "subject": "001",
+        "pose": "three-quarter"
+      },
+      {
+        "file": "neutral_left_3quarter/020_02.jpg",
+        "sha256": "124dbd5d18b64ee0dd10c5584e4a151edc809ae8c059f635251e05014ce820d6",
+        "subject": "020",
+        "pose": "three-quarter"
+      },
+      {
+        "file": "neutral_left_3quarter/043_02.jpg",
+        "sha256": "8a7f8b4d1f28ddfc56d42b8ee94e5ba929dfa161c459d45cd3af30b0d43f5ec7",
+        "subject": "043",
+        "pose": "three-quarter"
+      },
+      {
+        "file": "neutral_left_3quarter/091_02.jpg",
+        "sha256": "3a756950d4278f9ef1c20908c03f201281dd70babcb82e5af29d05da7680cb81",
+        "subject": "091",
+        "pose": "three-quarter"
+      },
+      {
+        "file": "neutral_left_3quarter/117_02.jpg",
+        "sha256": "cbcf11eb1b776fe909ef9704feb5396f8dfc714d691f551380119c210929fe38",
+        "subject": "117",
+        "pose": "three-quarter"
+      },
+      {
+        "file": "neutral_left_3quarter/137_02.jpg",
+        "sha256": "f33c03781e1b9285e436b40612af952c36cec95b2592972176a95d0423ad0f66",
+        "subject": "137",
+        "pose": "three-quarter"
+      },
+      {
+        "file": "neutral_left_profile/001_01.jpg",
+        "sha256": "bd79b979d377cc9e6da75e1136f46f0eaf1d5051b45ed4c1062a35e348ed1a4b",
+        "subject": "001",
+        "pose": "profile"
+      },
+      {
+        "file": "neutral_left_profile/020_01.jpg",
+        "sha256": "6465fbf3c6debfe63b8303539ae894d0a776e00c64d53675e9f7f24162be32fe",
+        "subject": "020",
+        "pose": "profile"
+      },
+      {
+        "file": "neutral_left_profile/043_01.jpg",
+        "sha256": "fb37287c77a01a8f65ad5f4ec9fcf1df7876b3a88c1435763d540ad371e46a21",
+        "subject": "043",
+        "pose": "profile"
+      },
+      {
+        "file": "neutral_left_profile/091_01.jpg",
+        "sha256": "86c0161a5e7e39698f3f01825649af3eca5940766eca31204dc8b932c7ba9b11",
+        "subject": "091",
+        "pose": "profile"
+      },
+      {
+        "file": "neutral_left_profile/117_01.jpg",
+        "sha256": "ae1f89ec0641414c3722d6d322fdfc9143b6275b15662e76cc9b180a6e70fbb9",
+        "subject": "117",
+        "pose": "profile"
+      },
+      {
+        "file": "neutral_left_profile/137_01.jpg",
+        "sha256": "67335d115cce51387a76c41533634e7092c20678b5d0b216162bcf89ddff232c",
+        "subject": "137",
+        "pose": "profile"
+      }
+    ],
+    "originalFrontalArraySha256": "a7149304901a97c6b77c6fc1f415dcd23991871eea9a69ab053a1235a0a97f74",
+    "originalEvaluationArraySha256": "db0aac83623a858a30402f0b6d61a81dc1be4417ec5c4db69116bf06c94d5625",
+    "originalArraySerialization": "JSON.stringify(array, null, 2), no trailing newline"
+  },
+  "historicalRun": {
+    "observedAtUtc": "2026-10-16T22:15:19.216Z",
+    "status": "evaluation-completed",
+    "originalRunner": "test-results/face-research/probe-london.cjs",
+    "originalRunnerSha256": "fc411349b093153a59f3b57d48a67cc51b388ef353437397e62d46bfde0965f3",
+    "reproductionRunner": "experiments/face-detection/photo-evaluate.cjs",
+    "pathOnlyAdaptation": "Frozen criteria, model hashes, selection, labels and retained result bytes are unchanged. The reproduction runner uses canonical ignored cache paths; new executions write ignored results and never overwrite photo-results.json.",
+    "pathMapping": [
+      {
+        "role": "runtime",
+        "original": ".cache/embedding-tfjs/package/dist/tf.es2017.min.js",
+        "canonical": ".cache/face-detection/runtime.js"
+      },
+      {
+        "role": "detector wrapper",
+        "original": "test-results/face-research/assets/npm/package/dist/face-detection.min.js",
+        "canonical": ".cache/face-detection/detector.js"
+      },
+      {
+        "role": "model topology/weights",
+        "original": "test-results/face-research/assets/short/",
+        "canonical": ".cache/face-detection/short/"
+      },
+      {
+        "role": "npm archive",
+        "original": "test-results/face-research/assets/face-detection-1.0.3.tgz",
+        "canonical": ".cache/face-detection/face-detection-1.0.3.tgz"
+      },
+      {
+        "role": "photographs",
+        "original": "test-results/face-research/assets/london/",
+        "canonical": ".cache/face-detection-photos/london/"
+      }
+    ],
+    "retainedFiles": [
+      {
+        "original": "test-results/face-research/london-manual-boxes.json",
+        "retained": "experiments/face-detection/photo-boxes.json",
+        "sha256": "29452e00fda41ced48018b28e4ae33ab40bae38799c7c2e015a9ca01a09175d2",
+        "bytePreservingCopy": true
+      },
+      {
+        "original": "test-results/face-research/acceptance-before-photo-evaluation.md",
+        "retained": "experiments/face-detection/photo-acceptance.md",
+        "sha256": "ac2074ceff2962ac117766bf3d487597fa7a5fababd4f1c6a7c4e552ffa5fc92",
+        "bytePreservingCopy": true
+      },
+      {
+        "original": "test-results/face-research/probe-london-results.json",
+        "retained": "experiments/face-detection/photo-results.json",
+        "sha256": "865d653aaca93552f5caf87db79c3235b85d2c8e84149e6e98c4cd431280425e",
+        "bytePreservingCopy": true
+      }
+    ],
+    "originalEnvironment": {
+      "node": "v24.19.0",
+      "pillow": [
+        "12.3.0"
+      ]
+    },
+    "labels": "Blinded assistant visual bounds and creator eye centers for frontal images. Pose eye centers are unavailable/null. Not human-expert ground truth."
+  },
+  "limitations": [
+    "Pillow RGB/BILINEAR preprocessing is not verified browser canvas parity.",
+    "Node VM CPU timings are not browser or phone performance.",
+    "Six repeated pose subjects do not add independent participants.",
+    "No image pixels are included in this tracked manifest, labels, or results.",
+    "No consumer-burst, group-photo, demographic-parity, or population accuracy claim."
+  ],
+  "commands": {
+    "inspectWithoutNetworkOrInference": "python experiments/face-detection/photo-acquire.py --dry-run; node experiments/face-detection/photo-evaluate.cjs --dry-run",
+    "explicitOptionalAcquisition": "python experiments/face-detection/photo-acquire.py --acquire",
+    "reuseCachedArchivesOnly": "python experiments/face-detection/photo-acquire.py --acquire --offline",
+    "reproduceAfterModelAcquire": "node experiments/face-detection/photo-evaluate.cjs --run-frozen-evaluation",
+    "newResultPath": "test-results/face-research/photo-reproduction-results.json"
+  }
+}

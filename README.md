@@ -14,6 +14,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 - Distinguish JPEG EXIF capture/digitized timestamps from file-modified time
 - See group-relative technical comparison candidates and measured reasons; uncertain or tied cases have no recommendation
 - Browse thumbnails, open a large view, and compare two photos
+- Optionally find faces in the comparison pair, choose a face to zoom, and return to the whole image
 - Switch A / B on phones; inspect 100%, 200%, or 400% views by scrolling
 - Keep any number of photos, with Undo for the latest selection change
 - Save original file bytes in a ZIP with an editable filename and collision-safe entry names
@@ -25,13 +26,14 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 1. Choose **Add photos**, drag files into the drop area, or choose a folder when supported.
 2. Review **Photo groups** or **All photos**. Use **Organize** to split, move, merge, or mark a group reviewed. Open a photo for a closer look. In **Compare**, choose photos A and B. Technical hints may highlight a comparison candidate, but never select it. **Keep** the ones you want.
 3. Optionally choose **Find similar-photo candidates**. It searches up to 36 eligible photos across at least two automatic, unreviewed groups whose normal analysis is complete. For larger sessions, choose whole groups to compare, totaling at most 36 photos per search. Open the candidate thumbnails to compare, then choose **Apply this grouping** only for a grouping you want. **Undo** reverses the latest group edit. Manual and reviewed groups are excluded.
-4. In **Save**, review your choices and filename, then choose **Save originals as ZIP**.
+4. In **Compare**, optionally choose **Find faces**. Select a face separately in each photo to zoom, or return to **Whole image**. Missed or incorrect candidates can occur; manual zoom remains available.
+5. In **Save**, review your choices and filename, then choose **Save originals as ZIP**.
 
 Arrow keys browse the active comparison photo. Enter toggles Keep when focus is on the page or image; focused buttons keep their usual action. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
 
 ## Privacy
 
-Processing stays inside the browser. Optional candidate search uses a model embedded in the HTML and starts only when you choose it. There are no image uploads, runtime APIs, external fonts, analytics, or remote model downloads. Hosted use downloads the initial HTML. Content Security Policy blocks runtime connections with `connect-src 'none'`.
+Processing stays inside the browser. Optional similarity search and face detection use models embedded in the HTML and start only when you choose them. There are no image uploads, runtime APIs, external fonts, analytics, or remote model downloads. Hosted use downloads the initial HTML. Content Security Policy blocks runtime connections with `connect-src 'none'`.
 
 ZIP entries use the original bytes: EXIF, GPS location, color profiles, and other metadata remain. Check metadata before sharing. Original files on your device are never overwritten, moved, or deleted.
 
@@ -45,11 +47,11 @@ See [validation results](docs/VALIDATION.md) for the environments and checks cov
 
 ## Limitations
 
-This is the v0.5 development milestone. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
+This is the v0.6 development milestone. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
 
 The 36-photo limit applies to each optional search, not the whole session. Choose the groups you want to compare; unselected groups stay unchanged. A group containing more than 36 photos cannot be selected for this search. No photos are silently truncated and existing groups are never split. Adding photos, editing groups, or starting a new analysis clears pending candidates. Applying one proposal clears the others, so search again for current candidates. Cancel or failure leaves existing groups, Keep choices, and originals unchanged. Processing may be slow on some devices; normal comparison and saving remain available.
 
-Technical hints use reduced-preview measurements, not aesthetic or subject judgment. Their agreement with human preferences has not been measured. Noise, intentional blur, line art, and lighting can mislead them; a dark photo is not automatically worse. Face detection and eye-state estimation are not included. HEIC, RAW, TIFF, animated images, and videos are unsupported.
+Technical hints use reduced-preview measurements, not aesthetic or subject judgment. Their agreement with human preferences has not been measured. Noise, intentional blur, line art, and lighting can mislead them; a dark photo is not automatically worse. Face detection is an optional navigation aid for the comparison pair, with up to six candidates per photo. Small, turned or occluded faces may be missed, and candidates can be incorrect. Processing can be slow on some devices. Eye-state estimation, face-based ranking and person matching are not included. HEIC, RAW, TIFF, animated images, and videos are unsupported.
 
 Duplicate hashing is limited to 64 MiB per original and requires Web Crypto. A skipped or unavailable duplicate check does not prevent manual selection or export. Manual groups are preserved on additional imports; Reset manual grouping explicitly rebuilds them.
 

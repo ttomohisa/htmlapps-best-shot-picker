@@ -2,6 +2,14 @@
 
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
+## 0.6.0 — development (2026-10-16)
+
+- Add optional face-position detection for the current two comparison photos, with independent face selection, original-image zoom and Whole image return.
+- Keep manual zoom, Keep choices, groups and untouched original ZIP export independent of face detection. Cancel, pair changes, reset and failures discard stale work.
+- Embed only the pinned short-range detector and reuse the existing pure-JavaScript TensorFlow.js CPU runtime in a disposable worker, without CSP relaxation or runtime downloads.
+- Keep face sharpness, eye-state inference, identity correspondence and ranking out of this limited release.
+- Record the controlled adult-photo evaluation and isolated browser gates separately from general accuracy and physical-phone claims.
+
 ## 0.5.1 — development (2026-10-16)
 
 - Choose whole eligible groups for optional candidate search in larger photo sessions, with a 36-photo limit per search.
