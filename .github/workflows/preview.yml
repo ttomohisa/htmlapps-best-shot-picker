@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - feat/best-shot-picker-v0.1-20261016
     types:
       - opened
       - synchronize

@@ -1,4 +1,4 @@
-/* Best Shot Picker v0.1: dependency-free, browser-local image headers and original-byte ZIP. */
+/* Best Shot Picker: dependency-free, browser-local metadata, exact duplicates and original-byte ZIP. */
 (function (root) {
   'use strict';
 
@@ -26,7 +26,7 @@
 
   function checkAbort(signal) {
     if (signal && signal.aborted) {
-      const error = new Error('Export cancelled. Your original photos and selection are unchanged.');
+      const error = new Error('Operation cancelled. Your original photos and selection are unchanged.');
       error.name = 'AbortError';
       error.code = 'ABORT_ERR';
       throw error;
@@ -237,14 +237,14 @@
     return failure('INVALID_IMAGE', 'The image header is empty, damaged, or incomplete.');
   }
 
-  function dimensions(format, width, height, orientation) {
+  function dimensions(format, width, height, orientation, captureTime = null) {
     if (width !== null && height !== null) {
       if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) throw imageError();
       if (width > MAX_IMAGE_AXIS || height > MAX_IMAGE_AXIS || width * height > MAX_IMAGE_PIXELS) {
         throw failure('IMAGE_TOO_LARGE', 'This image exceeds the safe preview limit (100 megapixels or 32,768 pixels on either side). Use a smaller image.');
       }
     }
-    return { format, width, height, orientation: orientation || 1 };
+    return { format, width, height, orientation: orientation || 1, captureTime };
   }
 
   function ascii(bytes, start, length) {
@@ -253,31 +253,84 @@
     return value;
   }
 
-  // Only IFD0 Orientation is needed. A corrupt/unsupported EXIF block must not crash intake.
-  function exifOrientation(bytes, start, end) {
-    if (end - start < 14 || ascii(bytes, start, 6) !== 'Exif\0\0') return 1;
+  // Read only Orientation and the six capture-time tags. Never follow GPS, MakerNote,
+  // thumbnail/next-IFD or arbitrary directory links. All offsets stay inside this APP1.
+  function exifMetadata(bytes, start, end) {
+    const result = { orientation: null, captureTime: null };
+    if (end - start < 14 || ascii(bytes, start, 6) !== 'Exif\0\0') return result;
     const tiff = start + 6, order = ascii(bytes, tiff, 2);
-    if (order !== 'II' && order !== 'MM') return 1;
+    if (order !== 'II' && order !== 'MM') return result;
     const little = order === 'II', view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-    if (view.getUint16(tiff + 2, little) !== 42) return 1;
-    const offset = view.getUint32(tiff + 4, little);
-    if (offset < 8 || offset > end - tiff - 2) return 1;
-    const ifd = tiff + offset, count = view.getUint16(ifd, little);
-    if (count > Math.floor((end - ifd - 2) / 12)) return 1;
-    for (let n = 0; n < count; n++) {
-      const entry = ifd + 2 + n * 12;
-      if (view.getUint16(entry, little) === 0x0112 && view.getUint16(entry + 2, little) === 3 && view.getUint32(entry + 4, little) === 1) {
-        const value = view.getUint16(entry + 8, little);
-        return value >= 1 && value <= 8 ? value : 1;
-      }
+    if (view.getUint16(tiff + 2, little) !== 42) return result;
+    function entries(offset) {
+      if (offset < 8 || offset > end - tiff - 2) return [];
+      const ifd = tiff + offset, count = view.getUint16(ifd, little);
+      if (count > Math.floor((end - ifd - 2) / 12)) return [];
+      return Array.from({ length: count }, (_, n) => ifd + 2 + n * 12);
     }
-    return 1;
+    const ifdOffset = view.getUint32(tiff + 4, little);
+    let exifOffset = null;
+    for (const entry of entries(ifdOffset)) {
+      const tag = view.getUint16(entry, little), type = view.getUint16(entry + 2, little), count = view.getUint32(entry + 4, little);
+      if (tag === 0x0112 && type === 3 && count === 1 && result.orientation === null) {
+        const value = view.getUint16(entry + 8, little);
+        if (value >= 1 && value <= 8) result.orientation = value;
+      }
+      if (tag === 0x8769 && type === 4 && count === 1 && exifOffset === null) exifOffset = view.getUint32(entry + 8, little);
+    }
+    if (exifOffset === null || exifOffset === ifdOffset) return result;
+    const tags = new Map(), wanted = new Set([0x9003, 0x9004, 0x9011, 0x9012, 0x9291, 0x9292]);
+    for (const entry of entries(exifOffset)) {
+      const tag = view.getUint16(entry, little);
+      if (!wanted.has(tag)) continue;
+      if (tags.has(tag)) { tags.set(tag, null); continue; } // Ambiguous duplicate tags are not trusted.
+      tags.set(tag, null);
+      const count = view.getUint32(entry + 4, little);
+      if (view.getUint16(entry + 2, little) !== 2 || count < 2 || count > 64) continue;
+      const offset = count <= 4 ? entry + 8 : tiff + view.getUint32(entry + 8, little);
+      if (offset < tiff + 8 || offset > end - count || bytes[offset + count - 1] !== 0) continue;
+      const value = ascii(bytes, offset, count - 1);
+      if (!/^[\x20-\x7e]*$/.test(value)) continue;
+      tags.set(tag, value);
+    }
+    result.captureTime = captureTimestamp(tags, true) || captureTimestamp(tags, false);
+    return result;
+  }
+
+  function captureTimestamp(tags, original) {
+    const raw = tags.get(original ? 0x9003 : 0x9004);
+    const match = typeof raw === 'string' && /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(raw);
+    if (!match) return null;
+    const [year, month, day, hour, minute, second] = match.slice(1).map(Number);
+    if (year < 1 || month < 1 || month > 12 || day < 1 || day > 31 || hour > 23 || minute > 59 || second > 59) return null;
+    // setUTCFullYear avoids Date.UTC's special treatment of years 0..99. No local timezone or DST guessing.
+    const date = new Date(0);
+    date.setUTCFullYear(year, month - 1, day); date.setUTCHours(hour, minute, second, 0);
+    if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+    const rawSubsecond = (tags.get(original ? 0x9291 : 0x9292) || '').trimEnd();
+    const subsecond = /^\d+$/.test(rawSubsecond) ? rawSubsecond : '';
+    let valueMs = date.getTime() + (subsecond ? Number(subsecond.slice(0, 3).padEnd(3, '0')) : 0);
+    const rawOffset = tags.get(original ? 0x9011 : 0x9012);
+    const offset = typeof rawOffset === 'string' && /^([+-])(\d{2}):(\d{2})$/.exec(rawOffset);
+    const validOffset = offset && Number(offset[2]) <= 23 && Number(offset[3]) <= 59;
+    const result = { valueMs, domain: validOffset ? 'instant' : 'wall', source: original ? 'exif-original' : 'exif-digitized', display: `${match[1]}-${match[2]}-${match[3]} ${match[4]}:${match[5]}:${match[6]}${subsecond ? '.' + subsecond : ''}` };
+    if (validOffset) {
+      result.offsetMinutes = (Number(offset[2]) * 60 + Number(offset[3])) * (offset[1] === '-' ? -1 : 1);
+      result.valueMs -= result.offsetMinutes * 60000;
+      result.display += rawOffset;
+    }
+    return result;
   }
 
   /**
    * Inspect a bounded prefix, not a full decoder/security validator. JPEG dimensions can
    * be null when a large metadata segment crosses the prefix. Always browser-decode next,
    * check decoded dimensions, and keep encoded versus oriented dimensions distinct.
+   * captureTime is null without valid JPEG EXIF original/digitized time. Its valueMs
+   * is an epoch instant only for domain='instant'. For domain='wall' it encodes UTC
+   * components solely for wall-clock comparisons: never apply the host timezone or
+   * compare it directly with instant/File.lastModified values. Subseconds are truncated
+   * to millisecond precision in valueMs; display retains their recorded precision.
    */
   function inspectImageHeader(input) {
     let bytes;
@@ -287,7 +340,7 @@
     if (bytes.length < 4) throw imageError();
     const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     if (bytes[0] === 0xff && bytes[1] === 0xd8) {
-      let cursor = 2, width = null, height = null, orientation = 1;
+      let cursor = 2, width = null, height = null, orientation = 1, captureTime = null;
       while (cursor < bytes.length) {
         if (bytes[cursor++] !== 0xff) throw imageError();
         while (cursor < bytes.length && bytes[cursor] === 0xff) cursor++;
@@ -301,7 +354,11 @@
         if (length < 2) throw imageError();
         const end = cursor + length;
         if (end > bytes.length) break; // Caller may intentionally provide only a header prefix.
-        if (marker === 0xe1 && ascii(bytes, cursor + 2, 6) === 'Exif\0\0') orientation = exifOrientation(bytes, cursor + 2, end);
+        if (marker === 0xe1 && ascii(bytes, cursor + 2, 6) === 'Exif\0\0') {
+          const metadata = exifMetadata(bytes, cursor + 2, end);
+          if (metadata.orientation !== null) orientation = metadata.orientation;
+          if (metadata.captureTime && (!captureTime || (captureTime.source !== 'exif-original' && metadata.captureTime.source === 'exif-original'))) captureTime = metadata.captureTime;
+        }
         if ((marker >= 0xc0 && marker <= 0xcf) && ![0xc4, 0xc8, 0xcc].includes(marker)) {
           if (length < 8 || bytes[cursor + 7] < 1 || length !== 8 + 3 * bytes[cursor + 7]) throw imageError();
           height = view.getUint16(cursor + 3, false);
@@ -310,7 +367,7 @@
         }
         cursor = end;
       }
-      return dimensions('jpeg', width, height, orientation);
+      return dimensions('jpeg', width, height, orientation, captureTime);
     }
     if (bytes[0] === 0x89 && ascii(bytes, 1, 3) === 'PNG') {
       const signature = [137, 80, 78, 71, 13, 10, 26, 10];
@@ -353,7 +410,141 @@
     throw failure('UNSUPPORTED_IMAGE', 'This format is not supported. Choose a JPEG, PNG, or still WebP image.');
   }
 
-  const api = Object.freeze({ sanitizeFilename, zipFilename, uniqueNames, createZip, inspectImageHeader });
+  /**
+   * Analyze immutable File/Blob records without changing records or selections.
+   * Only equal-size candidates are hashed, one at a time. Native SHA-256 needs a
+   * full buffer, so maxHashBytes is a PER-FILE budget (64 MiB by default), not a
+   * collection size limit. Equal digests are then verified with 1 MiB byte reads.
+   * digest has WebCrypto's (algorithm, ArrayBuffer) signature; null means unavailable.
+   * Statuses: unique-size, checked, duplicate, skipped-large, unavailable, failed.
+   * checked means successfully examined, not proof of uniqueness against failed/skipped peers.
+   * Progress never exposes a partial duplicate set. On abort, no result is returned.
+   */
+  async function findExactDuplicates(records, options = {}) {
+    const { signal, onProgress, maxHashBytes = 64 * 1024 * 1024 } = options;
+    checkAbort(signal);
+    if (!Number.isSafeInteger(maxHashBytes) || maxHashBytes < 0) throw failure('INVALID_BUDGET', 'maxHashBytes must be a non-negative safe integer.');
+    const subtle = (root ? root.crypto : globalThis.crypto)?.subtle;
+    const digest = options.digest === undefined ? (subtle && subtle.digest.bind(subtle)) : options.digest;
+    const ids = new Set(), statuses = Object.create(null), bySize = new Map();
+    const input = Array.from(records, record => {
+      if (!record || typeof record.id !== 'string' || !record.id || ids.has(record.id)) throw failure('INVALID_RECORD', 'Each record needs a unique non-empty string id.');
+      ids.add(record.id);
+      const item = { id: record.id, file: record.file, size: record.size };
+      statuses[item.id] = 'failed';
+      try {
+        // Brand-check and use the native immutable size, not a caller-supplied size alone.
+        const actualSize = Object.getOwnPropertyDescriptor(Blob.prototype, 'size').get.call(item.file);
+        if (!Number.isSafeInteger(item.size) || item.size < 0 || item.size !== actualSize) return item;
+        if (!bySize.has(item.size)) bySize.set(item.size, []);
+        bySize.get(item.size).push(item);
+        statuses[item.id] = 'checked';
+      } catch { /* A bad record cannot prevent other originals from being used. */ }
+      return item;
+    });
+    let completedFiles = 0;
+    function progress(phase, currentId = null) {
+      checkAbort(signal);
+      if (typeof onProgress === 'function') onProgress({ phase, currentId, completedFiles, totalFiles: input.length });
+      checkAbort(signal);
+    }
+    async function read(item, start, end) {
+      checkAbort(signal);
+      let buffer;
+      try {
+        buffer = await item.file.slice(start, end).arrayBuffer();
+        if (!(buffer instanceof ArrayBuffer) || buffer.byteLength !== end - start) throw new Error('Incomplete file read.');
+      } catch (cause) {
+        checkAbort(signal);
+        const error = failure('READ_FAILED', 'Could not read this original for duplicate analysis.');
+        error.recordId = item.id;
+        throw error;
+      }
+      checkAbort(signal);
+      return buffer;
+    }
+    const byHash = new Map();
+    for (const item of input) {
+      checkAbort(signal);
+      if (statuses[item.id] !== 'failed') {
+        if (bySize.get(item.size).length < 2) statuses[item.id] = 'unique-size';
+        else if (item.size > maxHashBytes) statuses[item.id] = 'skipped-large';
+        else if (typeof digest !== 'function') statuses[item.id] = 'unavailable';
+        else {
+          progress('hashing', item.id);
+          let hash;
+          try {
+            // No hash buffer is retained once its digest resolves, and no cache can outlive the caller's session.
+            const bytes = await read(item, 0, item.size);
+            const result = await digest('SHA-256', bytes);
+            checkAbort(signal); // A native digest cannot itself be aborted.
+            const value = result instanceof ArrayBuffer ? new Uint8Array(result) : ArrayBuffer.isView(result) ? new Uint8Array(result.buffer, result.byteOffset, result.byteLength) : null;
+            if (!value || value.length !== 32) throw new Error('Invalid SHA-256 digest.');
+            hash = `${item.size}:` + Array.from(value, byte => byte.toString(16).padStart(2, '0')).join('');
+          } catch {
+            checkAbort(signal);
+            statuses[item.id] = 'failed';
+          }
+          if (hash) {
+            if (!byHash.has(hash)) byHash.set(hash, []);
+            byHash.get(hash).push(item);
+          }
+        }
+      }
+      completedFiles++;
+      progress('hashing', item.id);
+      await nextTurn();
+    }
+    async function equalBytes(left, right) {
+      for (let start = 0; start < left.size; start += CHUNK_BYTES) {
+        const end = Math.min(left.size, start + CHUNK_BYTES);
+        const a = new Uint8Array(await read(left, start, end));
+        const b = new Uint8Array(await read(right, start, end));
+        for (let n = 0; n < a.length; n++) if (a[n] !== b[n]) return false;
+        progress('comparing', right.id);
+        await nextTurn();
+        checkAbort(signal);
+      }
+      return true;
+    }
+    const groups = [];
+    for (const bucket of byHash.values()) {
+      if (bucket.length < 2) continue;
+      const classes = [];
+      for (const item of bucket) {
+        progress('comparing', item.id);
+        let matched = false;
+        for (const group of classes) {
+          // If a representative becomes unreadable, remove it and retry against a
+          // surviving verified member. Failed reads must never imply equal bytes.
+          while (group.length && statuses[item.id] !== 'failed') {
+            const representative = group[0];
+            try {
+              if (await equalBytes(representative, item)) { group.push(item); matched = true; }
+              break;
+            } catch (error) {
+              checkAbort(signal);
+              if (error.code !== 'READ_FAILED') throw error;
+              statuses[error.recordId] = 'failed';
+              if (error.recordId === representative.id) group.shift();
+            }
+          }
+          if (matched || statuses[item.id] === 'failed') break;
+        }
+        if (!matched && statuses[item.id] !== 'failed') classes.push([item]);
+        await nextTurn();
+        checkAbort(signal);
+      }
+      groups.push(...classes.filter(group => group.length > 1));
+    }
+    const order = new Map(input.map((item, n) => [item.id, n]));
+    const sets = groups.map(group => group.map(item => item.id)).sort((a, b) => order.get(a[0]) - order.get(b[0]));
+    for (const set of sets) for (const id of set) statuses[id] = 'duplicate';
+    progress('complete');
+    return { sets, statuses };
+  }
+
+  const api = Object.freeze({ sanitizeFilename, zipFilename, uniqueNames, createZip, inspectImageHeader, findExactDuplicates });
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.BestShotCore = api;
 })(typeof window !== 'undefined' ? window : null);

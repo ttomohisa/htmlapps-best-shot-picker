@@ -61,3 +61,7 @@ Before adding or upgrading a package:
 Only explicit JPEG/PNG/static WebP signatures are accepted. Header checks and browser decoding both gate a file before it enters the successful photo list. A 100-megapixel / 32,768-pixel-per-axis resource guard is checked wherever dimensions are available. This cannot guarantee immunity to all browser decoder failures.
 
 Original File objects remain immutable. ZIP export flattens and sanitizes names, normalizes Unicode, avoids case-insensitive collisions, checks ZIP32 limits, and copies original bytes without image rewriting. Export therefore preserves private EXIF/GPS metadata; the app warns users before sharing. No image, thumbnail, selection, or face data is persisted. Language preference is the only localStorage value.
+
+## Photo grouping boundary
+
+The grouping path reads only JPEG orientation and capture/digitized timestamp metadata. GPS and unrelated EXIF data are not followed. Thumbnails/descriptors/digests remain session-only and are not logged or transmitted. SHA-256 uses sequential native whole-file buffers up to 64 MiB per candidate; matching hashes undergo bounded byte verification. This budget is not a guarantee for every low-memory device. Analysis failure never changes Keep choices or original files.

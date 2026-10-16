@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — development
+
+- Added bounded JPEG EXIF capture/digitized timestamps, with explicit timezone domains and file-modified fallback.
+- Added native SHA-256 candidate hashing followed by exact byte comparison, with cancellation and visible skipped/error states.
+- Added conservative all-pairs dHash/RGB/time grouping, independent duplicate badges, group filtering and split/move/merge/review Undo.
+- Preserved Keep selections, original export, manual groups on additional intake, and stale-result guards.
+- Added synthetic grouping/state coverage and an explicit unmeasured real-photo release gate.
+- Updated the local-processing badge and hid only the informational footer on phones.
+
 ## 0.1.0 — 2026-10-16
 
 - Added manual JPEG / PNG / still WebP photo intake, thumbnails, EXIF-aware browser previews, and isolated import errors.
