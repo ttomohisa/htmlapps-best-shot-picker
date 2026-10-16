@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/**'
       - 'tests/performance.browser.cjs'
+      - 'tests/rendering.browser.cjs'
       - '.github/workflows/photo-performance.yml'
       - 'build-standalone.ps1'
       - 'package-lock.json'
