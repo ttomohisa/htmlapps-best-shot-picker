@@ -1,0 +1,4 @@
+# Developer-only Linux x86_64 Python 3.12 corpus renderer; never a product dependency.
+rawpy==0.25.1
+numpy==2.2.6
+Pillow==11.3.0

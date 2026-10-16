@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — frozen external burst validation
+
+- Add an independent, hash-pinned HDR+ burst corpus and a fixed-protocol evaluator that cannot tune on external labels.
+- Record both grouping denominators, sequential browser costs, synthetic CPU stress, and failure fallback without shipping a model or changing app behavior.
+
 ## 0.4.0 — 2026-10-16
 
 - Extend the isolated evaluation with a roughly 89% smaller TFJS harness, verified CPU inference in both unchanged-CSP forms, negative security controls, and a licensed scene-disjoint real-photo lighting pilot.
