@@ -38,6 +38,9 @@
   }
   const nativeWebAssembly=window.WebAssembly;
   let model;const samples=[];
+  const heartbeat=[];let lastBeat=performance.now();
+  const heartbeatTimer=setInterval(()=>{const now=performance.now();heartbeat.push(Math.max(0,now-lastBeat-16));lastBeat=now;},16);
+  report.heartbeatMeasurement='16ms main-thread timer lateness throughout setup and inference; synthetic CI scheduling, not physical-phone responsiveness.';
   try{
     // Decode one photograph at a time; release before the next decode. No fabricated EXIF.
     const baselineStart=performance.now();
@@ -102,6 +105,8 @@
   }catch(error){report.status='model-unavailable';report.error={name:error.name,message:error.message};}
   finally{
     model?.dispose();report.remainingTensors=window.tf?tf.memory().numTensors:null;
+    clearInterval(heartbeatTimer);report.heartbeatSamples=heartbeat.length;
+    const beats=[...heartbeat].sort((a,b)=>a-b);report.heartbeatLatenessP95Ms=beats[Math.floor((beats.length-1)*.95)]||0;report.heartbeatLatenessMaxMs=Math.max(0,...beats);
     report.globalWebAssemblyUnchanged=window.WebAssembly===nativeWebAssembly;
   }
   report.fallbackGroups=(await BestShotGrouping.groupPhotos(samples)).map(g=>g.ids);

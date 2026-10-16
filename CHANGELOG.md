@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — isolated embedding worker
+
+- Prototype a bounded CPU embedding worker with transferable inputs, cancellation, timeout and stale-result cleanup.
+- Compare the unchanged frozen corpus and main-thread timer responsiveness without adding a model to the app.
+
 ## Unreleased — frozen external burst validation
 
 - Add an independent, hash-pinned HDR+ burst corpus and a fixed-protocol evaluator that cannot tune on external labels.

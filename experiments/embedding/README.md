@@ -136,3 +136,21 @@ This is a new, narrow real-burst benefit: the guarded model recovers six additio
 The readable case measured 424.5 ms baseline preparation, 4.6 ms baseline grouping, 155.5 ms runtime load and 73.4 ms model initialization. Its extra 36-photo decode/inference/yield pass took 5,119.1 ms, with per-image inference p50/p95 of 131.2/142.6 ms. The wrapped case's extra pass took 5,270.1 ms. Under 4× CPU throttling, the extra pass took 23,304.8 ms, with inference p50/p95 of 606.2/727.9 ms. These are phase measurements in an isolated harness, not a controlled product speed ratio or phone benchmark. The 15.5 MB research HTML includes approximately 10.5 MB of public PNG fixture bytes and is not the shipped app or proposed model-only bundle size.
 
 **Integration decision: keep the model out of the product.** The benefit justifies continuing a bounded prototype, but this synchronous main-thread adapter already blocks for materially longer than an interactive frame budget. The Long Task API reported only a subset of these continuations; its logged maxima are incomplete observations, not a worst-case UI pause bound. Retained per-image synchronous timings expose that limitation. Next implementation work should isolate inference in a worker or a genuinely interruptible path and test cancellation, stale-result rejection, manual grouping/Keep preservation and failure recovery before any opt-in product integration. Physical Android/iPhone measurements and broader independent labels remain open gates. Repeating the same favorable corpus is not a substitute.
+
+## Off-main-thread adapter prototype (isolated)
+
+`worker-client.js` owns one Blob worker, one generation and at most one pending request. Runtime source and model bytes come only from the existing hash-pinned embedded assets. Weights and bounded RGB inputs transfer ownership; normalized Float64 vectors transfer back. The CPU tensor preprocessing is unchanged. The worker never receives a photo-session state object, Keep flags, originals, or permission to apply groups.
+
+Cancellation immediately terminates the worker, rejects the current operation, clears listeners/timers and revokes its source URL. It does not wait for synchronous inference to cooperate. Late generation/job responses are ignored. Timeout, initialization failure and message failures close the client; restart requires a fresh instance. Successful completion disposes the model, reports remaining tensors and terminates the worker. Abrupt termination releases the worker realm but cannot provide a post-termination tensor census. The client applies backpressure rather than accumulating pixel buffers.
+
+The separate `worker-build.cjs` produces no product artifacts. Both research forms retain the exact existing CSP, including `connect-src 'none'`, with no `unsafe-eval`, WASM exception, or remote script imports. Browser checks compare all 630 cosine scores and the frozen evaluation against PR #5 evidence, and test real worker cancellation/restart. Unit tests additionally inject late callbacks and resource failures. The same-run baseline and worker harnesses record 16 ms main-thread timer lateness throughout setup/inference; this complements, rather than repairs, incomplete Long Task observations. Throughput, timer lateness, sampled tensor bytes and physical-device memory/latency are distinct measurements.
+
+After the preceding burst reproduction steps:
+
+```sh
+npm run experiment:worker:build
+pwsh -NoProfile -File scripts/build-self-extract.ps1 -InputPath test-results/embedding-worker/index.html -OutputPath test-results/embedding-worker/index.self-extract.html
+npm run experiment:worker:test
+```
+
+This is an implementation gate toward an opt-in feature, not a product integration. Browser measurements and review must be recorded before any adoption decision. Physical Android/iPhone performance, broader independent consumer-photo labels, product generation/state wiring and user-facing opt-in/cancel behavior remain open.

@@ -173,9 +173,20 @@ jobs:
           ./scripts/verify-self-extract.ps1 -Path test-results/embedding-burst/index.self-extract.html -ExpectedSourcePath test-results/embedding-burst/index.html
       - name: Measure frozen grouping, sequential costs, and model-failure fallback
         run: npm run experiment:burst:test
+      - name: Build isolated off-main-thread adapter using the same frozen assets
+        run: npm run experiment:worker:build
+      - name: Wrap worker experiment with unchanged canonical CSP
+        shell: pwsh
+        run: |
+          ./scripts/build-self-extract.ps1 -InputPath test-results/embedding-worker/index.html -OutputPath test-results/embedding-worker/index.self-extract.html
+          ./scripts/verify-self-extract.ps1 -Path test-results/embedding-worker/index.self-extract.html -ExpectedSourcePath test-results/embedding-worker/index.html
+      - name: Verify worker parity, cancellation, cleanup and responsiveness
+        run: npm run experiment:worker:test
       - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: external-burst-holdout-${{ github.event.pull_request.head.sha || github.sha }}
-          path: test-results/embedding-burst/*.json
+          path: |
+            test-results/embedding-burst/*.json
+            test-results/embedding-worker/*.json
           retention-days: 14
