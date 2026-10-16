@@ -1,0 +1,212 @@
+{
+  "observedAtUtc": "2026-10-16T10:28:45.364738+00:00",
+  "scope": "Read-only official artifact and license research; no inference or browser execution performed; no production model adoption implied.",
+  "recommendation": "Prioritize TFJS 4.22.0 full ES2017 UMD plus official MobileNet V1 0.25 feature-vector TFJS version 2 for isolated comparison.",
+  "payloadEstimate": {
+    "gzip9AssetSumBytes": 1057891,
+    "base64AssetSumBytes": 1410524,
+    "excludes": "Harness/application HTML, license text, serialization punctuation and loader; this is an asset arithmetic estimate, not a built HTML measurement."
+  },
+  "staticAudit": {
+    "evalCallCount": 0,
+    "functionConstructorCallCount": 0,
+    "xmlHttpRequestCount": 0,
+    "webSocketCount": 0,
+    "eventSourceCount": 0,
+    "sendBeaconCount": 0,
+    "importScriptsCount": 0,
+    "workerConstructorCount": 0,
+    "observedNetworkCode": "HTTP model/data IO helpers and browser fetch wrapper; use embedded fromMemory path. No telemetry endpoint found in the audited ES2017 bundle. Static audit is not a proof of every execution path.",
+    "optionalWasm": "long.js 4.0.0 eagerly attempts a tiny WebAssembly.Module/Instance inside try/catch; JS fallback exists. Strict CSP can still emit a violation despite successful fallback. Test explicitly; a lexically scoped WebAssembly=undefined wrapper can select JS fallback without changing the global or relaxing CSP, but is an adapter requiring tests.",
+    "legacyUmdWarning": "dist/tf.min.js has Function-constructor fallbacks including regeneratorRuntime assignment; prefer ES2017 build.",
+    "requiredBrowserChecks": [
+      "file:// readable and canonical self-extract",
+      "CPU and WebGL separately",
+      "connect-src none and no eval/WASM CSP relaxation",
+      "network interceptors before runtime load",
+      "CSP violation listener before runtime load",
+      "cold/warm initialization and inference timings",
+      "invalid-model fallback",
+      "repeat input/disposal memory behavior",
+      "physical Android and iPhone validation pending"
+    ]
+  },
+  "alternatives": [
+    {
+      "rank": 2,
+      "name": "MediaPipe 0.10.35 single SIMD artifact",
+      "estimate": "Remove scalar loader/WASM from current experiment: about 4.39 MB base64 savings; about 9.75 MB remaining before minor serializer differences. Scalar-only is about 9.62 MB. Current wrapper CSP blocker remains.",
+      "modelCatalogue": "https://storage.googleapis.com/mediapipe-models?prefix=image_embedder/",
+      "finding": "Complete public listing contains only float32 small/large, each version 1/latest. No official fp16/int8 image-embedder variant found. quantize affects output embeddings, not weights."
+    },
+    {
+      "rank": 3,
+      "name": "Official MobileNet V1 0.25 int8 TFLite classifier plus LiteRT/custom runtime",
+      "model": "https://storage.googleapis.com/download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_0.25_224_quant.tgz",
+      "modelBytes": 497264,
+      "modelGzip9Bytes": 383129,
+      "risk": "Classifier output is not an embedding. Need validated intermediate-output export/model conversion. Stock LiteRT.js 2.5.3 smallest compat WASM is 9,334,181 raw bytes and has separate loading/CSP adapters; not obviously smaller than TFJS route."
+    },
+    {
+      "rank": 4,
+      "name": "ONNX Runtime custom minimal build",
+      "license": "MIT runtime; model license separate",
+      "documentation": "https://onnxruntime.ai/docs/build/web.html",
+      "risk": "Stock 1.30.0 CPU SIMD threaded WASM is 14,239,897 raw bytes. A reduced-operator minimal build is supported but needs ORT conversion/custom toolchain and new browser tests; not an easy small prebuilt replacement."
+    }
+  ],
+  "runtime": {
+    "package": "@tensorflow/tfjs",
+    "version": "4.22.0",
+    "license": "Apache-2.0",
+    "tarball": {
+      "url": "https://registry.npmjs.org/@tensorflow/tfjs/-/tfjs-4.22.0.tgz",
+      "bytes": 30566337,
+      "sha256": "56505c191e24116787477b3bb5bb1cc0cf1c2bdce8112b9c402a8a2d31cf2f00",
+      "licenseFileInArchive": false
+    },
+    "asset": {
+      "path": "package/dist/tf.es2017.min.js",
+      "url": "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.es2017.min.js",
+      "bytes": 1105894,
+      "gzip9Bytes": 270611,
+      "sha256": "a1f9e32fd9b373cf394905050cf0c8c66238b34925846c065db00d2a34d1c040"
+    }
+  },
+  "model": {
+    "publisher": "Google",
+    "name": "MobileNet V1 0.25 224 feature-vector",
+    "format": "tfjs graph-model",
+    "version": 2,
+    "license": "Apache-2.0",
+    "archive": {
+      "url": "https://www.kaggle.com/api/v1/models/google/mobilenet-v1/tfJs/025-224-feature-vector/2/download",
+      "bytes": 788589,
+      "sha256": "6f96026bd8521f7ceb8244cf71609bebd82515a96ea200600699ed0d6a9ca625"
+    },
+    "assets": [
+      {
+        "path": "model.json",
+        "bytes": 45887,
+        "gzip9Bytes": 2238,
+        "sha256": "a654b6316e27c84d9ad55e61ab9397d37428159ea8aecb097ea9d6ca9af6927e"
+      },
+      {
+        "path": "group1-shard1of1.bin",
+        "bytes": 841360,
+        "gzip9Bytes": 785042,
+        "sha256": "0f5796c21d7034b6fe0dd021b0e834a503c88fc2d581d75d92fd69aa4f82cd6a"
+      }
+    ],
+    "licenseEvidence": {
+      "sourceUrl": "https://www.kaggle.com/api/v1/models/list?search=mobilenet-v1&owner=google",
+      "responseBytes": 456974,
+      "responseSha256": "b1ec1832128759d0ebfb179ffa06053bb21c7cb017e2081b808a4a0b22325aa6",
+      "modelRef": "google/mobilenet-v1",
+      "modelId": 241,
+      "publisher": "Google",
+      "instance": {
+        "hasBaseModelInstanceInformation": false,
+        "id": 1517,
+        "slug": "025-224-feature-vector",
+        "framework": "tfJs",
+        "fineTunable": false,
+        "overview": "TF.js deployment of google/imagenet/mobilenet_v1_025_224/feature_vector/3.",
+        "usage": "## Origin\n\nThis model is based on [google/imagenet/mobilenet_v1_025_224/feature_vector/3](/models/google/mobilenet-v1/TensorFlow1/025-224-feature-vector/2).\n\nThis model has been automatically converted using the [TF.js converter](https://github.com/tensorflow/tfjs/tree/master/tfjs-converter).\n\n## Example use\nThis model can be loaded using TF.js as:\n\n```javascript\ntf.loadGraphModel(\"${URL}\", { fromTFHub: true })\n```",
+        "downloadUrl": "/models/google/mobilenet-v1/TfJs/025-224-feature-vector/2/download",
+        "versionId": 1814,
+        "versionNumber": 2,
+        "trainingData": [],
+        "url": "https://www.kaggle.com/models/google/mobilenet-v1/TfJs/025-224-feature-vector",
+        "licenseName": "Apache 2.0",
+        "modelInstanceType": "unspecified",
+        "externalBaseModelUrl": "",
+        "totalUncompressedBytes": 887247
+      },
+      "note": "Model license is independently declared by the exact official model instance; it is not inferred from runtime licensing. API response is mutable; record this snapshot, do not require future API body hashes to be unchanged."
+    },
+    "modelCard": "https://www.kaggle.com/models/google/mobilenet-v1/TfJs/025-224-feature-vector/2",
+    "input": {
+      "name": "images",
+      "dtype": "float32",
+      "shape": [
+        -1,
+        -1,
+        -1,
+        3
+      ],
+      "recommendedShape": [
+        1,
+        224,
+        224,
+        3
+      ],
+      "range": [
+        0,
+        1
+      ],
+      "channelOrder": "RGB"
+    },
+    "output": {
+      "name": "module_apply_default/hub_output/feature_vector/SpatialSqueeze",
+      "shape": [
+        1,
+        256
+      ],
+      "l2Normalized": false
+    },
+    "operators": [
+      "BiasAdd",
+      "Const",
+      "DepthwiseConv2dNative",
+      "Mean",
+      "Mul",
+      "Placeholder",
+      "Relu6",
+      "Squeeze",
+      "Sub",
+      "_FusedConv2D"
+    ],
+    "loadApi": "tf.loadGraphModelSync([modelJSON, weightsArrayBuffer]) or tf.loadGraphModel(tf.io.fromMemory({modelTopology: modelJSON.modelTopology, weightSpecs: modelJSON.weightsManifest.flatMap(g => g.weights), weightData: weightsArrayBuffer}))",
+    "inferenceApi": "await tf.setBackend('cpu' or 'webgl'); await tf.ready(); graph.execute(inputTensor, 'module_apply_default/hub_output/feature_vector/SpatialSqueeze'); await output.data(); dispose temporary tensors; L2-normalize for cosine."
+  },
+  "thirdPartyPackages": [
+    {
+      "package": "seedrandom",
+      "version": "3.0.5",
+      "tarball": {
+        "url": "https://registry.npmjs.org/seedrandom/-/seedrandom-3.0.5.tgz",
+        "bytes": 67860,
+        "sha256": "f217e14961edb2a61f23b3eaee7477578021f0db15f69941a866e9f55e518544"
+      },
+      "licenseSources": [
+        {
+          "path": "package/seedrandom.js",
+          "bytes": 8602,
+          "sha256": "df5431fa9ba4b311f182a046e60cdd36ae37a1a80f515d6e9b1f568528735047"
+        },
+        {
+          "path": "package/lib/alea.js",
+          "bytes": 3238,
+          "sha256": "9f821c9ede583e1c1f1d3263d6d016d13d562768de6c477d8262f7e8028a09cb"
+        }
+      ]
+    },
+    {
+      "package": "long",
+      "version": "4.0.0",
+      "tarball": {
+        "url": "https://registry.npmjs.org/long/-/long-4.0.0.tgz",
+        "bytes": 38774,
+        "sha256": "b4bfa0f1695b39b7beb11ffe71c936528e5f34bd3969192fdc4ef1df790c95fb"
+      },
+      "licenseSources": [
+        {
+          "path": "package/LICENSE",
+          "bytes": 11560,
+          "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+        }
+      ]
+    }
+  ]
+}

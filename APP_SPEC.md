@@ -485,3 +485,14 @@ Original-byte ZIP Exporter
 v0.3の参考候補は、既存の向き補正済みサムネイルを長辺160px以下に縮小した技術指標から導出する。数値スコアを品質の正解として表示せず、「縮小画像の細部指標が高め」「白に近い画素が少なめ」のように実測範囲だけを説明する。候補は保存対象・比較対象・並び順を変更しない。暗部率は参考値であり、単独で減点しない。
 
 全メンバーの計測、寸法・粗い構図・局所的細部の整合性、十分な差を条件とし、僅差・不確か・未計測の場合はおすすめなしとする。この条件は被写体や背景ボケを理解するものではない。実写真での推薦一致率、既存の誤グループ率、Android/iPhone実機は未検証であり、合成データ試験をその代替の合格と扱わない。実装と検証の詳細は `docs/QUALITY.md` と `docs/VALIDATION.md` に記録する。
+
+
+## 18. v0.4実装範囲とモデル採用ゲート（2026-10-16）
+
+製品のグループ化は非MLのままとし、閾値を緩めない。不正なhash・RGB配列・寸法比・数値は利用不能な特徴量として扱い、例外や誤結合を避ける。撮影日時のdomainがwall/instant以外なら信頼時刻として使わない。厳密重複、人の編集・選択、原本保存は維持する。
+
+MediaPipe 0.10.35とMobileNetV3 Small v1の固定・ハッシュ検証済み資産を使う技術検証は `experiments/embedding/` に隔離する。通常のアプリビルド、Pages配信、PRプレビューには含めない。合成素材を使い、コサイン類似度と同じ画像に対する既存方式、初期化・推論時間、容量、CSPとネットワーク、モデル失敗時のフォールバックを記録する。単一HTML/自己展開の制約も実測し、失敗を合格と言い換えない。一般的な写真群での改善・誤混入率・実機性能の採用基準が満たされていないため、モデル採用は未承認のままにする。
+
+The v0.4 investigation also compares a smaller, isolated TensorFlow.js CPU/WebGL feature-vector model under the unchanged default CSP. Public, licensed, non-person staged-photo lighting cases may provide an exploratory scene-disjoint development/holdout comparison. These results must not be equated with the planned consumer-burst, human-preference or physical-device release gates. No experimental model or photograph is included in the production app until adoption gates are explicitly met.
+
+The TFJS pilot now demonstrates CPU inference in both default-CSP forms and a narrow controlled-lighting benefit, documented in `experiments/embedding/tfjs-results-2026-10-16.json`. The frozen hybrid recovers 13/27 held-out same-scene pairs without a mixed-scene group, versus 0/27 for the strict no-time baseline. The fixed guard alone recovers 13/27 but introduces one mixed-scene group; this is a post-hoc diagnostic, not independent release validation. Cosine-only recovers 27/27 on this small pilot. None of these counts establish consumer-burst reliability or the original false-group/device gates.

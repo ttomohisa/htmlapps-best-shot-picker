@@ -1,0 +1,535 @@
+{
+  "kind": "public-real-photo-lighting-pilot",
+  "title": "A Multi-Illumination Dataset of Indoor Object Appearance",
+  "authors": [
+    "Lukas Murmann",
+    "Michael Gharbi",
+    "Miika Aittala",
+    "Fredo Durand"
+  ],
+  "year": 2019,
+  "source": "https://projects.csail.mit.edu/illumination/",
+  "license": "CC-BY-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "licenseEvidence": "Official data section explicitly links all data to CC BY 4.0.",
+  "selection": "17 staged non-person object/material scenes, every fifth available scene from 16 through 100; excluded subsequent mannequin-head scenes after visual screening. Each has the fixed source lighting directions 0, 12, 24.",
+  "labels": "Published scene identifiers define same-scene groups; these are not human-preference or consumer-burst labels.",
+  "limitations": [
+    "Static camera, indoor staged objects and controlled lighting only",
+    "Shared calibration objects/backgrounds can confound scene comparisons",
+    "No human-preference, family/child, pet, outdoor burst or phone evaluation",
+    "Pilot does not meet the original real-photo release gate"
+  ],
+  "images": [
+    {
+      "id": "main_experiment16-0",
+      "scene": "main_experiment16",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment16/dir_0_mip3.jpg",
+      "sha256": "95c9fec85a6553700995b17663a381929cfb2c1efc960c6d191bf727dd9c67c5",
+      "bytes": 60279,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment16-12",
+      "scene": "main_experiment16",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment16/dir_12_mip3.jpg",
+      "sha256": "cd31be8a3602930670f07619c587f703c8130174156df80b83d71b9c62a5eedd",
+      "bytes": 55734,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment16-24",
+      "scene": "main_experiment16",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment16/dir_24_mip3.jpg",
+      "sha256": "dba97bfcd901cfd340cc45bdda74461c42873ede500a2ab843083da3224f52d7",
+      "bytes": 64901,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment21-0",
+      "scene": "main_experiment21",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment21/dir_0_mip3.jpg",
+      "sha256": "f2800a9c7acbc727a38db05ca4933887d4512f2ebc28a771f3160121f686c576",
+      "bytes": 44151,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment21-12",
+      "scene": "main_experiment21",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment21/dir_12_mip3.jpg",
+      "sha256": "a8f0d3b65f3035410748caa48ba3997886beb1fceea3ee918b6786e6917e110c",
+      "bytes": 47775,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment21-24",
+      "scene": "main_experiment21",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment21/dir_24_mip3.jpg",
+      "sha256": "1ac6b23d24e0a716883c0956b28803222c03b112c68605c7704fc098ae0d5ad5",
+      "bytes": 40810,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment26-0",
+      "scene": "main_experiment26",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment26/dir_0_mip3.jpg",
+      "sha256": "964a45ae6d7f214d0f8aef6769d2d3bce279ac0327fb6ff6b6577a73848f48cb",
+      "bytes": 32111,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment26-12",
+      "scene": "main_experiment26",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment26/dir_12_mip3.jpg",
+      "sha256": "221c0c7106392507f2cf11d9e2e5195b593d55190507f931515e37501f3d5513",
+      "bytes": 30711,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment26-24",
+      "scene": "main_experiment26",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment26/dir_24_mip3.jpg",
+      "sha256": "7e591670ff5d1a0871ad4bfd56151336d8874b3ae0cbe300b42e3004cb5b189b",
+      "bytes": 30742,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment31-0",
+      "scene": "main_experiment31",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment31/dir_0_mip3.jpg",
+      "sha256": "93d2684b5c7abd52fd62798f3b48615a2be012da34a3ffb704c18be1c21229ed",
+      "bytes": 155512,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment31-12",
+      "scene": "main_experiment31",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment31/dir_12_mip3.jpg",
+      "sha256": "01b6f31ca673fcaf01225adb22933b560cf60b0973469b885595a9989b04c244",
+      "bytes": 158306,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment31-24",
+      "scene": "main_experiment31",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment31/dir_24_mip3.jpg",
+      "sha256": "fe1713392dc46875f7ee6bd8af705086ca8e1602c09d6aa37df29ae86a0dfdc6",
+      "bytes": 149953,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment36-0",
+      "scene": "main_experiment36",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment36/dir_0_mip3.jpg",
+      "sha256": "a834858023ca3ea0fc3d454e462b05e802420d62cf674e9ab46c9ea7c210bb2a",
+      "bytes": 78423,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment36-12",
+      "scene": "main_experiment36",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment36/dir_12_mip3.jpg",
+      "sha256": "ebb3a85b99ea727b3c0025b05d2eaa3fcd9091439f0f6e08cb0753cf80b95d7a",
+      "bytes": 77057,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment36-24",
+      "scene": "main_experiment36",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment36/dir_24_mip3.jpg",
+      "sha256": "818121b237439914aec5f3e2c2cdaf488e1fd13af0b2ac4fc91e906b6e4578d1",
+      "bytes": 74642,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment41-0",
+      "scene": "main_experiment41",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment41/dir_0_mip3.jpg",
+      "sha256": "0afde6a1a4d17f6baee3a7a3889701a630a53a9b755f0d5b0849f98a9fb0463a",
+      "bytes": 48619,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment41-12",
+      "scene": "main_experiment41",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment41/dir_12_mip3.jpg",
+      "sha256": "6206b76a79d87a60291171b6d72067ec90c75cff05a24506e0440e52bb856d84",
+      "bytes": 47359,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment41-24",
+      "scene": "main_experiment41",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment41/dir_24_mip3.jpg",
+      "sha256": "47718838975e05ed3af5b6f2a941204d23e81e3ba2fdcb8f998894cc13e49aaa",
+      "bytes": 55453,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment46-0",
+      "scene": "main_experiment46",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment46/dir_0_mip3.jpg",
+      "sha256": "dc5d4b78898a8ad145ad5887983bf0d19dedf6fd1e9ce60fb6a8522f0461a85c",
+      "bytes": 61082,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment46-12",
+      "scene": "main_experiment46",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment46/dir_12_mip3.jpg",
+      "sha256": "5943c4835b5f637da718564e62e9600fa281ac6206bdf70d128e1a04ee4ce672",
+      "bytes": 63610,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment46-24",
+      "scene": "main_experiment46",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment46/dir_24_mip3.jpg",
+      "sha256": "0af03b55b637a7fcc81e743a07ff00c5f15595a681233650976afe7f48cb2f13",
+      "bytes": 59529,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment51-0",
+      "scene": "main_experiment51",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment51/dir_0_mip3.jpg",
+      "sha256": "f6cdbf16271ec9dc4ca89cb2112b2578ced94079591410027fcbe088f570ebb0",
+      "bytes": 36197,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment51-12",
+      "scene": "main_experiment51",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment51/dir_12_mip3.jpg",
+      "sha256": "84ae268fafd0bad85835f71fbd79a9148fd6eb61da381298634650d6149b7248",
+      "bytes": 38318,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment51-24",
+      "scene": "main_experiment51",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment51/dir_24_mip3.jpg",
+      "sha256": "b48407df02954f78bc6616b88c3827b1dd7cb0b7893dad34f44616548a1c4f7f",
+      "bytes": 30583,
+      "mime": "image/jpeg",
+      "split": "development"
+    },
+    {
+      "id": "main_experiment56-0",
+      "scene": "main_experiment56",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment56/dir_0_mip3.jpg",
+      "sha256": "692595c6a96317cd119447e9c928e0e4b166396f31347a1398b71e2155003b39",
+      "bytes": 79698,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment56-12",
+      "scene": "main_experiment56",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment56/dir_12_mip3.jpg",
+      "sha256": "65911303a2bc9b8a9afd25fe86922ec273cfe4e5c4b7f029fe9fda2128c1d47f",
+      "bytes": 81415,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment56-24",
+      "scene": "main_experiment56",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment56/dir_24_mip3.jpg",
+      "sha256": "f23fef20285c91d4b68b457521dd28f100f0ae862b9d2541a358a1921dde2a16",
+      "bytes": 80476,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment61-0",
+      "scene": "main_experiment61",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment61/dir_0_mip3.jpg",
+      "sha256": "b8892b9df8dcc40fc0bdc84473eeb4d71a25b6a2a67f7256394c6943342a44aa",
+      "bytes": 99924,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment61-12",
+      "scene": "main_experiment61",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment61/dir_12_mip3.jpg",
+      "sha256": "159f24f94df25e3f73796eebc3bb000898d939955f28b336954f10a3edb42de3",
+      "bytes": 99244,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment61-24",
+      "scene": "main_experiment61",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment61/dir_24_mip3.jpg",
+      "sha256": "f4ba0d454917d216d20368a8fc91134617b9db1557e33d713dbb944e3f59a231",
+      "bytes": 102207,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment66-0",
+      "scene": "main_experiment66",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment66/dir_0_mip3.jpg",
+      "sha256": "7c5aa7850a26608ff9ec8d1f36e494bc3ef3e3a67021fb3840e996de4208c24f",
+      "bytes": 46416,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment66-12",
+      "scene": "main_experiment66",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment66/dir_12_mip3.jpg",
+      "sha256": "4502264d1650dca1c47075e196e2d17dee5a5a56d0d8ce4bdb20c551f6c4cb77",
+      "bytes": 46009,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment66-24",
+      "scene": "main_experiment66",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment66/dir_24_mip3.jpg",
+      "sha256": "c5f248e11587d426156b9ea13e97221415f2ecaddd9bf74eb62976f1cc5e0d59",
+      "bytes": 42492,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment71-0",
+      "scene": "main_experiment71",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment71/dir_0_mip3.jpg",
+      "sha256": "eb0606760ecc0cee21f81d752d6078b37f19028838f9b23115c0347d825c5a63",
+      "bytes": 29314,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment71-12",
+      "scene": "main_experiment71",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment71/dir_12_mip3.jpg",
+      "sha256": "45ddfb472b11108e50ff38cf374c8a6529a0e860872230e0c233398c329991b6",
+      "bytes": 29498,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment71-24",
+      "scene": "main_experiment71",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment71/dir_24_mip3.jpg",
+      "sha256": "8ca76b60f3dfdf184bf11ce44e64588cb70d2fb96874047eb44e071bdae3cd91",
+      "bytes": 26432,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment80-0",
+      "scene": "main_experiment80",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment80/dir_0_mip3.jpg",
+      "sha256": "3fd96d3350ee65a80a4000f2cf63416c4c365627b070c8a7d61c98286c6b43bf",
+      "bytes": 46080,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment80-12",
+      "scene": "main_experiment80",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment80/dir_12_mip3.jpg",
+      "sha256": "1dee9215c40e3da8eb5aeadc23994210c5c8be139102e6fe040e5945626f094b",
+      "bytes": 47865,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment80-24",
+      "scene": "main_experiment80",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment80/dir_24_mip3.jpg",
+      "sha256": "69063fc9c1b2ab99fe9fac45a24162302b1d4aade042901f37881017728baa15",
+      "bytes": 36345,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment85-0",
+      "scene": "main_experiment85",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment85/dir_0_mip3.jpg",
+      "sha256": "a88548068563319376c5708c407077d05ad6ac20f204cdcd3ff87195b338fd95",
+      "bytes": 40168,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment85-12",
+      "scene": "main_experiment85",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment85/dir_12_mip3.jpg",
+      "sha256": "3d7fd9d09fa5cd9a42a7fe9cd8f1b38ed45939e0fb8d2d8abbce923011b89491",
+      "bytes": 40783,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment85-24",
+      "scene": "main_experiment85",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment85/dir_24_mip3.jpg",
+      "sha256": "7f69c61a32fb0d4dd9754b65e33d4f2cca447f6947965ce9844ca2dff0316fb7",
+      "bytes": 49782,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment90-0",
+      "scene": "main_experiment90",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment90/dir_0_mip3.jpg",
+      "sha256": "4855dd66521cd57b9aa9462283cfc36484967d9306936824ed2af48a87f6d458",
+      "bytes": 39268,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment90-12",
+      "scene": "main_experiment90",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment90/dir_12_mip3.jpg",
+      "sha256": "322f96b7e44ed63ec18f17496e745218f97d93d24c5ce2af370bdd286f81cd3d",
+      "bytes": 40646,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment90-24",
+      "scene": "main_experiment90",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment90/dir_24_mip3.jpg",
+      "sha256": "a40870f46c55896b104a8f6ff92bda6184befeb0fa3f6f4324de6c2f71ef6de4",
+      "bytes": 39298,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment95-0",
+      "scene": "main_experiment95",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment95/dir_0_mip3.jpg",
+      "sha256": "f73c7157489f485e31b3855852c4cd1cdf7b6ab55ff19e63d3fb6c262df53861",
+      "bytes": 68624,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment95-12",
+      "scene": "main_experiment95",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment95/dir_12_mip3.jpg",
+      "sha256": "a99e046a7bf94b1eec27be17aa3dc63593edea1061a775ac90445c011cfcd13a",
+      "bytes": 66330,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment95-24",
+      "scene": "main_experiment95",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment95/dir_24_mip3.jpg",
+      "sha256": "974fe10cfe5856f76ee875bdcd0394a646952dc81d0d8540c3f031222470edc0",
+      "bytes": 48659,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment100-0",
+      "scene": "main_experiment100",
+      "light": 0,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment100/dir_0_mip3.jpg",
+      "sha256": "e22340277f6b839d7f3be92a2cb5d925dc81a255b8534b447081825ba0d9e77a",
+      "bytes": 78726,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment100-12",
+      "scene": "main_experiment100",
+      "light": 12,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment100/dir_12_mip3.jpg",
+      "sha256": "bc7bd729df40097d741249d27de7e1f8c554ff476cf0b463a211bf7de7b8e4e8",
+      "bytes": 77643,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    },
+    {
+      "id": "main_experiment100-24",
+      "scene": "main_experiment100",
+      "light": 24,
+      "url": "https://projects.csail.mit.edu/illumination/databrowser/main_experiment100/dir_24_mip3.jpg",
+      "sha256": "f5e0fb03beac7a2ef18bcb8921f5fa63c5f854efc1e8ed0ac03b6a076ee4cfab",
+      "bytes": 72813,
+      "mime": "image/jpeg",
+      "split": "holdout"
+    }
+  ]
+}

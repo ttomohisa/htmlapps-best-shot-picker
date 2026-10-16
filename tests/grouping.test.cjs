@@ -14,3 +14,49 @@ test('aspect threshold is symmetric at its boundary',()=>{const a=photo('a',{tim
 test('merge Undo restores original group order',()=>{const initial=['a','b','c'].map(id=>({id:'g-'+id,ids:[id],manual:false,reviewed:false}));const edit=G.editGroups(initial,{type:'merge',sourceId:'g-a',targetId:'g-c'});assert.deepEqual(G.undoEdit(edit.groups,edit.patch),initial);});
 
 test('reviewing a pending group locks its membership for later analysis',async()=>{const pending=[{id:'g-a',ids:['a'],manual:false,reviewed:false,pending:true}];const reviewed=G.editGroups(pending,{type:'review',sourceId:'g-a'}).groups;const grouped=await G.groupPhotos([photo('a'),photo('b')],{previousGroups:reviewed.filter(g=>!g.pending||g.manual)});assert.equal(grouped.length,2);assert.equal(grouped[0].reviewed,true);assert.equal(grouped[0].manual,true);});
+
+test('malformed visual features abstain symmetrically instead of throwing or joining', () => {
+  const base = photo('base', { time: 0 });
+  const invalid = [
+    ['missing feature', null], ['wrong version', { version: 'other' }], ['missing version', { version: undefined }],
+    ...['', 'x', '0'.repeat(15), '0'.repeat(17), 'gggggggggggggggg', '0xaaaaaaaaaaaaaaaa', 123, null].map(hash => ['invalid hash', { hash }]),
+    ...[undefined, null, [], Array(216), Array(216).fill('100'), { length: 216 }, new Float32Array(216)].map(rgb => ['invalid RGB', { rgb }]),
+    ...[NaN, Infinity, -1, 256].map(value => { const rgb = Array(216).fill(100); rgb[123] = value; return ['invalid RGB value', { rgb }]; }),
+    ...[NaN, Infinity, 0, -1, '1'].map(aspect => ['invalid aspect', { aspect }]),
+    ...[NaN, Infinity, -1, '30', undefined, 128].map(deviation => ['invalid deviation', { deviation }])
+  ];
+  for (const [label, patch] of invalid) {
+    const other = photo('invalid', { time: 0 }); other.features = patch === null ? null : { ...other.features, ...patch };
+    for (const [a, b] of [[base, other], [other, base]]) assert.deepEqual(G.pairDecision(a, b), { match: false, reason: 'features-unavailable' }, label);
+  }
+});
+
+test('unknown timestamp domains never relax strict visual thresholds or impose a capture-time gap', () => {
+  for (const domain of [undefined, null, '', 'utc', 'file-last-modified', 'WALL', {}]) {
+    const a = photo('a', { time: 0 }), b = photo('b', { time: 1, color: 110 });
+    a.captureTime.domain = domain; b.captureTime.domain = domain;
+    assert.equal(G.pairDecision(a, b).match, false); assert.equal(G.pairDecision(a, b).reason, 'strict-visual');
+    b.features.rgb.fill(100); b.captureTime.valueMs = 999999999;
+    assert.equal(G.pairDecision(a, b).match, true); assert.equal(G.pairDecision(a, b).reason, 'strict-visual');
+  }
+  for (const domain of ['wall', 'instant']) assert.equal(G.pairDecision(photo('a', { time: 0, domain }), photo('b', { time: 1, domain, color: 110 })).reason, 'capture-and-visual');
+});
+
+test('validated features retain exact-duplicate priority and ordinary numeric boundary behavior', () => {
+  const a = photo('a'), b = photo('b'); a.duplicateSetId = b.duplicateSetId = 'verified';
+  a.features = null; b.features = { hash: 'not-hex', rgb: null };
+  assert.deepEqual(G.pairDecision(a, b), { match: true, reason: 'exact-bytes' });
+  const x = photo('x', { hash: 'AAAAAAAAAAAAAAAA' }), y = photo('y');
+  assert.equal(G.pairDecision(x, y).match, true);
+  x.features.deviation = 0; assert.equal(G.pairDecision(x, y).reason, 'low-information');
+});
+
+test('invalid new features keep a separate group without changing saved membership, order or Keep', async () => {
+  const photos = [photo('a', { kept: true }), photo('b'), photo('broken'), photo('later')];
+  photos[2].features.hash = 'not-hex';
+  const previousGroups = await G.groupPhotos(photos.slice(0, 2));
+  const snapshot = structuredClone({ photos, previousGroups });
+  const result = await G.groupPhotos(photos, { previousGroups });
+  assert.deepEqual(result.map(group => group.ids), [['a', 'b', 'later'], ['broken']]);
+  assert.deepEqual({ photos, previousGroups }, snapshot);
+});

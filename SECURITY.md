@@ -65,3 +65,9 @@ Original File objects remain immutable. ZIP export flattens and sanitizes names,
 ## Photo grouping boundary
 
 The grouping path reads only JPEG orientation and capture/digitized timestamp metadata. GPS and unrelated EXIF data are not followed. Thumbnails/descriptors/digests remain session-only and are not logged or transmitted. SHA-256 uses sequential native whole-file buffers up to 64 MiB per candidate; matching hashes undergo bounded byte verification. This budget is not a guarantee for every low-memory device. Analysis failure never changes Keep choices or original files.
+
+## Isolated embedding experiments
+
+The developer-only MediaPipe/TFJS experiments are excluded from the normal application build and deployments. Public research photographs are downloaded with explicit source attribution/license and pinned hashes; user-selected private photos are not used in CI. Experimental HTML/model/photo bundles are not published as CI artifacts.
+
+The TFJS candidate does not change the canonical self-extract builder or production CSP. A local lexical parameter disables only the bundled long.js optional WASM accelerator, retaining its JavaScript fallback; global WebAssembly remains unchanged. CPU/WebGL inference and model loading use embedded in-memory bytes. Negative tests independently check that JavaScript eval/Function, WASM compilation and external connections remain blocked. Research results cannot authorize model adoption without the documented photographic and device gates.

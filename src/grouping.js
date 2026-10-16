@@ -10,15 +10,21 @@ function features(rgba,width,height,aspect){
  return{version:CONFIG.version,hash:hash.toString(16).padStart(16,'0'),rgb,aspect,deviation};
 }
 function hamming(a,b){let bits=BigInt('0x'+a)^BigInt('0x'+b),count=0;while(bits){bits&=bits-1n;count++;}return count;}
+function validFeatures(value,config){
+ if(!value||typeof value.version!=='string'||!value.version||value.version!==config.version||typeof value.hash!=='string'||!/^[0-9a-f]{16}$/i.test(value.hash)||!Number.isFinite(value.aspect)||value.aspect<=0||!Number.isFinite(value.deviation)||value.deviation<0||value.deviation>127.5+1e-9||!Array.isArray(value.rgb)||value.rgb.length!==216)return false;
+ // Do not let holes, coercible strings or non-finite samples masquerade as zero distance.
+ // Tiny roundoff is possible when alpha-compositing valid byte channels onto white.
+ for(let i=0;i<216;i++)if(!Object.prototype.hasOwnProperty.call(value.rgb,i)||!Number.isFinite(value.rgb[i])||value.rgb[i]<-1e-9||value.rgb[i]>255+1e-9)return false;
+ return true;
+}
 function pairDecision(a,b,config=CONFIG){
  if(a.duplicateSetId&&a.duplicateSetId===b.duplicateSetId)return{match:true,reason:'exact-bytes'};
- const x=a.features,y=b.features;if(!x||!y||x.version!==config.version||y.version!==config.version)return{match:false,reason:'features-unavailable'};
- const ta=a.captureTime,tb=b.captureTime;const timed=!!(ta&&tb&&ta.domain===tb.domain&&Number.isFinite(ta.valueMs)&&Number.isFinite(tb.valueMs));
+ const x=a.features,y=b.features;if(!validFeatures(x,config)||!validFeatures(y,config))return{match:false,reason:'features-unavailable'};
+ const ta=a.captureTime,tb=b.captureTime;const timed=!!(ta&&tb&&(ta.domain==='wall'||ta.domain==='instant')&&ta.domain===tb.domain&&Number.isFinite(ta.valueMs)&&Number.isFinite(tb.valueMs));
  if(timed&&Math.abs(ta.valueMs-tb.valueMs)>config.captureWindowMs)return{match:false,reason:'capture-time-gap'};
  if(Math.min(x.deviation,y.deviation)<config.minLumaDeviation)return{match:false,reason:'low-information'};
  const aspectDelta=Math.max(x.aspect,y.aspect)/Math.min(x.aspect,y.aspect)-1;if(aspectDelta>(timed?config.timedAspectDelta:config.untimedAspectDelta))return{match:false,reason:'aspect'};
  const distance=hamming(x.hash,y.hash);if(distance>(timed?config.timedHashDistance:config.untimedHashDistance))return{match:false,reason:'hash',distance};
- if(x.rgb.length!==216||y.rgb.length!==216)return{match:false,reason:'features-unavailable'};
  const rgbDistance=x.rgb.reduce((sum,value,i)=>sum+Math.abs(value-y.rgb[i]),0)/x.rgb.length;
  return{match:rgbDistance<=(timed?config.timedRgbDistance:config.untimedRgbDistance),reason:timed?'capture-and-visual':'strict-visual',distance,rgbDistance};
 }

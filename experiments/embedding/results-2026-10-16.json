@@ -1,0 +1,449 @@
+{
+  "sourceHead": "159beb1df01ee2712add76f31714291476356f29",
+  "workflowRun": "https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38880569185",
+  "artifactSha256": "0e7871652b240aade326e4120f37c2e5c0b91cbc3af041dd740feb05bde05cf1",
+  "build": {
+    "kind": "development-only-feasibility-build",
+    "runtime": "0.10.35",
+    "model": "1",
+    "htmlBytes": 14130687,
+    "htmlSha256": "36431e04ab153775bb457a653cec6a367b16630279094bb83bd012f968edba6d",
+    "assets": {
+      "module": {
+        "bytes": 136993,
+        "gzipBytes": 39868,
+        "sha256": "55d7ab624fbb70dcc5adc4ae6d7ea9cfcb569139d3dbfbf2b1deafcb966bc0fe"
+      },
+      "simdLoader": {
+        "bytes": 322044,
+        "gzipBytes": 78076,
+        "sha256": "e7fd9858e8e8f221d9b96eddc11f8e077f263e0b7bbd79d3cbe882b134274f8c"
+      },
+      "simdWasm": {
+        "bytes": 11153617,
+        "gzipBytes": 3301512,
+        "sha256": "6a5c64584c2ab61c763b6e204afbdbc7ce1caf7f5216187322bca8df94f646bc"
+      },
+      "scalarLoader": {
+        "bytes": 321847,
+        "gzipBytes": 78009,
+        "sha256": "438d1fe8ff7f4d946025bc211c291543c037d8a3785ed4eee60f1f521b236296"
+      },
+      "scalarWasm": {
+        "bytes": 10481398,
+        "gzipBytes": 3211107,
+        "sha256": "8a3092d34c79d3f57e6ba8592105e8a90f6b07c27891ffecd14cca428bfd3e31"
+      },
+      "model": {
+        "bytes": 4117670,
+        "gzipBytes": 3789925,
+        "sha256": "bbbb4c51a55a53905af1daec995ca1aae355046f8839bb8c9f5ce9271394bc40"
+      }
+    },
+    "productionModelIncluded": false
+  },
+  "wrapper": {
+    "schemaVersion": 1,
+    "generatedAtUtc": "2026-10-16T09:27:56.0325542Z",
+    "source": {
+      "path": "index.html",
+      "bytes": 14130687,
+      "sha256": "36431e04ab153775bb457a653cec6a367b16630279094bb83bd012f968edba6d"
+    },
+    "compressedPayload": {
+      "format": "gzip",
+      "bytes": 10623186,
+      "sha256": "325415f7f1dd6c3c22f34cd257ea5aadb437037949d2d1f3fb303130ff997fef",
+      "encoding": "base64"
+    },
+    "output": {
+      "path": "index.self-extract.html",
+      "bytes": 14170041,
+      "sha256": "56a325240123f430fe7d7310279a862d0b6a4740fc77620956d6bfe23249bf90",
+      "loaderEncoding": "ascii",
+      "faviconInherited": true
+    },
+    "runtime": {
+      "decompressor": "DecompressionStream",
+      "networkRequired": false
+    }
+  },
+  "browser": {
+    "kind": "development-only-embedding-feasibility",
+    "browser": "143.0.7499.4",
+    "platform": "linux",
+    "architecture": "x64",
+    "realPhotoAccuracy": "NOT MEASURED",
+    "realDevicePerformance": "NOT MEASURED",
+    "adoption": "NOT APPROVED",
+    "productionModelIncluded": false,
+    "results": [
+      {
+        "kind": "synthetic-offline-feasibility-only",
+        "realPhotoAccuracy": "NOT MEASURED",
+        "adoption": "NOT APPROVED",
+        "productionModelIncluded": false,
+        "runtime": "0.10.35",
+        "model": "1",
+        "mode": "simd",
+        "fixtureProvenance": "Project-authored synthetic landscapes and textures",
+        "attempts": [],
+        "violations": [],
+        "baselineGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "phase": "complete",
+        "backend": "simd",
+        "injectedFault": null,
+        "initializationMs": 304.20000000001164,
+        "embeddings": [
+          {
+            "id": "landscape.jpg",
+            "dimensions": 1024
+          },
+          {
+            "id": "landscape-2.jpg",
+            "dimensions": 1024
+          },
+          {
+            "id": "quality-detail.png",
+            "dimensions": 1024
+          },
+          {
+            "id": "quality-soft.png",
+            "dimensions": 1024
+          }
+        ],
+        "pairs": [
+          {
+            "a": "landscape.jpg",
+            "b": "landscape-2.jpg",
+            "baseline": {
+              "match": true,
+              "reason": "capture-and-visual",
+              "distance": 1,
+              "rgbDistance": 2.6435185185185186
+            },
+            "cosine": 0.974632341669326
+          },
+          {
+            "a": "landscape.jpg",
+            "b": "quality-detail.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 39
+            },
+            "cosine": 0.13268155870460532
+          },
+          {
+            "a": "landscape.jpg",
+            "b": "quality-soft.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 39
+            },
+            "cosine": 0.14245121768616467
+          },
+          {
+            "a": "landscape-2.jpg",
+            "b": "quality-detail.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 40
+            },
+            "cosine": 0.12924470717803568
+          },
+          {
+            "a": "landscape-2.jpg",
+            "b": "quality-soft.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 40
+            },
+            "cosine": 0.13928295030469526
+          },
+          {
+            "a": "quality-detail.png",
+            "b": "quality-soft.png",
+            "baseline": {
+              "match": true,
+              "reason": "capture-and-visual",
+              "distance": 0,
+              "rgbDistance": 0.2824074074074074
+            },
+            "cosine": 0.9790818019625672
+          }
+        ],
+        "selfSimilarity": 1,
+        "firstInferenceMs": [
+          50.79999999998836,
+          7.2000000000116415,
+          8.599999999976717,
+          9.700000000011642
+        ],
+        "warmP50Ms": 5.5,
+        "warmP95Ms": 7.899999999965075,
+        "status": "inference-completed",
+        "fallbackGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "fallbackPreserved": true,
+        "totalMs": 689.4000000000233,
+        "file": "index.html",
+        "httpRequests": [],
+        "pageErrors": []
+      },
+      {
+        "kind": "synthetic-offline-feasibility-only",
+        "realPhotoAccuracy": "NOT MEASURED",
+        "adoption": "NOT APPROVED",
+        "productionModelIncluded": false,
+        "runtime": "0.10.35",
+        "model": "1",
+        "mode": "scalar",
+        "fixtureProvenance": "Project-authored synthetic landscapes and textures",
+        "attempts": [],
+        "violations": [],
+        "baselineGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "phase": "complete",
+        "backend": "scalar",
+        "injectedFault": null,
+        "initializationMs": 303.29999999998836,
+        "embeddings": [
+          {
+            "id": "landscape.jpg",
+            "dimensions": 1024
+          },
+          {
+            "id": "landscape-2.jpg",
+            "dimensions": 1024
+          },
+          {
+            "id": "quality-detail.png",
+            "dimensions": 1024
+          },
+          {
+            "id": "quality-soft.png",
+            "dimensions": 1024
+          }
+        ],
+        "pairs": [
+          {
+            "a": "landscape.jpg",
+            "b": "landscape-2.jpg",
+            "baseline": {
+              "match": true,
+              "reason": "capture-and-visual",
+              "distance": 1,
+              "rgbDistance": 2.6435185185185186
+            },
+            "cosine": 0.9746325924644549
+          },
+          {
+            "a": "landscape.jpg",
+            "b": "quality-detail.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 39
+            },
+            "cosine": 0.1326815896424484
+          },
+          {
+            "a": "landscape.jpg",
+            "b": "quality-soft.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 39
+            },
+            "cosine": 0.1424511414651003
+          },
+          {
+            "a": "landscape-2.jpg",
+            "b": "quality-detail.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 40
+            },
+            "cosine": 0.12924479899578883
+          },
+          {
+            "a": "landscape-2.jpg",
+            "b": "quality-soft.png",
+            "baseline": {
+              "match": false,
+              "reason": "hash",
+              "distance": 40
+            },
+            "cosine": 0.13928296427326442
+          },
+          {
+            "a": "quality-detail.png",
+            "b": "quality-soft.png",
+            "baseline": {
+              "match": true,
+              "reason": "capture-and-visual",
+              "distance": 0,
+              "rgbDistance": 0.2824074074074074
+            },
+            "cosine": 0.9790820074581426
+          }
+        ],
+        "selfSimilarity": 1,
+        "firstInferenceMs": [
+          51.40000000002328,
+          16,
+          15.400000000023283,
+          15.299999999988358
+        ],
+        "warmP50Ms": 14.099999999976717,
+        "warmP95Ms": 14.599999999976717,
+        "status": "inference-completed",
+        "fallbackGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "fallbackPreserved": true,
+        "totalMs": 793,
+        "file": "index.html",
+        "httpRequests": [],
+        "pageErrors": []
+      },
+      {
+        "kind": "synthetic-offline-feasibility-only",
+        "realPhotoAccuracy": "NOT MEASURED",
+        "adoption": "NOT APPROVED",
+        "productionModelIncluded": false,
+        "runtime": "0.10.35",
+        "model": "1",
+        "mode": "broken",
+        "fixtureProvenance": "Project-authored synthetic landscapes and textures",
+        "attempts": [],
+        "violations": [],
+        "baselineGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "phase": "initializing-model",
+        "backend": "simd",
+        "injectedFault": "invalid-model",
+        "status": "model-unavailable",
+        "error": {
+          "name": "Error",
+          "message": "INVALID_ARGUMENT: The model is not a valid Flatbuffer buffer; Initialize was not ok; StartGraph failed\n=== Source Location Trace: ===\nthird_party/mediapipe/tasks/cc/common.cc:30\nthird_party/mediapipe/tasks/cc/core/model_resources.cc:94\nthird_party/mediapipe/tasks/cc/core/model_task_graph.cc:222\nthird_party/mediapipe/tasks/cc/vision/image_embedder/image_embedder_graph.cc:100\nthird_party/mediapipe/framework/tool/subgraph_expansion.cc:309\nthird_party/mediapipe/framework/validated_graph_config.cc:503\nthird_party/mediapipe/framework/validated_graph_config.cc:365\nthird_party/mediapipe/framework/calculator_graph.cc:529\nresearch/drishti/app/pursuit/wasm/graph_utils.cc:95\n"
+        },
+        "fallbackGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "fallbackPreserved": true,
+        "totalMs": 303.9000000000233,
+        "file": "index.html",
+        "httpRequests": [],
+        "pageErrors": []
+      },
+      {
+        "kind": "synthetic-offline-feasibility-only",
+        "realPhotoAccuracy": "NOT MEASURED",
+        "adoption": "NOT APPROVED",
+        "productionModelIncluded": false,
+        "runtime": "0.10.35",
+        "model": "1",
+        "mode": "simd",
+        "fixtureProvenance": "Project-authored synthetic landscapes and textures",
+        "attempts": [],
+        "violations": [
+          {
+            "directive": "script-src",
+            "blocked": "wasm-eval"
+          },
+          {
+            "directive": "script-src",
+            "blocked": "wasm-eval"
+          }
+        ],
+        "baselineGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "phase": "initializing-model",
+        "backend": "scalar",
+        "injectedFault": null,
+        "status": "model-unavailable",
+        "error": {
+          "name": "RuntimeError",
+          "message": "Aborted(CompileError: WebAssembly.instantiate(): Compiling or instantiating WebAssembly module violates the following Content Security policy directive because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: ). Build with -sASSERTIONS for more info."
+        },
+        "fallbackGroups": [
+          [
+            "landscape.jpg",
+            "landscape-2.jpg"
+          ],
+          [
+            "quality-detail.png",
+            "quality-soft.png"
+          ]
+        ],
+        "fallbackPreserved": true,
+        "totalMs": 428.5,
+        "file": "index.self-extract.html",
+        "httpRequests": [],
+        "pageErrors": [],
+        "adoptionBlocker": "Observed canonical-wrapper CSP WASM compilation restriction"
+      }
+    ]
+  }
+}

@@ -43,7 +43,7 @@ See [validation results](docs/VALIDATION.md) for actual checks. Real Android/iPh
 
 ## Limitations
 
-This is the v0.3 development milestone. Similarity groups can be wrong or miss related photos; they never select photos for you. Real-photo grouping accuracy has not yet been measured. Technical hints use reduced-preview measurements, not aesthetic or subject judgment. Their agreement with human preferences has not been measured. Noise, intentional blur, line art, and lighting can mislead them; a dark photo is not automatically worse. Face detection and eye-state estimation are not included. HEIC, RAW, TIFF, animated images, and videos are unsupported.
+This is the v0.4 development milestone. Similarity grouping remains non-ML. Similarity groups can be wrong or miss related photos; they never select photos for you. Real-photo grouping accuracy has not yet been measured. Technical hints use reduced-preview measurements, not aesthetic or subject judgment. Their agreement with human preferences has not been measured. Noise, intentional blur, line art, and lighting can mislead them; a dark photo is not automatically worse. Face detection and eye-state estimation are not included. HEIC, RAW, TIFF, animated images, and videos are unsupported.
 
 Duplicate hashing is limited to 64 MiB per original and requires Web Crypto. A skipped or unavailable duplicate check does not prevent manual selection or export. Manual groups are preserved on additional imports; Reset manual grouping explicitly rebuilds them.
 
@@ -79,4 +79,4 @@ MIT. No third-party runtime dependencies. See [LICENSE](LICENSE) and [THIRD_PART
 
 See [grouping design and evaluation limits](docs/GROUPING.md).
 
-See [technical-hint design and evidence limits](docs/QUALITY.md).
+See [technical-hint design and evidence limits](docs/QUALITY.md) and the [isolated embedding feasibility experiment](experiments/embedding/README.md).
