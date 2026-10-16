@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.0 — 2026-10-16
+
+- Harden the non-ML fallback against malformed, sparse, non-finite or incompatible visual evidence, without broadening grouping thresholds.
+- Ignore unknown capture-time domains rather than treating them as trusted timestamps; exact-byte duplicates retain priority.
+- Add an isolated, hash-pinned MediaPipe/MobileNetV3 offline feasibility experiment with SIMD/scalar, invalid-model fallback and canonical self-extract checks.
+- Keep ML out of the distributed app. Photographic improvement and physical-device gates remain unmet; experiment measurements are not accuracy claims.
+
+
 ## 0.3.0 — development
 
 - Added bounded, contrast-normalized detail and near-white/near-black measurements from oriented reduced previews.

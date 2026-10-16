@@ -1,11 +1,13 @@
 {
   "name": "best-shot-picker-tests",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs",
+    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs",
     "test:browser": "node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs",
-    "test:grouping": "node tests/grouping-evaluation.cjs"
+    "test:grouping": "node tests/grouping-evaluation.cjs",
+    "experiment:embedding:build": "node experiments/embedding/build.cjs",
+    "experiment:embedding:test": "node experiments/embedding/browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.57.0"
