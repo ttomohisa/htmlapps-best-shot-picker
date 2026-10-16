@@ -212,7 +212,11 @@ jobs:
         shell: pwsh
         env:
           BSP_PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
-        run: node tests/preview.smoke.cjs
+        run: |
+          node tests/preview.smoke.cjs
+          if ($LASTEXITCODE -ne 0) { throw "Normal preview checks failed." }
+          node tests/similarity.browser.cjs
+          if ($LASTEXITCODE -ne 0) { throw "Opt-in similarity preview checks failed." }
 
       - name: Upload normal preview browser evidence
         if: always() && steps.cloudflare.outputs.configured == 'true'

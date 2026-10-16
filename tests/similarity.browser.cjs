@@ -1,17 +1,20 @@
 /* Own synthetic fixtures exercise product behavior, not photographic accuracy or physical-phone cost. */
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
 const {chromium}=require('playwright'),root=path.resolve(__dirname,'..');
+const preview=process.env.BSP_PREVIEW_URL?new URL(process.env.BSP_PREVIEW_URL):null;
+if(preview){assert.equal(preview.protocol,'https:');assert.match(preview.hostname,/^r\d+-pr-\d+-bk-previews\.ttomohisa\.workers\.dev$/);assert.equal(preview.pathname,'/');assert.equal(preview.search,'');}
+const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 async function idle(page){await page.locator('#loadProgress').waitFor({state:'hidden'});await page.locator('#analysisProgress').waitFor({state:'hidden'});await page.waitForFunction(()=>/finished|完了/.test(document.querySelector('#analysisResult').textContent));}
 async function done(page){await page.locator('#similarityProgress').waitFor({state:'hidden',timeout:90000});}
-(async()=>{const browser=await chromium.launch({headless:true}),report=[];try{for(const variant of ['index.html','index.self-extract.html']){
+(async()=>{const browser=await chromium.launch({headless:true}),report=[];try{for(const variant of (preview?['https-preview']:['index.html','index.self-extract.html'])){
  const context=await browser.newContext({viewport:{width:1360,height:900},locale:'en-US',acceptDownloads:true}),page=await context.newPage(),errors=[],requests=[];
- page.setDefaultTimeout(30000);page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});
+ page.setDefaultTimeout(30000);page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url())&&r.url()!==preview?.href)requests.push(r.url());});
  await page.addInitScript(()=>{window.__modelClients=[];window.__modelHeld=[];let value;Object.defineProperty(window,'EmbeddingWorkerClient',{configurable:true,get:()=>value,set:Client=>{value=class extends Client{constructor(options){if(window.__modelFail)throw new Error('Synthetic initialization failure');super(options);window.__modelClients.push(this);}async infer(...args){const result=await super.infer(...args);if(window.__modelHold)await new Promise(resolve=>window.__modelHeld.push(resolve));return result;}};}});});
- await page.goto('file://'+path.join(root,'dist',variant));await page.locator('#addButton').waitFor();
+ const navigation=await page.goto(preview?.href||'file://'+path.join(root,'dist',variant));if(preview)assert.equal(digest(await navigation.body()),digest(await fs.readFile(path.join(root,'dist/index.html'))),'Preview must serve this built artifact');await page.locator('#addButton').waitFor();
  const original=await fs.readFile(path.join(__dirname,'fixtures/landscape.jpg'));
  const bright=Buffer.from(await page.evaluate(async data=>{const image=new Image();image.src=data;await image.decode();const c=document.createElement('canvas');c.width=image.width;c.height=image.height;const ctx=c.getContext('2d');ctx.drawImage(image,0,0);const pixels=ctx.getImageData(0,0,c.width,c.height);for(let i=0;i<pixels.data.length;i+=4)for(let j=0;j<3;j++)pixels.data[i+j]=Math.min(255,pixels.data[i+j]+12);ctx.putImageData(pixels,0,0);return c.toDataURL('image/png').split(',')[1];},'data:image/jpeg;base64,'+original.toString('base64')),'base64');
  const files=[{name:'landscape.jpg',mimeType:'image/jpeg',buffer:original},{name:'landscape-brighter.png',mimeType:'image/png',buffer:bright}];
- async function fresh(){await page.reload();await page.locator('#addButton').waitFor();await page.locator('#fileInput').setInputFiles(files);await idle(page);assert.equal(await page.locator('.group-chip').count(),2);}
+ async function fresh(){const response=await page.reload();if(preview)assert.equal(digest(await response.body()),digest(await fs.readFile(path.join(root,'dist/index.html'))));await page.locator('#addButton').waitFor();await page.locator('#fileInput').setInputFiles(files);await idle(page);assert.equal(await page.locator('.group-chip').count(),2);}
  async function search(){await page.locator('#findSimilarButton').click();await done(page);assert.equal(await page.locator('.similarity-card').count(),1,await page.locator('#similarityMessage').textContent());}
  async function hold(){await page.evaluate(()=>window.__modelHold=true);await page.locator('#findSimilarButton').click();await page.waitForFunction(()=>window.__modelHeld.length===1,{},{timeout:90000});}
  async function release(){await page.evaluate(()=>{window.__modelHold=false;window.__modelHeld.splice(0).forEach(resolve=>resolve());});await page.waitForTimeout(50);}
