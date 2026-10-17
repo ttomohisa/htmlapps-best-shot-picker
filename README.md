@@ -18,6 +18,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 - Switch A / B on phones; inspect 100%, 200%, or 400% views by scrolling
 - Keep any number of photos, with Undo for the latest selection change
 - Save original file bytes in a ZIP with an editable filename and collision-safe entry names
+- Optionally prepare independent ZIP batches, then download and confirm each one before continuing
 - Isolate unreadable files, cancel work, and retry unfinished photos
 - Japanese / English, keyboard controls, and narrow-screen page tabs
 
@@ -27,7 +28,11 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 2. Review **Photo groups** or **All photos**. Use **Organize** to split, move, merge, or mark a group reviewed. Open a photo for a closer look. In **Compare**, choose photos A and B. Technical hints may highlight a comparison candidate, but never select it. **Keep** the ones you want.
 3. Optionally choose **Find similar-photo candidates**. It searches up to 36 eligible photos across at least two automatic, unreviewed groups whose normal analysis is complete. For larger sessions, choose whole groups to compare, totaling at most 36 photos per search. Open the candidate thumbnails to compare, then choose **Apply this grouping** only for a grouping you want. **Undo** reverses the latest group edit. Manual and reviewed groups are excluded.
 4. In **Compare**, optionally choose **Find faces**. Select a face separately in each photo to zoom, or return to **Whole image**. Missed or incorrect candidates can occur; manual zoom remains available.
-5. In **Save**, review your choices and filename, then choose **Save originals as ZIP**.
+5. In **Save**, review your choices and filename, then choose **Save originals as ZIP** for the usual single archive. For smaller archives, choose the optional ZIP-batch mode and explicitly select 32, 64, 128, 256, or 512 MiB. No capacity is preselected because none has been validated as a safe physical-device default.
+6. In batch mode, review the archive sizes and part count before starting. The plan freezes the selected originals, entry names, and output name at that point. Later Keep changes, Undo, group edits, or added photos affect your live collection and the next export, not this plan.
+7. Build only the current part, then explicitly download it. Check the browser's download status, then choose **Saved; next ZIP** (or **Saved; finish** for the last one) to acknowledge that it is saved. Prepare the next part separately. Nothing downloads or advances automatically. Each `.zip` opens independently; the files are not pieces of one spanning ZIP.
+
+A cancelled or failed batch build can retry only its current part. Downloading that part again is an explicit action with a duplicate-copy warning. Closing or discarding a prepared/download-requested part asks for confirmation: releasing its download URL can affect an unfinished download. Starting over clears the export plan along with the session after the normal confirmation. Reloading or closing the page loses the plan, so finish saving first.
 
 Arrow keys browse the active comparison photo. Enter toggles Keep when focus is on the page or image; focused buttons keep their usual action. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
 
@@ -49,7 +54,7 @@ See [validation results](docs/VALIDATION.md) for the environments and checks cov
 
 ## Limitations
 
-This is the v0.6.2 development version. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
+This is the v0.7.0 development version. Sequential ZIP batches are the first bounded portion of the planned v0.8 storage work; the full v0.8 milestone is not complete. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
 
 The 36-photo limit applies to each optional search, not the whole session. Choose the groups you want to compare; unselected groups stay unchanged. A group containing more than 36 photos cannot be selected for this search. No photos are silently truncated and existing groups are never split. Adding photos, editing groups, or starting a new analysis clears pending candidates. Applying one proposal clears the others, so search again for current candidates. Cancel or failure leaves existing groups, Keep choices, and originals unchanged. Processing may be slow on some devices; normal comparison and saving remain available.
 
@@ -59,7 +64,9 @@ Duplicate hashing is limited to 64 MiB per original and requires Web Crypto. A s
 
 Images above 100 megapixels or 32,768 pixels on either side are skipped before decoding when the header supplies dimensions, and checked again after decoding. This does not guarantee protection against every malformed image or low-memory device.
 
-The ZIP writer reads bounded chunks for CRC and stores original Blob parts, but the final archive still uses browser-managed memory. It does not provide disk streaming, ZIP64, split archives, or CSV/JSON selection-list export. Keep selections below ZIP32 limits (under 65,535 entries and 4 GiB total), and use smaller batches if memory is constrained. Download initiation is not proof that the browser finished writing to disk.
+The ZIP writer reads bounded chunks for CRC and stores original Blob parts, but each finished archive still uses browser-managed memory. Batch preflight includes the exact ZIP headers, UTF-8 names, and directory overhead, and assigns safe names that remain unique across the whole plan. A file that cannot fit by itself with ZIP overhead stops the plan before any export read; the message names the file and suggests a higher capacity, a different selection, or the single-ZIP mode. Originals are never cut into pieces.
+
+The chosen capacity bounds one archive, not total browser memory, garbage-collection timing, or smartphone safety. Only the current batch archive and its download URL are retained by the batch workflow; original files, previews, and browser-managed download buffers may still consume memory. Each archive must stay within ZIP32 limits (under 65,535 entries and 4 GiB including ZIP overhead). Disk streaming, ZIP64, spanning ZIP files, and CSV/JSON selection-list export are not included. Download initiation and your saved confirmation are not an application-verified disk-write result.
 
 ## Single HTML / offline use
 

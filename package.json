@@ -1,10 +1,10 @@
 {
   "name": "best-shot-picker-tests",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
-    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs tests/similarity.test.cjs tests/similarity-integration.test.cjs tests/embedding-packaging.test.cjs tests/embedding-product-client.test.cjs tests/face-worker-client.test.cjs tests/face-packaging.test.cjs tests/face-geometry.test.cjs tests/rendering.test.cjs tests/compatibility.test.cjs",
-    "test:browser": "node tests/compatibility.browser.cjs && node tests/similarity.browser.cjs && node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs && node tests/face.browser.cjs && node tests/rendering.browser.cjs",
+    "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs tests/similarity.test.cjs tests/similarity-integration.test.cjs tests/embedding-packaging.test.cjs tests/embedding-product-client.test.cjs tests/face-worker-client.test.cjs tests/face-packaging.test.cjs tests/face-geometry.test.cjs tests/rendering.test.cjs tests/compatibility.test.cjs tests/zip-batches.test.cjs tests/zip-session.test.cjs",
+    "test:browser": "node tests/zip-batches.browser.cjs && node tests/compatibility.browser.cjs && node tests/similarity.browser.cjs && node tests/browser.test.cjs && node tests/grouping.browser.cjs && node tests/quality.browser.cjs && node tests/face.browser.cjs && node tests/rendering.browser.cjs",
     "test:grouping": "node tests/grouping-evaluation.cjs",
     "experiment:embedding:build": "node experiments/embedding/build.cjs",
     "experiment:embedding:test": "node experiments/embedding/browser.cjs",

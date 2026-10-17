@@ -2,6 +2,15 @@
 
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
+## 0.7.0 — development (2026-10-16)
+
+- Add optional, independently extractable ZIP batches while preserving the default single-ZIP flow. This is the first bounded portion of planned v0.8 storage work, not completion of that milestone.
+- Require an explicit 32/64/128/256/512 MiB capacity choice, with no preselected or physically validated safe default. Preflight exact archive sizes and part count before export reads, with safe entry names unique across the entire plan.
+- Freeze selected File references, entry names and output name at start. Later Keep changes, Undo, group editing and imports update the live session without rewriting the active export.
+- Build only the current part; require a separate download action and user saved acknowledgement before advancing. Keep one batch archive/URL, support current-part build retry, warn about duplicate downloads, and confirm discard of a prepared/download-requested part.
+- Reject an oversized original before any export read, identify it and offer capacity/selection/single-ZIP guidance. Preserve complete original bytes and EXIF/GPS; retain ZIP32 limits with no spanning ZIP, ZIP64, disk streaming or CSV/JSON output.
+- Record completed v0.6.2/PR11 release evidence separately from the new candidate's pending checks. Batch capacity is not a total-memory ceiling or a physical-phone safety guarantee.
+
 ## 0.6.2 — development (2026-10-16)
 
 - Explain when required browser APIs for optional similarity/face searches are unavailable, while retaining readable-HTML comparison, Keep and original ZIP saving.
