@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Allow keyboard-only inspection of overflowing enlarged images in A/B comparison and the large preview. Tab into the image to pan with arrow keys; existing photo browsing remains outside the image. Fit/hidden images add no Tab stop.
+
 - Add bounded Chromium, Firefox and WebKit core acceptance using the same canonical standalone artifacts.
 - Restore keyboard focus to a remaining selected photo, the ZIP filename when empty, or the selection-list summary while that filename is disabled, after closing Preview if Unkeep removed its original Save-list opener.
 

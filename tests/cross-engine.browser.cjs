@@ -283,6 +283,61 @@ async function mobileDialogs(run) {
   assert.equal(await page.locator('.photo-card.kept').count(),0);
   await shot(run,'empty-save-focus');
 }
+async function zoomKeyboard(run) {
+  const {page}=run;await importFiles(page,await mixedFixtures());
+  await page.locator('#selectA').selectOption('p1');await page.locator('#selectB').selectOption('p2');
+  for(const id of ['viewportA','viewportB'])assert.equal(await page.locator('#'+id).getAttribute('tabindex'),'-1','Fit image has no extra Tab stop');
+  await page.locator('#compareZoom').selectOption('4');
+  for(const [slot,selected] of [['A','p1'],['B','p2']]){
+    const viewport='#viewport'+slot;
+    await page.waitForFunction(id=>document.querySelector(id).tabIndex===0,viewport);
+    await page.locator('#select'+slot).focus();await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(()=>document.activeElement.id),'viewport'+slot,'Image reached with Tab');
+    assert(await page.locator(viewport).getAttribute('aria-label'));
+    assert.notEqual(await page.locator(viewport).evaluate(n=>getComputedStyle(n).outlineStyle),'none');
+    await page.locator(viewport).evaluate(n=>n.scrollTo({left:0,top:0,behavior:'instant'}));
+    await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowDown');
+    await page.waitForFunction(id=>{const n=document.querySelector(id);return n.scrollLeft>0&&n.scrollTop>0;},viewport);
+    assert.equal(await page.locator('#select'+slot).inputValue(),selected,'Arrow pans without changing photo');
+    const middle=await page.locator(viewport).evaluate(n=>{n.scrollTo({left:n.scrollWidth/2,top:n.scrollHeight/2,behavior:'instant'});return{left:n.scrollLeft,top:n.scrollTop};});
+    await page.keyboard.press('ArrowLeft');await page.keyboard.press('ArrowUp');
+    await page.waitForFunction(({id,before})=>{const n=document.querySelector(id);return n.scrollLeft<before.left&&n.scrollTop<before.top;},{id:viewport,before:middle});
+    assert.equal(await page.locator('#select'+slot).inputValue(),selected,'Left/Up pans back without changing photo');
+    await page.locator(viewport).evaluate(n=>n.scrollTo({left:n.scrollWidth,top:n.scrollHeight,behavior:'instant'}));
+    await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowDown');
+    assert.equal(await page.locator('#select'+slot).inputValue(),selected,'At edge arrows never browse another photo');
+    assert.equal(await page.locator('.photo-card.kept').count(),0);
+  }
+  await page.locator('#compareZoom').selectOption('fit');
+  for(const id of ['viewportA','viewportB'])await page.waitForFunction(id=>document.querySelector(id).tabIndex===-1,'#'+id);
+  await page.locator('#openPreviewButton').click();await page.locator('#previewZoom').selectOption('4');
+  await page.waitForFunction(()=>document.querySelector('#previewViewport').tabIndex===0);
+  await page.locator('#closePreviewButton').focus();await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'previewViewport');
+  const original=await page.locator('#previewName').textContent();
+  await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowDown');
+  await page.waitForFunction(()=>{const n=document.querySelector('#previewViewport');return n.scrollLeft>0&&n.scrollTop>0;});
+  assert.equal(await page.locator('#previewName').textContent(),original);
+  await shot(run,'keyboard-pan');
+  await page.locator('#previewViewport').evaluate(n=>n.scrollTo({left:n.scrollWidth,top:n.scrollHeight,behavior:'instant'}));
+  await page.keyboard.press('ArrowRight');assert.equal(await page.locator('#previewName').textContent(),original);
+  await page.locator('#closePreviewButton').focus();await page.keyboard.press('ArrowRight');
+  assert.notEqual(await page.locator('#previewName').textContent(),original,'Outside image existing browse shortcut remains');
+  await page.keyboard.press('Escape');
+  await page.locator('#compareZoom').selectOption('4');await page.setViewportSize({width:320,height:640});
+  await page.locator('[data-mobile-key="photos"]').click();
+  await page.waitForFunction(()=>document.querySelector('#viewportA').tabIndex===-1);
+  await page.locator('[data-mobile-key="compare"]').click();
+  await page.waitForFunction(()=>document.querySelector('#viewportA').tabIndex===0);
+  await page.locator('#languageButton').click();assert.match(await page.locator('#viewportA').getAttribute('aria-label'),/写真A/);
+  await page.locator('#viewportA').focus();await shot(run,'ja-narrow-image-focus');
+  await page.locator('#compareZoom').selectOption('fit');
+  await page.waitForFunction(()=>document.querySelector('#viewportA').tabIndex===-1);
+  await page.locator('[data-mobile-key="save"]').click();await page.locator('#outputFilename').fill('keyboard');
+  const pair=await page.locator('#selectA').inputValue();await page.locator('#outputFilename').press('ArrowLeft');
+  assert.equal(await page.locator('#selectA').inputValue(),pair,'Text-field arrows do not browse');
+  run.record.keyboard={nativePan:true,edgeDoesNotBrowse:true,fitAndHiddenExcluded:true,formsPreserved:true};
+}
 function capabilityFault(mode) {
   window.__crossEngineFault = { mode, attempts: 0 };
   if (mode === 'missing-worker') {
@@ -371,7 +426,7 @@ async function main() {
   try {
     browser = await require('playwright')[engine].launch({ headless: true }); report.version = browser.version();
     for (const variant of VARIANTS) for (const [name, execute] of [['core', core], ['batches', batches],
-      ['mobile-dialogs', mobileDialogs], ['missing-worker', optionalModel], ['worker-failure', optionalModel]]) {
+      ['mobile-dialogs', mobileDialogs], ['zoom-keyboard',zoomKeyboard], ['missing-worker', optionalModel], ['worker-failure', optionalModel]]) {
       const result = await scenario(browser, directory, variant, name, execute); report.scenarios.push(result);
       await fs.writeFile(path.join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n');
       console.log(`${result.status.toUpperCase()} ${engine} ${variant} ${name}${result.error ? '\n' + result.error : ''}`);
