@@ -192,6 +192,18 @@ async function batches(run) {
   // The reviewed plan must retain its starting selection after live Keep edits.
   await page.locator('#photo-p1 .keep-button').click();
   assert.equal(await page.locator('.photo-card.kept').count(), 2);
+  // The frozen plan disables the filename; empty live selection must still have
+  // a visible focus destination without discarding or rewriting that plan.
+  while(await page.locator('#selectedList li').count()){
+    await page.locator('#selectedList li button').first().focus(); await page.keyboard.press('Enter');
+    await page.locator('#previewDialog').waitFor(); await page.locator('#previewKeep').click(); await page.keyboard.press('Escape');
+    await page.locator('#previewDialog').waitFor({state:'hidden'});
+  }
+  assert(await page.locator('#outputFilename').isDisabled());
+  await page.waitForFunction(()=>document.activeElement===document.querySelector('#selectionListOptions > summary'));
+  run.record.activeBatchEmptyFocus=await focusState(page);
+  assert(run.record.activeBatchEmptyFocus.visible&&run.record.activeBatchEmptyFocus.inViewport);
+  for(const id of ['p2','p3'])await page.locator(`#photo-${id} .keep-button`).click();
   const actual = [];
   for (let index = 0; index < 2; index++) {
     await page.locator('#prepareZipBatchButton').click(); await page.locator('#downloadZipBatchButton').waitFor();
@@ -257,7 +269,19 @@ async function mobileDialogs(run) {
   run.record.detachedSaveOpenerFocus.reachableControl = run.record.detachedSaveOpenerFocus.connected &&
     run.record.detachedSaveOpenerFocus.visible && run.record.detachedSaveOpenerFocus.enabled &&
     run.record.detachedSaveOpenerFocus.tabIndex >= 0 && run.record.detachedSaveOpenerFocus.inViewport;
+  assert(run.record.detachedSaveOpenerFocus.reachableControl, 'Closing Preview after Unkeep restores a visible reachable control');
   await shot(run, 'detached-save-opener');
+  while(await page.locator('#selectedList li').count()){
+    await page.locator('#selectedList li button').first().focus(); await page.keyboard.press('Enter');
+    await page.locator('#previewDialog').waitFor(); await page.locator('#previewKeep').click(); await page.keyboard.press('Escape');
+    await page.locator('#previewDialog').waitFor({state:'hidden'});
+  }
+  await page.waitForFunction(()=>document.activeElement===document.querySelector('#outputFilename'));
+  run.record.emptySaveFocus=await focusState(page);
+  assert(run.record.emptySaveFocus.visible&&run.record.emptySaveFocus.inViewport, 'Empty selection returns to visible ZIP filename');
+  assert.equal(await page.locator('.photo-card').count(),3,'Unkeep never removes originals');
+  assert.equal(await page.locator('.photo-card.kept').count(),0);
+  await shot(run,'empty-save-focus');
 }
 function capabilityFault(mode) {
   window.__crossEngineFault = { mode, attempts: 0 };
