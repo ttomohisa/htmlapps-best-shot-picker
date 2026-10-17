@@ -2,6 +2,13 @@
 
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
+## 0.7.1 — 2026-10-17
+
+- Add explicit, separate kept-only JSON/CSV planned-file lists with editable filenames and original-to-ZIP entry/part mapping.
+- Preserve exact original names in JSON; use fixed text prefixes and visible control-character escapes in display-oriented CSV.
+- Reuse frozen batch metadata after live Keep edits without exporting images, EXIF, timestamps, folder metadata or model results.
+- Keep list download lifetimes separate from archive save confirmation; no automatic ZIP inclusion or session restore.
+
 ## 0.7.0 — development (2026-10-16)
 
 - Add optional, independently extractable ZIP batches while preserving the default single-ZIP flow. This is the first bounded portion of planned v0.8 storage work, not completion of that milestone.

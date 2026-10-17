@@ -2,7 +2,12 @@
 
 ## Current release and evidence index — 2026-10-16
 
-The published baseline is v0.6.2: PR11 main merge `82c26648507b90af829fd32fb88284455c77a2bf`, tree `6040c410`. Its optional-model browser capability and localized license-display changes have completed the recorded CI and deployment checks below. The current v0.7.0 candidate adds only the first bounded portion of planned v0.8 storage work: optional, sequential, independently extractable ZIP batches. This version number does not close the original v0.7 physical-device gates or the full v0.8 milestone.
+Latest published baseline: v0.7.0 / PR12, main `0329429d67e02e0403a2b412be6b255963b754f7`, tree `00981965`. Final head `62264a9` passed [validation 38984443340](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38984443340), [exact-artifact preview 38984443378](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38984443378), [rendering regression 38984443193](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38984443193) and [face probe 38984443381](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38984443381). [Pages 38984989173](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38984989173) succeeded; both served HTML forms exactly matched main artifact `12081928737`. At the 32 MiB setting, three synthetic originals produced 25,166,035-byte and 12,583,032-byte independent ZIPs with all original CRC/SHA matches and peak live ZIP URLs of one. Frozen choices, retries, reset/late reads, and EN/JA narrow controls passed. This is not process-memory or physical-phone evidence.
+
+Current v0.7.1 candidate: optional kept-only planned JSON/CSV mapping, separately downloaded. Exact-head CI/preview results are pending. [Field/privacy/CSV contract](SELECTION_LIST.md). No new image or model processing, ZIP inclusion or selection restore.
+
+
+Previous v0.6.2 baseline: PR11 main merge `82c26648507b90af829fd32fb88284455c77a2bf`, tree `6040c410`. Its optional-model browser capability and localized license-display changes have completed the recorded CI and deployment checks below. The released v0.7.0 adds only the first bounded portion of planned v0.8 storage work: optional, sequential, independently extractable ZIP batches. This version number does not close the original v0.7 physical-device gates or the full v0.8 milestone.
 
 | Scope | Recorded outcome and evidence | Boundary |
 |---|---|---|
@@ -11,11 +16,11 @@ The published baseline is v0.6.2: PR11 main merge `82c26648507b90af829fd32fb8828
 | v0.6.2 / PR11 paired rendering observations | [Run 38983063611](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38983063611): success | 100/500 tiny synthetic photos in CI Chromium; not real-photo or physical-phone performance |
 | v0.6.2 / PR11 isolated face probe | [Run 38983063577](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38983063577): success | Probe coverage only; not general face accuracy or device-memory validation |
 | Published v0.6.2 Pages artifacts | [Run 38983516379](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38983516379): success; served readable and self-extract HTML both matched same-run main artifact `12082132283` exactly | Confirms deployed bytes, not a new all-device functional pass |
-| v0.7.0 sequential ZIP-batch candidate | Pending: no final-head CI, exact-artifact preview, or deployment result recorded here | Exact-byte planner, frozen start snapshot, one current archive/URL, explicit download and saved/next controls, retry/discard/reset lifecycle, and original single-ZIP regressions require candidate evidence |
+| v0.7.0 sequential ZIP batches | Completed exact-head CI, preview and Pages evidence is recorded above | Bounded synthetic scope, not real-device capacity |
 
 Both optional model features require Web Workers and `DecompressionStream`. The readable HTML retains manual comparison, Keep and original-byte ZIP export when these optional capabilities are absent. The self-extracting HTML itself cannot open without `DecompressionStream`; the readable form is the alternative. The PR11 results cover this bounded compatibility change without guaranteeing model operation on every API-capable device.
 
-The owner reported the previous version's smartphone smoke flow as successful, without device/browser, photo count or timings. Physical Android/iPhone 100/500-photo and PC 1,000-photo gates, peak/process memory, real-photo decoding throughput, and broad photographic accuracy remain unverified. The new independent ZIP-batch mode is not a spanning ZIP or disk-streaming implementation. ZIP64 and CSV/JSON selection-list export remain unimplemented; eye-state estimation remains deferred. Narrow viewports and synthetic throttling are not physical-device evidence, and no batch capacity has a physically validated safe default.
+The owner reported the previous version's smartphone smoke flow as successful, without device/browser, photo count or timings. Physical Android/iPhone 100/500-photo and PC 1,000-photo gates, peak/process memory, real-photo decoding throughput, and broad photographic accuracy remain unverified. The new independent ZIP-batch mode is not a spanning ZIP or disk-streaming implementation. ZIP64 remains unimplemented; the v0.7.1 candidate adds separate planned JSON/CSV lists; eye-state estimation remains deferred. Narrow viewports and synthetic throttling are not physical-device evidence, and no batch capacity has a physically validated safe default.
 
 The records below retain their original milestone scope, dates, observations and failures. Historical statements about unapproved models or unfinished checks are not the current release status; the index above identifies later evidence without converting partial coverage into an all-P0 pass. See [the acceptance scope/status index](../ACCEPTANCE_MATRIX.md#現在の実装範囲と検証状況2026-10-16).
 
@@ -23,9 +28,9 @@ The records below retain their original milestone scope, dates, observations and
 
 For continuity, the reviewed PR10 final head was `d9b64083`, merged as main `3fa9669a362ff1c39a765d6bb366ffb5de324f02`, tree `d540cb4`. Its [validation 38981464279](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464279), [HTTPS preview 38981464280](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464280), [paired rendering 38981464283](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464283), and [isolated face probe 38981464329](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38981464329) all succeeded. [Pages 38982053672](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/38982053672) succeeded and both served HTML forms matched its artifacts exactly. These remain revision-specific, bounded checks; they do not add physical-device or general photographic evidence.
 
-### v0.7.0 ZIP-batch candidate: evidence still required
+### v0.7.0 ZIP-batch acceptance scope
 
-This is an acceptance checklist, not a completed test report. The current candidate must retain results for:
+The PR12 evidence above covers the synthetic checks below. This checklist does not convert unmeasured physical-device requirements into passes:
 
 - Metadata-only preflight: exact STORE archive sizes including headers/names/directories, capacity and ZIP32 boundaries, globally unique safe entry names, and no export reads for an unselected capacity or any oversized original. Reject the entire plan before building an earlier, otherwise valid part.
 - Independent extraction of every generated part: each selected original appears exactly once, with its full original bytes, CRC, EXIF/GPS and expected name. Verify that the default single-ZIP path still behaves as before.
