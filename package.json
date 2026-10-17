@@ -1,6 +1,6 @@
 {
   "name": "best-shot-picker-tests",
-  "version": "0.8.0-beta.1",
+  "version": "0.8.0-beta.2",
   "private": true,
   "scripts": {
     "test": "node --test tests/core.test.cjs tests/grouping.test.cjs tests/quality.test.cjs tests/quality-integration.test.cjs tests/embedding-contract.test.cjs tests/embedding-pilot.test.cjs tests/embedding-frozen.test.cjs tests/embedding-burst-contract.test.cjs tests/embedding-worker-client.test.cjs tests/similarity.test.cjs tests/similarity-integration.test.cjs tests/embedding-packaging.test.cjs tests/embedding-product-client.test.cjs tests/face-worker-client.test.cjs tests/face-packaging.test.cjs tests/face-geometry.test.cjs tests/rendering.test.cjs tests/compatibility.test.cjs tests/zip-batches.test.cjs tests/zip-session.test.cjs tests/selection-list.test.cjs tests/selection-list-ui.test.cjs tests/zoom-keyboard.test.cjs tests/review-navigation.test.cjs tests/group-thumbnails.test.cjs",

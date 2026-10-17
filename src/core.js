@@ -28,6 +28,16 @@
     return error;
   }
 
+  // Only bounded diagnostic categories cross into the UI, never a provider's
+  // message, URL, path or stack. A readable thumbnail is not a byte snapshot.
+  function zipFailure(code, cause, fileIndex, totalFiles) {
+    const error = failure(code, code === 'ZIP_READ_FAILED' ? 'An original photo could not be read for ZIP export.' : 'The ZIP archive could not be assembled.');
+    const names = ['NotReadableError', 'NotFoundError', 'SecurityError', 'AbortError', 'QuotaExceededError', 'TypeError', 'RangeError'];
+    error.reason = cause?.code === 'INVALID_FILE' ? 'INVALID_FILE' : names.includes(cause?.name) ? cause.name : 'Error';
+    if (Number.isInteger(fileIndex)) { error.fileIndex = fileIndex; error.totalFiles = totalFiles; }
+    return error;
+  }
+
   function checkAbort(signal) {
     if (signal && signal.aborted) {
       const error = new Error('Operation cancelled. Your original photos and selection are unchanged.');
@@ -388,13 +398,19 @@
       for (let offset = 0; offset < entry.size; offset += CHUNK_BYTES) {
         checkAbort(signal);
         const end = Math.min(entry.size, offset + CHUNK_BYTES);
-        const part = entry.file.slice(offset, end);
-        if (!part || part.size !== end - offset || typeof part.arrayBuffer !== 'function') {
-          throw failure('INVALID_FILE', 'The original file could not be read completely. Add the photo again and retry.');
+        let bytes;
+        try {
+          const part = entry.file.slice(offset, end);
+          if (!part || part.size !== end - offset || typeof part.arrayBuffer !== 'function') {
+            throw failure('INVALID_FILE', 'Incomplete original slice.');
+          }
+          bytes = new Uint8Array(await part.arrayBuffer());
+          if (bytes.length !== end - offset) throw failure('INVALID_FILE', 'Incomplete original read.');
+        } catch (error) {
+          checkAbort(signal);
+          throw zipFailure('ZIP_READ_FAILED', error, completedFiles, entries.length);
         }
-        const bytes = new Uint8Array(await part.arrayBuffer());
         checkAbort(signal);
-        if (bytes.length !== end - offset) throw failure('INVALID_FILE', 'An original file read was incomplete. Retry the export.');
         value = crcUpdate(value, bytes);
         processedBytes += bytes.length;
         report('reading', entry.name);
@@ -403,9 +419,13 @@
       }
       // Validate the actual Blob brand and length rather than allowing object-to-string coercion.
       let original;
-      try { original = Blob.prototype.slice.call(entry.file, 0, entry.size); }
-      catch (_) { throw failure('INVALID_FILE', 'The selected original is not a readable File or Blob.'); }
-      if (original.size !== entry.size) throw failure('INVALID_FILE', 'The original file size changed. Add it again and retry.');
+      try {
+        original = Blob.prototype.slice.call(entry.file, 0, entry.size);
+        if (original.size !== entry.size) throw failure('INVALID_FILE', 'Original size changed.');
+      } catch (error) {
+        checkAbort(signal);
+        throw zipFailure('ZIP_READ_FAILED', error, completedFiles, entries.length);
+      }
       const checksum = (value ^ 0xffffffff) >>> 0;
       parts.push(makeHeader(entry, checksum, false), original);
       central.push(makeHeader(entry, checksum, true));
@@ -421,8 +441,11 @@
     view.setUint16(10, entries.length, true);
     view.setUint32(12, centralSize, true);
     view.setUint32(16, localSize, true);
-    const archive = new Blob([...parts, ...central, end], { type: 'application/zip' });
-    if (archive.size !== localSize + centralSize + 22) throw failure('INVALID_FILE', 'Archive size verification failed. Retry with a smaller selection.');
+    let archive;
+    try {
+      archive = new Blob([...parts, ...central, end], { type: 'application/zip' });
+      if (archive.size !== localSize + centralSize + 22) throw failure('INVALID_FILE', 'Archive size verification failed.');
+    } catch (error) { throw zipFailure('ZIP_BUILD_FAILED', error); }
     report('complete', '');
     return archive;
   }

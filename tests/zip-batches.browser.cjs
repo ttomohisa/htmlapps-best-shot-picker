@@ -152,7 +152,7 @@ function installAudit() {
     const mode = audit.nextRead; audit.nextRead = '';
     const bytes = await nativeRead.apply(this, args);
     if (mode === 'hold') await new Promise(resolve => audit.pending.push(resolve));
-    if (mode === 'fail') { audit.failures++; throw new Error('Synthetic one-off original-read failure'); }
+    if (mode === 'fail') { audit.failures++; throw new DOMException('Synthetic private provider detail', 'NotReadableError'); }
     return bytes;
   };
   function ObservedBlob(...args) {
@@ -276,6 +276,11 @@ async function narrowScreens(page, target, phase, controls) {
     if (locale === 'ja') assert.match(status, /[\u3040-\u30ff\u4e00-\u9fff]/);
     else assert.match(status, /[A-Za-z]/);
     if (phase === 'requested') assert.match(status, locale === 'ja' ? /保存完了を確認できません/ : /cannot confirm disk completion/i);
+    if (phase === 'read-failed') {
+      assert.match(status, /ZIP_READ_FAILED \/ NotReadableError/);
+      assert.match(status, locale === 'ja' ? /元画像を読み取れません.*別タブ/ : /original photo could not be read.*separate tab/i);
+      assert.doesNotMatch(status, /Synthetic private provider detail/);
+    }
     for (const width of [320, 390]) {
       await page.setViewportSize({ width, height: 640 });
       await page.locator('[data-mobile-key="save"]').click();
@@ -407,7 +412,8 @@ async function sequentialBatches(browser, target, files) {
     await page.locator('#prepareZipBatchButton').click();
     await page.waitForFunction(() => window.__zipBatchAudit.failures === 1);
     await page.locator('#exportProgress').waitFor({ state: 'hidden' });
-    assert.match(await page.locator('#zipBatchStatus').textContent(), /fail|could not|unable|retry/i);
+    assert.match(await page.locator('#zipBatchStatus').textContent(), /ZIP_READ_FAILED \/ NotReadableError/);
+    await narrowScreens(page, target, 'read-failed', ['#prepareZipBatchButton', '#closeZipBatchesButton']);
     assert(await page.locator('#prepareZipBatchButton').isEnabled());
     assert.equal((await audit(page)).built.length, 0);
     assert.equal(run.downloads.length, 0);
@@ -615,7 +621,7 @@ async function selfTest() {
   let nextURL = 0;
   const window = { Blob: TestBlob, addEventListener() {} };
   const URL = { createObjectURL: () => `blob:synthetic-${++nextURL}`, revokeObjectURL() {} };
-  vm.runInNewContext(`(${installAudit.toString()})()`, { window, URL, HTMLAnchorElement: Anchor });
+  vm.runInNewContext(`(${installAudit.toString()})()`, { window, URL, HTMLAnchorElement: Anchor, DOMException });
   const observed = new window.Blob(['original'], { type: 'image/png' });
   assert(observed instanceof Blob);
   assert.equal(Buffer.from(await observed.arrayBuffer()).toString(), 'original');

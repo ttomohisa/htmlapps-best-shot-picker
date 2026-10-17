@@ -169,7 +169,7 @@ test('ZIP read failure leaves original input available for a successful retry', 
   const source = file('retry.jpg');
   const slice = source.slice.bind(source);
   source.slice = () => { throw new Error('simulated read failure'); };
-  await assert.rejects(Core.createZip([source]), /simulated read failure/);
+  await assert.rejects(Core.createZip([source]), { code: 'ZIP_READ_FAILED', reason: 'Error' });
   source.slice = slice;
   assert.equal(unzip(await (await Core.createZip([source])).arrayBuffer())[0].content.toString(), 'original bytes');
 });

@@ -337,15 +337,47 @@ test('cancel during an in-flight chunk waits for that read and never reads the n
 test('read failures, short reads and invalid Blob brands cannot return an archive; successful retry keeps fixed names', async () => {
   const input = file('retry.jpg', 'original bytes'), plan = Core.planZipBatches([input], { maxBytes: 1000 }), slice = input.slice.bind(input);
   input.slice = () => { throw new Error('simulated failure'); };
-  await assert.rejects(Core.createZipBatch(plan, 0), /simulated failure/);
+  await assert.rejects(Core.createZipBatch(plan, 0), { code: 'ZIP_READ_FAILED', reason: 'Error' });
   input.slice = () => ({ size: input.size, arrayBuffer: async () => new ArrayBuffer(1) });
-  await assert.rejects(Core.createZipBatch(plan, 0), { code: 'INVALID_FILE' });
+  await assert.rejects(Core.createZipBatch(plan, 0), { code: 'ZIP_READ_FAILED' });
   input.slice = () => ({ size: input.size - 1, arrayBuffer: async () => new ArrayBuffer(input.size) });
-  await assert.rejects(Core.createZipBatch(plan, 0), { code: 'INVALID_FILE' });
+  await assert.rejects(Core.createZipBatch(plan, 0), { code: 'ZIP_READ_FAILED' });
   input.slice = slice;
   const retry = unzip(await (await Core.createZipBatch(plan, 0)).arrayBuffer());
   assert.equal(retry[0].name, 'retry.jpg');
   assert.equal(retry[0].content.toString(), 'original bytes');
   const fake = { name: 'not-blob', size: 0, slice() {} };
-  await assert.rejects(Core.createZipBatch(Core.planZipBatches([fake], { maxBytes: 1000 }), 0), { code: 'INVALID_FILE' });
+  await assert.rejects(Core.createZipBatch(Core.planZipBatches([fake], { maxBytes: 1000 }), 0), { code: 'ZIP_READ_FAILED' });
+});
+
+test('provider-backed original becoming unreadable after import has a safe read diagnostic in both ZIP modes', async () => {
+  const inputs = [file('private-one.jpg', 'first'), file('private-two.jpg', 'second')];
+  const plan = Core.planZipBatches(inputs, { maxBytes: 1000 });
+  const originalSlice = inputs[1].slice.bind(inputs[1]);
+  assert.equal((await originalSlice(0, 3).arrayBuffer()).byteLength, 3, 'an earlier preview read succeeds');
+  inputs[1].slice = (start, end) => ({ size: end - start, arrayBuffer: async () => { throw new DOMException('private cloud URL or filename must not escape', 'NotReadableError'); } });
+  for (const run of [() => Core.createZipBatch(plan, 0), () => Core.createZip(inputs)]) {
+    await assert.rejects(run(), error => {
+      assert.equal(error.code, 'ZIP_READ_FAILED');
+      assert.equal(error.reason, 'NotReadableError');
+      assert.equal(error.fileIndex, 1); assert.equal(error.totalFiles, 2);
+      assert.doesNotMatch(error.message, /private|cloud URL|filename/);
+      return true;
+    });
+  }
+  inputs[1].slice = originalSlice;
+  const retried = unzip(await (await Core.createZipBatch(plan, 0)).arrayBuffer());
+  assert.deepEqual(retried.map(entry => entry.content.toString()), ['first', 'second']);
+});
+
+test('archive assembly failure is not reported as a read or assumed memory failure', async () => {
+  class RejectArchive extends Blob {
+    constructor(parts, options) { if (options?.type === 'application/zip') throw new RangeError('private platform detail'); super(parts, options); }
+  }
+  const context = { module: { exports: {} }, TextEncoder, Blob: RejectArchive, setTimeout, Uint8Array, DataView, ArrayBuffer };
+  vm.runInNewContext(fs.readFileSync(require.resolve('../src/core.js'), 'utf8'), context);
+  await assert.rejects(context.module.exports.createZip([file('one.png', 'original')]), error => {
+    assert.equal(error.code, 'ZIP_BUILD_FAILED'); assert.equal(error.reason, 'RangeError');
+    assert.doesNotMatch(error.message, /private|memory/i); return true;
+  });
 });
