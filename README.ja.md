@@ -109,3 +109,5 @@ npm run test:browser
 [比較のヒントの設計と評価上の制限](docs/QUALITY.md)、[分離された画像埋め込みの技術検証](experiments/embedding/README.md)も参照してください。
 
 判定条件を固定した独立HDR+連写評価は、対象を絞った任意機能の研究根拠であり、精度保証ではありません。研究用の写真と評価ツールは配布アプリに含めません。[評価範囲と制約](experiments/embedding/README.md#independent-hdr-burst-holdout)を参照してください。
+
+開発用の手動診断: [合成12MPリソース検証](experiments/resource-probe/README.md)。通常PRの標準CIや実機の受け入れ判定とは分けています。

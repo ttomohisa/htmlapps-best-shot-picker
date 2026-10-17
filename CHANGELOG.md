@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a manual-only, staged synthetic 12MP decode/resource/recovery diagnostic; keep the existing tiny-image benchmark and automatic PR workload unchanged. No product behavior or physical-device guarantee is added.
+
+
 - Add representative thumbnails to the group list using the current technical candidate or first available group photo. Reuse existing thumbnail URLs and keyed image/label nodes; preserve Keep, group/review edits, keyboard access and original-byte saving.
 
 - Review groups directly in Compare with Next unreviewed group, explicit Mark reviewed and next, progress, zero-Keep completion and Undo returning to the original group. Pause during import/analysis and ignore the second click of a double-click. Keep, originals and frozen export plans remain unchanged.
