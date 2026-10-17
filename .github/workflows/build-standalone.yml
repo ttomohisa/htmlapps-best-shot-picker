@@ -89,6 +89,38 @@ jobs:
           path: test-results/
           retention-days: 14
 
+  cross-engine-core:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v8
+        with:
+          name: standalone-html-${{ github.event.pull_request.head.sha || github.sha }}
+          path: .
+      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: Verify bounded cross-engine core flows
+        run: npm run test:cross-engine
+        env:
+          BSP_BROWSER_ENGINE: ${{ matrix.engine }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: cross-engine-${{ matrix.engine }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: test-results/cross-engine/
+          if-no-files-found: warn
+          retention-days: 14
+
   embedding-experiment:
     runs-on: ubuntu-latest
     timeout-minutes: 15
