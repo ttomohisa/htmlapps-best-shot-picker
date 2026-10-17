@@ -111,10 +111,13 @@ async function mixedFixtures() {
 function batchFixtures() {
   return [1, 2, 3].map(index => ({ name: `synthetic-${index}.png`, mimeType: 'image/png', buffer: syntheticPNG(index, 12 * MiB) }));
 }
+function analysisFinished() {
+  return /Analysis finished\.|解析が終わりました。/.test(document.querySelector('#analysisResult').textContent);
+}
 async function idle(page, count) {
   await page.locator('#loadProgress').waitFor({ state: 'hidden' });
   await page.locator('#analysisProgress').waitFor({ state: 'hidden' });
-  await page.waitForFunction(() => /finished|完了/.test(document.querySelector('#analysisResult').textContent));
+  await page.waitForFunction(analysisFinished);
   assert.equal(await page.locator('.photo-card').count(), count);
   assert.equal(await page.locator('#errorList li').count(), 0);
 }
@@ -510,6 +513,9 @@ async function scenario(browser, directory, variant, name, execute) {
   return record;
 }
 async function selfTest() {
+  for (const [text, expected] of [['Analysis finished. Review groups before keeping photos.', true], ['解析が終わりました。グループを確認して、残す写真を選んでください。', true], ['Analyzing', false], ['解析中', false], ['Analysis cancelled.', false], ['', false]]) {
+    assert.equal(require('node:vm').runInNewContext('(' + analysisFinished.toString() + ')()', { document: { querySelector: () => ({ textContent: text }) } }), expected, `Localized idle predicate: ${text}`);
+  }
   assert.equal(engineName(), 'chromium'); for (const name of ['chromium', 'firefox', 'webkit']) assert.equal(engineName(name), name);
   for (const bad of ['', '../webkit', 'safari', 'Firefox']) assert.throws(() => engineName(bad));
   const files = await mixedFixtures(); assert.deepEqual(files.map(file => file.mimeType), ['image/jpeg', 'image/png', 'image/webp']);
