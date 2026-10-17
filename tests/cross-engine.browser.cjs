@@ -265,6 +265,7 @@ async function mobileDialogs(run) {
   await page.locator('#selectedList li button').first().focus(); await page.keyboard.press('Enter');
   await page.locator('#previewKeep').click(); await page.keyboard.press('Escape');
   await page.locator('#previewDialog').waitFor({ state: 'hidden' });
+  await page.waitForFunction(()=>document.activeElement===document.querySelector('#selectedList button'));
   run.record.detachedSaveOpenerFocus = await focusState(page);
   run.record.detachedSaveOpenerFocus.reachableControl = run.record.detachedSaveOpenerFocus.connected &&
     run.record.detachedSaveOpenerFocus.visible && run.record.detachedSaveOpenerFocus.enabled &&
@@ -310,7 +311,10 @@ async function zoomKeyboard(run) {
   }
   await page.locator('#compareZoom').selectOption('fit');
   for(const id of ['viewportA','viewportB'])await page.waitForFunction(id=>document.querySelector(id).tabIndex===-1,'#'+id);
+  await page.locator('#slotA').click();
+  await page.setViewportSize({width:900,height:700});
   await page.locator('#openPreviewButton').click();await page.locator('#previewZoom').selectOption('4');
+  assert.equal(await page.locator('#previewName').textContent(),'landscape.jpg','Choose the large fixture, not a PNG that fits at 400%');
   await page.waitForFunction(()=>document.querySelector('#previewViewport').tabIndex===0);
   await page.locator('#closePreviewButton').focus();await page.keyboard.press('Tab');
   assert.equal(await page.evaluate(()=>document.activeElement.id),'previewViewport');
