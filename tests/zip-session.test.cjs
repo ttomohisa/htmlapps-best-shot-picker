@@ -8,8 +8,8 @@ function harness(){
  const document={activeElement:null,body:{append(){}},createElement(){return{click(){downloads.push(this.download);},remove(){}};}};
  const $=id=>{if(!nodes.has(id))nodes.set(id,{value:'',hidden:false,disabled:false,dataset:{},focus(){document.activeElement=this;}});return nodes.get(id);};
  $('#zipBatchSize').value='32';const outputFilename={value:'frozen-name'};let n=0;
- const context={state,$,document,outputFilename,AbortController,zipPlanSequence:0,defaultZipName:()=> 'default',kept:()=>selected,translate:k=>k,renderSave(){},setExportMessage(k){context.message=k;},setTimeout:f=>timers.push(f),AppConfirm:{ask:async()=>true},URL:{createObjectURL(){const u='blob:'+(++n);urls.add(u);return u;},revokeObjectURL(u){urls.delete(u);revoked.push(u);}},Core:{zipFilename:x=>x,zipBatchFilename:(x,i,t)=>x+'-'+i+'-'+t,planZipBatches(inputs){return{inputs:inputs.slice(),batches:[{},{}]};},createZipBatch:async()=>({bytes:1})},assertCurrent(g,s){if(g!==state.generation||s.aborted){const e=Error('cancelled');e.name='AbortError';throw e;}}};
- const names=['releaseZipBatch','disposeZipBatches','planZipBatches','prepareZipBatch','downloadZipBatch','advanceZipBatch','closeZipBatches'];
+ const context={state,$,document,outputFilename,AbortController,zipPlanSequence:0,defaultZipName:()=> 'default',kept:()=>selected,translate:k=>k,renderSave(){},setExportMessage(k,failure){context.message=k;context.failure=failure;},setTimeout:f=>timers.push(f),AppConfirm:{ask:async()=>true},URL:{createObjectURL(){const u='blob:'+(++n);urls.add(u);return u;},revokeObjectURL(u){urls.delete(u);revoked.push(u);}},Core:{zipFilename:x=>x,zipBatchFilename:(x,i,t)=>x+'-'+i+'-'+t,planZipBatches(inputs){return{inputs:inputs.slice(),batches:[{},{}]};},createZipBatch:async()=>({bytes:1}),createZip:async()=>({bytes:1})},assertCurrent(g,s){if(g!==state.generation||s.aborted){const e=Error('cancelled');e.name='AbortError';throw e;}}};
+ const names=['exportZip','zipFailureDetails','zipFailureMessage','releaseZipBatch','disposeZipBatches','planZipBatches','prepareZipBatch','downloadZipBatch','advanceZipBatch','closeZipBatches'];
  const handlers=vm.runInNewContext(names.map(fn).join('\n')+'\n({'+names.join(',')+'})',context);
  return{...handlers,context,state,$,files,selected,urls,revoked,downloads,timers};
 }
@@ -41,4 +41,24 @@ test('async completion does not steal focus after the user moves elsewhere',asyn
 
 test('ordinary download acknowledgement survives automatic URL expiry',async()=>{
  const h=harness();h.state.ordinaryDownloadPending=true;h.context.AppConfirm.ask=async()=>false;await h.planZipBatches();assert.equal(h.state.zipBatches,null);assert.equal(h.state.ordinaryDownloadPending,true);h.context.AppConfirm.ask=async()=>true;await h.planZipBatches();assert(h.state.zipBatches);assert.equal(h.state.ordinaryDownloadPending,false);
+});
+
+test('failed link preparation releases the current archive but preserves the plan, Keep and prior outputs',async()=>{
+ const h=harness();await h.planZipBatches();const batch=h.state.zipBatches;batch.index=1;
+ h.downloads.push('previous-part.zip');h.context.URL.createObjectURL=()=>{throw new TypeError('private detail');};
+ await h.prepareZipBatch();assert.equal(batch.phase,'failed');assert.equal(batch.blob,null);assert.equal(batch.url,null);
+ assert.equal(batch.failure.code,'ZIP_LINK_FAILED');assert.equal(batch.failure.reason,'TypeError');
+ assert.equal(batch.index,1);assert.equal(h.selected.length,2);assert.deepEqual(h.downloads,['previous-part.zip']);assert.equal(h.urls.size,0);
+ const single=harness();single.context.URL.createObjectURL=()=>{throw new TypeError('private detail');};await single.exportZip();assert.equal(single.context.failure.code,'ZIP_LINK_FAILED');assert.equal(single.context.failure.reason,'TypeError');assert.equal(single.selected.length,2);assert.equal(single.downloads.length,0);
+});
+
+test('read failure keeps safe structured details and retry clears them without advancing',async()=>{
+ const h=harness();await h.planZipBatches();const batch=h.state.zipBatches;
+ h.context.Core.createZipBatch=async()=>{throw Object.assign(new Error('private filename and URL'),{code:'ZIP_READ_FAILED',reason:'NotReadableError',fileIndex:1,totalFiles:2});};
+ await h.prepareZipBatch();assert.equal(batch.failure.code,'ZIP_READ_FAILED');assert.equal(batch.failure.fileIndex,1);assert.equal(batch.failure.totalFiles,2);
+ assert(!JSON.stringify(batch.failure).includes('private'));
+ assert.equal(h.zipFailureDetails({name:'private URL',reason:'private filename',code:'untrusted'},'build').reason,'Error');
+ assert.equal(h.zipFailureDetails({name:'private URL',reason:'private filename',code:'untrusted'},'build').code,'ZIP_PREPARE_FAILED');
+ assert.match(h.zipFailureMessage(batch.failure),/zipReadFailed.*ZIP_READ_FAILED \/ NotReadableError.*2 \/ 2/);
+ h.context.Core.createZipBatch=async()=>({bytes:1});await h.prepareZipBatch();assert.equal(batch.phase,'ready');assert.equal(batch.failure,null);assert.equal(batch.index,0);
 });

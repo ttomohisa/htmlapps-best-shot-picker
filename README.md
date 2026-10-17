@@ -38,6 +38,8 @@ A cancelled or failed batch build can retry only its current part. Downloading t
 
 Arrow keys browse the active comparison photo outside an enlarged image. Tab into an overflowing image to pan with arrow keys instead. Enter toggles Keep when focus is on the page; focused buttons keep their usual action. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
 
+If ZIP export reports **ZIP_READ_FAILED**, an original could not be read again. For a cloud-backed photo, download it to the device and select the local file in a separate tab; keep the current page open to preserve its choices. A thumbnail does not guarantee later access to original bytes. Other diagnostics distinguish archive assembly and link preparation; they do not prove a memory shortage. No photo upload is needed for troubleshooting.
+
 ## Privacy
 
 Processing stays inside the browser. Optional similarity search and face detection use models embedded in the HTML and start only when you choose them. There are no image uploads, runtime APIs, external fonts, analytics, or remote model downloads. Hosted use downloads the initial HTML. Content Security Policy blocks runtime connections with `connect-src 'none'`.
@@ -62,7 +64,7 @@ Single-ZIP mode records current Keep at the list click. During smaller-ZIP savin
 
 ## Limitations
 
-This is v0.8.0-beta.1. Independent ZIP batches and optional JSON/CSV lists are implemented; this prerelease aligns the version with that existing storage scope. Physical-device acceptance remains open, so this is not final v0.8 or v1.0 acceptance. The [remaining release gates](DEVELOPMENT_PLAN.md#18-v08-betaへの版整理と残る出荷条件2026-10-17) are fixed separately from feature development. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
+This is v0.8.0-beta.2. Independent ZIP batches and optional JSON/CSV lists are implemented; this prerelease adds distinct ZIP failure guidance and releases failed archive references. Physical-device acceptance remains open, so this is not final v0.8 or v1.0 acceptance. The [remaining release gates](DEVELOPMENT_PLAN.md#18-v08-betaへの版整理と残る出荷条件2026-10-17) are fixed separately from feature development. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
 
 The 36-photo limit applies to each optional search, not the whole session. Choose the groups you want to compare; unselected groups stay unchanged. A group containing more than 36 photos cannot be selected for this search. No photos are silently truncated and existing groups are never split. Adding photos, editing groups, or starting a new analysis clears pending candidates. Applying one proposal clears the others, so search again for current candidates. Cancel or failure leaves existing groups, Keep choices, and originals unchanged. Processing may be slow on some devices; normal comparison and saving remain available.
 

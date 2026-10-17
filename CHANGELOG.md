@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.0-beta.2 — prerelease (2026-10-17)
+
+- Distinguish unreadable originals, ZIP assembly failure and download-link preparation failure. Show only a safe error category and photo ordinal; provide local-file recovery guidance for cloud-backed originals without claiming that cloud storage caused every failure.
+- Release the current archive Blob if its download link cannot be created. Preserve the plan, Keep choices, originals and earlier downloaded parts.
+- Keep physical-device acceptance open: an owner reported a 12-photo, 32,681,303-byte Android batch failure; its underlying cause and local-file comparison are not yet confirmed. No byte-budget reduction, eager whole-collection copy or new benchmark is introduced.
+
 ## 0.8.0-beta.1 — prerelease (2026-10-17)
 
 - Align the displayed/configured version and roadmap with the independent ZIP batches and optional JSON/CSV lists already shipped in 0.7.0/0.7.1. Carry forward the review improvements below; no new runtime behavior or dependency is introduced by this version alignment.
