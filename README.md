@@ -109,3 +109,5 @@ See [grouping design and evaluation limits](docs/GROUPING.md).
 See [technical-hint design and evidence limits](docs/QUALITY.md) and the [isolated embedding feasibility experiment](experiments/embedding/README.md).
 
 The frozen-protocol HDR+ holdout is research evidence for this bounded, optional feature, not an accuracy guarantee. Research photographs and evaluation tools are excluded from the distributed app; see [experiment scope and limits](experiments/embedding/README.md#independent-hdr-burst-holdout).
+
+Manual developer diagnostic: [synthetic 12MP resource probe](experiments/resource-probe/README.md), separate from normal PR CI and physical-device acceptance.
