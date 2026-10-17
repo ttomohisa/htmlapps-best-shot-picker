@@ -400,7 +400,8 @@
       :root { --header-height: 58px; }
       .header-inner { padding-block: 8px; }
       .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
-      .brand-name { font-size: 15px; }
+      .brand-name { font-size: 15px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+      .version-badge { margin-left: 0; }
       .brand-meta { display: none; }
       .header-actions { gap: 11px; }
       .language-button { padding-block: 6px; }
@@ -581,7 +582,7 @@
           <img id="appBrandIcon" src="__APP_ICON_DATA_URI__" alt="">
         </div>
         <div class="brand-copy">
-          <p class="brand-name"><span id="brandName">Best Shot Picker</span><span class="version-badge" id="versionBadge">v0.7.1</span></p>
+          <p class="brand-name"><span id="brandName">Best Shot Picker</span><span class="version-badge" id="versionBadge">v0.8.0-beta.1</span></p>
           <p class="brand-meta" data-i18n="brandMeta">Compare. Choose. Keep the originals.</p>
         </div>
       </div>

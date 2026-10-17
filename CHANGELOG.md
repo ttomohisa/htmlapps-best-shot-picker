@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.8.0-beta.1 — prerelease (2026-10-17)
+
+- Align the displayed/configured version and roadmap with the independent ZIP batches and optional JSON/CSV lists already shipped in 0.7.0/0.7.1. Carry forward the review improvements below; no new runtime behavior or dependency is introduced by this version alignment.
+- End additional v0.7 feature work and record the finite remaining acceptance gates for final v0.8, RC and v1.0. Unexecuted physical-device and photographic checks remain unexecuted; a beta label does not waive them.
+- Keep the full prerelease version visible below the product name in the existing narrow header. Strengthen its existing browser check to reject a badge clipped by the title container; no new test case or suite.
 
 - Add a manual-only, staged synthetic 12MP decode/resource/recovery diagnostic; keep the existing tiny-image benchmark and automatic PR workload unchanged. No product behavior or physical-device guarantee is added.
 
