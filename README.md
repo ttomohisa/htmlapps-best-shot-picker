@@ -52,9 +52,15 @@ Both optional model features, **Find similar-photo candidates** and **Find faces
 
 See [validation results](docs/VALIDATION.md) for the environments and checks covered. Physical Android/iPhone 100/500-photo tests, PC 1,000-photo tests, peak memory, and real-photo throughput remain unverified.
 
+## Optional selected-file list
+
+In Save, open **Save a selected-file list** and choose JSON or CSV. The list downloads separately and is never added to a ZIP. It contains only kept files: original name, assigned ZIP entry/archive name, part number, order and byte size. Names may contain personal information. No EXIF/GPS, folder metadata, timestamps or model results are added.
+
+Single-ZIP mode records current Keep at the list click. During smaller-ZIP saving, it uses that plan's starting selection even if Keep changes. It records planned files, not proof of completed downloads. JSON retains exact names; CSV uses `file: ` display prefixes and visible control-character escapes for spreadsheet viewing. This does not restore a selection session. See [the field and CSV contract](docs/SELECTION_LIST.md).
+
 ## Limitations
 
-This is the v0.7.0 development version. Sequential ZIP batches are the first bounded portion of the planned v0.8 storage work; the full v0.8 milestone is not complete. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
+This is the v0.7.1 development version. Sequential ZIP batches are the first bounded portion of the planned v0.8 storage work; the full v0.8 milestone is not complete. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
 
 The 36-photo limit applies to each optional search, not the whole session. Choose the groups you want to compare; unselected groups stay unchanged. A group containing more than 36 photos cannot be selected for this search. No photos are silently truncated and existing groups are never split. Adding photos, editing groups, or starting a new analysis clears pending candidates. Applying one proposal clears the others, so search again for current candidates. Cancel or failure leaves existing groups, Keep choices, and originals unchanged. Processing may be slow on some devices; normal comparison and saving remain available.
 
@@ -66,7 +72,7 @@ Images above 100 megapixels or 32,768 pixels on either side are skipped before d
 
 The ZIP writer reads bounded chunks for CRC and stores original Blob parts, but each finished archive still uses browser-managed memory. Batch preflight includes the exact ZIP headers, UTF-8 names, and directory overhead, and assigns safe names that remain unique across the whole plan. A file that cannot fit by itself with ZIP overhead stops the plan before any export read; the message names the file and suggests a higher capacity, a different selection, or the single-ZIP mode. Originals are never cut into pieces.
 
-The chosen capacity bounds one archive, not total browser memory, garbage-collection timing, or smartphone safety. Only the current batch archive and its download URL are retained by the batch workflow; original files, previews, and browser-managed download buffers may still consume memory. Each archive must stay within ZIP32 limits (under 65,535 entries and 4 GiB including ZIP overhead). Disk streaming, ZIP64, spanning ZIP files, and CSV/JSON selection-list export are not included. Download initiation and your saved confirmation are not an application-verified disk-write result.
+The chosen capacity bounds one archive, not total browser memory, garbage-collection timing, or smartphone safety. Only the current batch archive and its download URL are retained by the batch workflow; original files, previews, and browser-managed download buffers may still consume memory. Each archive must stay within ZIP32 limits (under 65,535 entries and 4 GiB including ZIP overhead). Disk streaming, ZIP64 and spanning ZIP files are not included; optional CSV/JSON lists are separate metadata downloads. Download initiation and your saved confirmation are not an application-verified disk-write result.
 
 ## Single HTML / offline use
 

@@ -10,6 +10,8 @@
   const ZIP32_MAX_FILES = 65534;
   // Plans own only original File references and metadata. Completed archives are never cached.
   const ZIP_BATCH_PLANS = new WeakMap();
+  // Only frozen allowlisted snapshots created here can reach the list serializers.
+  const SELECTION_LISTS = new WeakSet();
   const MAX_IMAGE_PIXELS = 100000000;
   const MAX_IMAGE_AXIS = 32768;
   const RESERVED_NAME = /^(con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])(?:\.|$)/i;
@@ -98,6 +100,18 @@
     const width = Math.max(3, String(total).length);
     const suffix = '-part-' + String(index + 1).padStart(width, '0') + '-of-' + String(total).padStart(width, '0');
     return fitName(name.slice(0, -4), '.zip', suffix);
+  }
+
+  function checkSelectionFormat(format) {
+    if (format !== 'json' && format !== 'csv') {
+      throw failure('INVALID_SELECTION_FORMAT', 'Choose JSON or CSV for the selection list.');
+    }
+  }
+
+  /** Optional list download name, derived from the same editable ZIP base. */
+  function selectionListFilename(base, format) {
+    checkSelectionFormat(format);
+    return fitName(zipFilename(base).slice(0, -4), '.' + format, '-selection');
   }
 
   function collisionKey(name) {
@@ -220,7 +234,10 @@
       if (entries.length && (entries.length === ZIP32_MAX_FILES || localSize + centralSize + localBytes + directoryBytes + 22 > maxBytes)) {
         finishBatch();
       }
-      entries.push(Object.freeze({ ...snapshot, name: names[index], encodedName, offset: localSize }));
+      entries.push(Object.freeze({
+        ...snapshot, originalName: typeof snapshot.name === 'string' ? snapshot.name : null,
+        name: names[index], encodedName, offset: localSize
+      }));
       localSize += localBytes; centralSize += directoryBytes; batchBytes += snapshot.size;
       totalBytes += snapshot.size;
       if (!Number.isSafeInteger(totalBytes)) throw zipLimit();
@@ -229,6 +246,74 @@
     const plan = Object.freeze({ maxBytes, totalFiles: inputs.length, totalBytes, estimatedBytes, names, batches: Object.freeze(batches) });
     ZIP_BATCH_PLANS.set(plan, privateBatches);
     return plan;
+  }
+
+  /**
+   * Metadata-only description of a kept-file ZIP plan, not proof of download or
+   * disk saving. The caller chooses current Keep or an existing batch snapshot.
+   * Read only the private plan's captured scalar fields, never the live File or
+   * photo record. In particular, originalName preserves File.name without NFC
+   * normalization, while zipEntryName is the already assigned global safe name.
+   */
+  function createSelectionList(plan, baseName, snapshotSource) {
+    const batches = ZIP_BATCH_PLANS.get(plan);
+    if (!batches) throw failure('INVALID_ZIP_PLAN', 'Create a new ZIP export plan from the selected original photos.');
+    if (snapshotSource !== 'current_keep' && snapshotSource !== 'zip_batch_plan') {
+      throw failure('INVALID_SELECTION_SOURCE', 'Choose the current selection or the active ZIP batch plan.');
+    }
+    // A normal single-ZIP selection must never acquire invented independent parts.
+    if (snapshotSource === 'current_keep' && batches.length !== 1) throw zipLimit();
+    const base = zipFilename(baseName), rows = [];
+    batches.forEach((batch, index) => {
+      const archiveName = zipBatchFilename(base, index, batches.length);
+      for (const entry of batch.entries) {
+        if (typeof entry.originalName !== 'string') {
+          throw failure('INVALID_SELECTION_LIST', 'A selected original filename is unavailable. Add the photo again and retry.');
+        }
+        rows.push(Object.freeze({
+          selectionIndex: rows.length + 1,
+          originalName: entry.originalName,
+          zipEntryName: entry.name,
+          zipArchiveName: archiveName,
+          zipPart: index + 1,
+          sizeBytes: entry.size
+        }));
+      }
+    });
+    const list = Object.freeze({ schemaVersion: 1, scope: 'kept-zip-plan', snapshotSource, rows: Object.freeze(rows) });
+    SELECTION_LISTS.add(list);
+    return list;
+  }
+
+  function selectionDisplayName(name) {
+    // CSV is an explicit display representation, not an exact filename codec.
+    // Keep a literal alphabetic prefix on every filename, including benign names;
+    // expose backslashes, controls and bidi formatting rather than hiding them.
+    // No CSV strategy guarantees safety in every spreadsheet/downstream workflow.
+    return 'file: ' + name.replace(/[\\\u0000-\u001f\u007f-\u009f\u061c\u200e\u200f\u2028-\u202e\u2066-\u206f\ufeff]/g,
+      char => char === '\\' ? '\\\\' : '\\u' + char.charCodeAt(0).toString(16).padStart(4, '0'));
+  }
+
+  /** Deterministic local text only; never adds a list entry to an image ZIP. */
+  function serializeSelectionList(list, format) {
+    checkSelectionFormat(format);
+    if (!SELECTION_LISTS.has(list)) {
+      throw failure('INVALID_SELECTION_LIST', 'Create a selection list from the current ZIP export plan.');
+    }
+    if (format === 'json') return JSON.stringify(list, null, 2) + '\n';
+    const quote = value => '"' + String(value).replace(/"/g, '""') + '"';
+    const lines = [[
+      'schemaVersion', 'scope', 'snapshotSource', 'selectionIndex', 'originalName_display',
+      'zipEntryName_display', 'zipArchiveName_display', 'zipPart', 'sizeBytes'
+    ].map(quote).join(',')];
+    for (const row of list.rows) {
+      lines.push([
+        list.schemaVersion, list.scope, list.snapshotSource, row.selectionIndex,
+        selectionDisplayName(row.originalName), selectionDisplayName(row.zipEntryName),
+        selectionDisplayName(row.zipArchiveName), row.zipPart, row.sizeBytes
+      ].map(quote).join(','));
+    }
+    return '\ufeff' + lines.join('\r\n') + '\r\n';
   }
 
   /**
@@ -653,7 +738,7 @@
     return { sets, statuses };
   }
 
-  const api = Object.freeze({ sanitizeFilename, zipFilename, zipBatchFilename, uniqueNames, planZipBatches, createZipBatch, createZip, inspectImageHeader, findExactDuplicates });
+  const api = Object.freeze({ sanitizeFilename, zipFilename, zipBatchFilename, selectionListFilename, uniqueNames, planZipBatches, createSelectionList, serializeSelectionList, createZipBatch, createZip, inspectImageHeader, findExactDuplicates });
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.BestShotCore = api;
 })(typeof window !== 'undefined' ? window : null);

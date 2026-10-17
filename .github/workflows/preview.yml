@@ -214,6 +214,8 @@ jobs:
           BSP_PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
           BSP_RENDERING_PREVIEW_URL: ${{ steps.preview.outputs.preview_url }}
         run: |
+          node tests/selection-list.browser.cjs
+          if ($LASTEXITCODE -ne 0) { throw "Selection list preview checks failed." }
           node tests/zip-batches.browser.cjs
           if ($LASTEXITCODE -ne 0) { throw "Sequential ZIP preview checks failed." }
           node tests/compatibility.browser.cjs
