@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add bounded Chromium, Firefox and WebKit core acceptance using the same canonical standalone artifacts.
+- Restore keyboard focus to a remaining selected photo, the ZIP filename when empty, or the selection-list summary while that filename is disabled, after closing Preview if Unkeep removed its original Save-list opener.
+
+
 Earlier entries describe their release or research stage. v0.5 supersedes prior “model excluded / adoption unapproved” product-scope statements only for the explicitly optional feature below.
 
 ## 0.7.1 — 2026-10-17

@@ -14,7 +14,8 @@
     "experiment:burst:build": "node experiments/embedding/burst-build.cjs",
     "experiment:burst:test": "node experiments/embedding/burst-browser.cjs",
     "experiment:worker:build": "node experiments/embedding/worker-build.cjs",
-    "experiment:worker:test": "node experiments/embedding/worker-browser.cjs"
+    "experiment:worker:test": "node experiments/embedding/worker-browser.cjs",
+    "test:cross-engine": "node tests/cross-engine.browser.cjs"
   },
   "devDependencies": {
     "playwright": "1.57.0"
