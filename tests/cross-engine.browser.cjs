@@ -399,6 +399,56 @@ async function reviewNavigation(run) {
   assert(await page.locator('#reviewNavigation').isHidden());assert.equal(await page.locator('.photo-card').count(),0);
   run.record.review={navigationOnly:true,zeroKeep:true,undo:true,lastGroup:true,reanalysis:true,doubleClick:true,heldEnter:true,heldSpace:true,organizeCancellation:true,narrowKeyboard:true};
 }
+async function groupThumbnails(run) {
+  const {page}=run,chip=id=>`.group-chip[data-group-id="${id}"]`,thumb=id=>`${chip(id)} img`;
+  assert.equal(await page.locator('.group-thumbnail').count(),0,'Empty session has no representatives');
+  const files=[
+    {name:'soft.png',mimeType:'image/png',buffer:await fs.readFile(path.join(__dirname,'fixtures/quality-soft.png'))},
+    {name:'detail.png',mimeType:'image/png',buffer:await fs.readFile(path.join(__dirname,'fixtures/quality-detail.png'))},
+    ...(await mixedFixtures()).slice(0,2)
+  ];
+  await importFiles(page,files);
+  const edit=async(photo,action)=>{await page.locator('#organizeButton').click();await page.locator('#sourceGroup').selectOption('g-p1');if(photo)await page.locator('#groupPhoto').selectOption(photo);await page.locator(`#${action}GroupButton`).click();};
+  if(await page.locator(chip('g-p2')).count()){
+    await page.locator('#organizeButton').click();await page.locator('#sourceGroup').selectOption('g-p2');await page.locator('#targetGroup').selectOption('g-p1');await page.locator('#mergeGroupButton').click();
+  }
+  assert.equal(await page.locator('#photo-p2 .quality-badge').count(),1,'Generated detail fixture is the technical candidate');
+  const first=await page.locator('#photo-p1 img').getAttribute('src'),candidate=await page.locator('#photo-p2 img').getAttribute('src');
+  assert.equal(await page.locator(thumb('g-p1')).getAttribute('src'),candidate,'Candidate, not first member, is represented');
+  assert.equal(await page.locator(thumb('g-p3')).getAttribute('src'),await page.locator('#photo-p3 img').getAttribute('src'),'Single uses its existing thumbnail');
+  assert.equal(await page.locator(thumb('g-p1')).getAttribute('alt'),'');assert.equal(await page.locator(thumb('g-p1')).getAttribute('loading'),'lazy');
+  await page.evaluate(()=>{window.__groupNodes=[...document.querySelectorAll('.group-chip')].map(button=>({button,image:button.querySelector('img'),label:button.querySelector('.group-chip-label')}));});
+  await page.locator('#photo-p1 .keep-button').click();await edit(null,'review');
+  assert.equal(await page.locator(thumb('g-p1')).getAttribute('src'),candidate,'Keep and review do not choose the representative');
+  await page.locator(chip('g-p1')).press('Enter');assert.equal(await page.locator('#groupFilter').inputValue(),'g-p1');
+  assert.equal(await page.locator(chip('g-p1')).getAttribute('aria-pressed'),'true');assert.equal(await page.locator('.photo-card.kept').count(),1);
+  await edit('p2','split');assert.equal(await page.locator(thumb('g-p1')).getAttribute('src'),first,'Split removes the old candidate from its source thumbnail');
+  assert.equal(await page.locator(thumb('manual-p2')).getAttribute('src'),candidate);await page.locator('#appToastAction').click();
+  assert.equal(await page.locator(thumb('g-p1')).getAttribute('src'),candidate,'Undo restores current membership representative');
+  await page.locator('#analyzeButton').click();await idle(page,4);
+  assert.equal(await page.locator(thumb('g-p1')).getAttribute('src'),candidate);
+  assert(await page.evaluate(()=>window.__groupNodes.every(({button,image,label})=>button.isConnected&&button.querySelector('img')===image&&button.querySelector('.group-chip-label')===label)),'Stable chips retain child identities across Keep/review/edit/Undo/reanalysis');
+  await originals(page,[files[0]],'group-thumbnails');
+  for(const language of ['en','ja']){
+    if(language==='ja')await page.locator('#languageButton').click();
+    for(const width of [1360,320,390]){
+      await page.setViewportSize({width,height:width===1360?900:480});
+      if(width<600)await page.locator('[data-mobile-key="photos"]').click();
+      await page.locator('#groupList').scrollIntoViewIfNeeded();
+      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Group thumbnails must not cause page overflow');
+      assert(await page.locator('.group-chip').evaluateAll(nodes=>nodes.every(node=>node.scrollWidth<=node.clientWidth+1)),'Group labels fit their controls');
+      const image=page.locator(thumb('g-p1'));await image.scrollIntoViewIfNeeded();await image.evaluate(async image=>{if(!image.complete)await new Promise(resolve=>image.addEventListener('load',resolve,{once:true}));});
+      assert(await image.evaluate(image=>image.naturalWidth>0&&image.getBoundingClientRect().width===48&&image.getBoundingClientRect().height===40));
+      await shot(run,`group-thumbnails-${language}-${width}`);
+    }
+    assert.equal(await page.locator(thumb('g-p1')).getAttribute('src'),candidate);assert.equal(await page.locator('.photo-card.kept').count(),1);
+  }
+  await page.locator('#clearButton').click();await page.locator('#appConfirmOk').click();assert.equal(await page.locator('.group-thumbnail').count(),0);
+  await importFiles(page,[files[2]]);assert.equal(await page.locator('.group-thumbnail').count(),1);
+  assert.equal(await page.locator(thumb('g-p5')).count(),1,'New session does not reuse a prior photo ID');
+  assert.equal(await page.locator('.group-thumbnail').getAttribute('src'),await page.locator('.photo-card img').getAttribute('src'));
+  run.record.groupThumbnails={candidate:true,fallback:true,keepIndependent:true,reviewIndependent:true,splitUndo:true,reanalysis:true,stableNodes:true,keyboard:true,enJaWidths:[1360,320,390],reset:true};
+}
 function capabilityFault(mode) {
   window.__crossEngineFault = { mode, attempts: 0 };
   if (mode === 'missing-worker') {
@@ -479,7 +529,7 @@ async function selfTest() {
 async function main() {
   if (process.argv.includes('--self-test')) return selfTest();
   const engine = engineName(process.env.BSP_BROWSER_ENGINE), directory = path.join(ROOT, 'test-results', 'cross-engine', engine);
-  if(process.env.BSP_BROWSER_SCENARIO)assert(['core','batches','mobile-dialogs','zoom-keyboard','review-navigation','missing-worker','worker-failure'].includes(process.env.BSP_BROWSER_SCENARIO),'Unknown scenario');
+  if(process.env.BSP_BROWSER_SCENARIO)assert(['core','batches','mobile-dialogs','zoom-keyboard','review-navigation','group-thumbnails','missing-worker','worker-failure'].includes(process.env.BSP_BROWSER_SCENARIO),'Unknown scenario');
   assert(!process.env.BSP_PREVIEW_URL, 'This bounded harness tests file:// artifacts only');
   await fs.mkdir(directory, { recursive: true });
   const report = { engine, version: null, playwrightVersion: require('playwright/package.json').version,
@@ -488,7 +538,7 @@ async function main() {
   try {
     browser = await require('playwright')[engine].launch({ headless: true }); report.version = browser.version();
     for (const variant of VARIANTS) for (const [name, execute] of [['core', core], ['batches', batches],
-      ['mobile-dialogs', mobileDialogs], ['zoom-keyboard',zoomKeyboard], ['review-navigation',reviewNavigation], ['missing-worker', optionalModel], ['worker-failure', optionalModel]]) {
+      ['mobile-dialogs', mobileDialogs], ['zoom-keyboard',zoomKeyboard], ['review-navigation',reviewNavigation], ['group-thumbnails',groupThumbnails], ['missing-worker', optionalModel], ['worker-failure', optionalModel]]) {
       if(process.env.BSP_BROWSER_SCENARIO && process.env.BSP_BROWSER_SCENARIO!==name)continue;
       const result = await scenario(browser, directory, variant, name, execute); report.scenarios.push(result);
       await fs.writeFile(path.join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n');

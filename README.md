@@ -13,7 +13,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 - Optionally find additional similar-photo candidates with an embedded local model, then review and apply each grouping yourself
 - Distinguish JPEG EXIF capture/digitized timestamps from file-modified time
 - See group-relative technical comparison candidates and measured reasons; uncertain or tied cases have no recommendation
-- Browse thumbnails, open a large view, and compare two photos
+- Recognize groups by representative thumbnails, browse photos, open a large view, and compare two photos
 - Review groups directly in Compare, skip to the next unfinished group, or mark a group reviewed and continue with Undo
 - Optionally find faces in the comparison pair, choose a face to zoom, and return to the whole image
 - Switch A / B on phones; inspect 100%, 200%, or 400% views by scrolling
@@ -26,7 +26,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 ## How to use
 
 1. Choose **Add photos**, drag files into the drop area, or choose a folder when supported. You can add more photos without clearing existing Keep choices or manual groups.
-2. Review **Photo groups** or **All photos**. Use **Organize** to split, move, merge, or mark a group reviewed. Open a photo for a closer look. In **Compare**, choose photos A and B. Technical hints may highlight a comparison candidate, but never select it. **Keep** the ones you want.
+2. Review **Photo groups** or **All photos**. Each group shows its current technical candidate when available, otherwise its first available photo. This representative is not a Keep choice. Use **Organize** to split, move, merge, or mark a group reviewed. Open a photo for a closer look. In **Compare**, choose photos A and B. Technical hints may highlight a comparison candidate, but never select it. **Keep** the ones you want.
    In Compare, **Next unreviewed group** only navigates. **Mark reviewed and next** finishes the current group, even with zero Keep choices; Undo returns to it. The last group stays visible when all are reviewed. Import and analysis temporarily pause these controls.
 3. Optionally choose **Find similar-photo candidates**. It searches up to 36 eligible photos across at least two automatic, unreviewed groups whose normal analysis is complete. For larger sessions, choose whole groups to compare, totaling at most 36 photos per search. Open the candidate thumbnails to compare, then choose **Apply this grouping** only for a grouping you want. **Undo** reverses the latest group edit. Manual and reviewed groups are excluded.
 4. In **Compare**, optionally choose **Find faces**. Select a face separately in each photo to zoom, or return to **Whole image**. Missed or incorrect candidates can occur; manual zoom remains available.

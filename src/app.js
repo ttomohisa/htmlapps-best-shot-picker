@@ -139,6 +139,8 @@
   Object.assign(translations.ja,{imageRegionA:'写真A：矢印キーで拡大画像を移動',imageRegionB:'写真B：矢印キーで拡大画像を移動',imageRegionPreview:'拡大写真：矢印キーで画像を移動',helpImageKeyboard:'拡大した写真が枠からはみ出すときは、Tabで画像に入り、矢印キーで見たい部分へ移動できます。Tabで画像の外へ出ると、左右キーは写真の切替に戻ります。Escで拡大画面を閉じます。'});
   Object.assign(translations.en,{nextUnreviewed:'Next unreviewed group',reviewAndNext:'Mark reviewed and next',reviewLast:'Mark reviewed',reviewProgress:'groups reviewed',reviewComplete:'All groups reviewed',reviewStart:'Use Next to start reviewing one group at a time.',reviewHint:'You can mark a group reviewed with no photos kept. Next alone leaves its review state unchanged.',reviewChanged:'Group marked reviewed.',helpReview:'In Compare, Next unreviewed group skips to another unfinished group without marking the current one. Mark reviewed and next finishes this group, even with no Keep choices, and continues. The last group stays visible when all are reviewed. Undo returns to the group and restores its review state. Normal reanalysis keeps reviewed groups; rebuilding groups clears review state. Review controls pause during import and analysis.'});
   Object.assign(translations.ja,{nextUnreviewed:'次の未確認グループへ',reviewAndNext:'確認済みにして次へ',reviewLast:'確認済みにする',reviewProgress:'グループ確認済み',reviewComplete:'すべてのグループを確認済み',reviewStart:'「次の未確認グループへ」で1組ずつ確認を始められます。',reviewHint:'「残す」が0枚でも確認済みにできます。「次へ」だけでは確認済みにしません。',reviewChanged:'グループを確認済みにしました。',helpReview:'比較画面の「次の未確認グループへ」は、今の組を確認済みにせず別の未確認の組へ進みます。「確認済みにして次へ」は、「残す」が0枚でも今の組を確認済みにして進みます。最後の組は表示したまま、全組の確認完了を案内します。「元に戻す」で元の組に戻り、確認状態を戻せます。通常の再解析は確認状態を維持し、グループの作り直しでは解除します。読み込み・解析中はこの操作を一時停止します。'});
+  Object.assign(translations.en,{groupThumbnailHint:'Each thumbnail represents a group, not a Keep choice.',helpGroupThumbnails:'Group thumbnails help you recognize each scene. They show the current technical candidate when available, otherwise the first available photo in that group. A representative is not automatically kept. Choosing the group filters Photos and Compare without changing Keep choices.'});
+  Object.assign(translations.ja,{groupThumbnailHint:'各組の代表画像です。「残す」の選択とは別です。',helpGroupThumbnails:'グループの代表画像で場面を見分けられます。現在の技術候補があればその写真、なければ組の先頭の利用可能な写真を表示します。代表画像を自動で「残す」にはしません。グループを選ぶと写真一覧と比較が絞り込まれますが、「残す」の選択は変わりません。'});
   const state = { selectionListUrls:new Set(), selectionListDownloading:false, selectionListStatus:'', ordinaryDownloadPending:false, zipBatches:null, zipPlanning:false, zipPlanError:null, modelLicenses:{phase:'idle',text:''}, faceJob:null, faceRevision:0, facePair:[null,null], faceResults:new Map(), faceSelected:[null,null], faceWhole:[false,false], faceMessage:'', similarity:null, similarityScope:null, similarityScopeDraft:null, similarityProposals:[], similarityMessage:'', qualityResults: new Map(), groups: [], groupFilter: '', analysis: null, inputRevision: 0, groupingRevision: 0, analysisMessage: '', photos: [], failures: [], queue: [], generation: 0, nextId: 1, load: null, exporting: null, pair: [null,null], active: 0, previewId: null, previewIds: [], fullUrls: new Map(), downloadUrls: new Set() };
   const outputFilename = $('#outputFilename');
   const defaultZipName = () => `best-shot-picker-${new Date().toLocaleDateString('sv-SE').replaceAll('-','')}`;
@@ -424,6 +426,21 @@
     if(result.candidateId)return `${translate('qualityCandidate')}: ${byId(result.candidateId)?.name||''} · ${result.reasons.map(qualityReason).join(' · ')}`;
     return translate({single:'qualitySingle',pending:'qualityPending',failed:'qualityFailed',incomparable:'qualityIncomparable',uncertain:'qualityUncertain','near-tie':'qualityTie'}[result.status]||'qualityNone');
   }
+  // A representative is only a visual wayfinder; it never implies Keep.
+  function groupRepresentative(group) {
+    const candidate=state.qualityResults.get(group.id)?.candidateId;
+    if(group.ids.includes(candidate)){const photo=byId(candidate);if(photo?.thumbnailUrl)return photo;}
+    return group.ids.map(byId).find(photo=>photo?.thumbnailUrl)||null;
+  }
+  function updateGroupChip(button,group) {
+    const image=button.querySelector('img'),photo=groupRepresentative(group);
+    image.hidden=!photo;
+    if(photo)setAttributeIfChanged(image,'src',photo.thumbnailUrl);else image.removeAttribute('src');
+    setTextIfChanged(button.querySelector('.group-chip-label'),groupLabel(group));
+    const active=state.groupFilter===group.id;
+    if(button.classList.contains('active')!==active)button.classList.toggle('active',active);
+    setAttributeIfChanged(button,'aria-pressed',active);
+  }
   function renderPhotoQuality(node,photo,details=false){
     const group=photo?photoGroups.get(photo.id):null,result=state.qualityResults.get(group?.id);
     const signature=JSON.stringify([language,photo?.id,photo?.qualityStatus,details,details?photo?.qualityMetrics:null,result?.candidateId,result?.reasons]);
@@ -438,7 +455,7 @@
     photoGroups.clear();groupPositions.clear();state.groups.forEach((group,index)=>{groupPositions.set(group.id,index+1);group.ids.forEach(id=>photoGroups.set(id,group));});
     state.qualityResults=new Map(state.groups.map(g=>[g.id,qualityResult(g)]));$('#groupTools').hidden=!ready().length;if(!state.groups.some(g=>g.id===state.groupFilter))state.groupFilter='';
     setOptions($('#groupFilter'),[['',translate('allPhotos')],...state.groups.map(g=>[g.id,groupLabel(g)])],state.groupFilter);
-    syncKeyedChildren($('#groupList'),state.groups,group=>group.id,group=>{const button=el('button','button group-chip');button.type='button';button.dataset.groupId=group.id;button.addEventListener('click',()=>{state.groupFilter=state.groupFilter===group.id?'':group.id;render();$('#groupFilter').focus({preventScroll:true});});return button;},(button,group)=>{setTextIfChanged(button,groupLabel(group));const active=state.groupFilter===group.id;if(button.classList.contains('active')!==active)button.classList.toggle('active',active);setAttributeIfChanged(button,'aria-pressed',active);});
+    syncKeyedChildren($('#groupList'),state.groups,group=>group.id,group=>{const button=el('button','button group-chip'),image=el('img','group-thumbnail');button.type='button';button.dataset.groupId=group.id;image.alt='';image.loading='lazy';image.decoding='async';image.width=48;image.height=40;button.append(image,el('span','group-chip-label'));button.addEventListener('click',()=>{state.groupFilter=state.groupFilter===group.id?'':group.id;render();$('#groupFilter').focus({preventScroll:true});});return button;},updateGroupChip);
     const active=state.groups.find(g=>g.id===state.groupFilter),candidateCount=[...state.qualityResults.values()].filter(r=>r.candidateId).length;$('#qualitySummary').textContent=active?qualityMessage(state.qualityResults.get(active.id)):candidateCount?`${candidateCount} ${translate(candidateCount===1?'qualityCountSingle':'qualityCount')}. ${translate('qualityNote')}`:translate('qualityNone');
     const duplicateSets=new Set(ready().map(p=>p.duplicateSetId).filter(Boolean));$('#groupSummary').textContent=`${state.groups.filter(g=>g.ids.length>1).length} ${translate('group')} · ${state.groups.filter(g=>g.ids.length===1).length} ${translate('single')} · ${duplicateSets.size} ${translate('identical')}`;
     $('#organizeButton').disabled=!state.groups.length||!!state.load;$('#analyzeButton').disabled=!!state.analysis||!!state.load;$('#regroupButton').disabled=!!state.analysis||!!state.load;$('#analysisResult').textContent=state.analysisMessage?translate(state.analysisMessage):'';
