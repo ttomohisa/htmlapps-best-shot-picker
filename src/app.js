@@ -137,6 +137,8 @@
   Object.assign(translations.ja,{faceFind:'顔を探す・試験的機能',faceTitle:'顔の位置を拡大・試験的機能',faceNote:'AとBの写真だけが対象です。それぞれの写真で顔を選べます。',faceLoading:'顔を探す準備中',faceFinding:'顔の位置を検出中',faceReady:'各写真の下で顔を選ぶと拡大できます。',faceChoose:'番号は写真ごとに付きます。写真間で同じ人物を示すものではありません。',faceNone:'顔が見つかりませんでした。全体表示と手動の拡大は利用できます。',faceLabel:'顔',faceWhole:'全体を表示',faceChoices:'この写真の顔',faceCancelled:'顔の検索を中止しました。もう一度試せます。',faceFailed:'顔の検索を完了できませんでした。再試行するか、手動で拡大してください。',helpFaces:'比較画面の「顔を探す」を押したときだけ、現在のAとBの写真を検索します。各写真の下で「顔1〜6」を個別に選ぶと、その位置の周囲を拡大します。「全体を表示」でその写真を全体表示に戻し、「拡大」の選択欄を変えると両方の写真が手動の拡大に戻ります。どちらかの写真を変えると顔の結果は消えます。「中止」で停止し、「顔を探す」で再試行できます。小さい顔、横向き、一部が隠れた顔などでは、位置の誤りや見落としがあります。端末によって処理に時間がかかります。番号は人物の識別や写真間の照合ではありません。目・表情・鮮明さ・残す写真は判定せず、グループ・「残す」の選択・元ファイルを変更しません。'});
   Object.assign(translations.en,{imageRegionA:'Photo A: scroll enlarged image with arrow keys',imageRegionB:'Photo B: scroll enlarged image with arrow keys',imageRegionPreview:'Large photo: scroll enlarged image with arrow keys',helpImageKeyboard:'When an enlarged photo extends beyond its frame, Tab into the image and use the arrow keys to look around. Tab out to browse photos with Left/Right again. Escape closes the large view.'});
   Object.assign(translations.ja,{imageRegionA:'写真A：矢印キーで拡大画像を移動',imageRegionB:'写真B：矢印キーで拡大画像を移動',imageRegionPreview:'拡大写真：矢印キーで画像を移動',helpImageKeyboard:'拡大した写真が枠からはみ出すときは、Tabで画像に入り、矢印キーで見たい部分へ移動できます。Tabで画像の外へ出ると、左右キーは写真の切替に戻ります。Escで拡大画面を閉じます。'});
+  Object.assign(translations.en,{nextUnreviewed:'Next unreviewed group',reviewAndNext:'Mark reviewed and next',reviewLast:'Mark reviewed',reviewProgress:'groups reviewed',reviewComplete:'All groups reviewed',reviewStart:'Use Next to start reviewing one group at a time.',reviewHint:'You can mark a group reviewed with no photos kept. Next alone leaves its review state unchanged.',reviewChanged:'Group marked reviewed.',helpReview:'In Compare, Next unreviewed group skips to another unfinished group without marking the current one. Mark reviewed and next finishes this group, even with no Keep choices, and continues. The last group stays visible when all are reviewed. Undo returns to the group and restores its review state. Normal reanalysis keeps reviewed groups; rebuilding groups clears review state. Review controls pause during import and analysis.'});
+  Object.assign(translations.ja,{nextUnreviewed:'次の未確認グループへ',reviewAndNext:'確認済みにして次へ',reviewLast:'確認済みにする',reviewProgress:'グループ確認済み',reviewComplete:'すべてのグループを確認済み',reviewStart:'「次の未確認グループへ」で1組ずつ確認を始められます。',reviewHint:'「残す」が0枚でも確認済みにできます。「次へ」だけでは確認済みにしません。',reviewChanged:'グループを確認済みにしました。',helpReview:'比較画面の「次の未確認グループへ」は、今の組を確認済みにせず別の未確認の組へ進みます。「確認済みにして次へ」は、「残す」が0枚でも今の組を確認済みにして進みます。最後の組は表示したまま、全組の確認完了を案内します。「元に戻す」で元の組に戻り、確認状態を戻せます。通常の再解析は確認状態を維持し、グループの作り直しでは解除します。読み込み・解析中はこの操作を一時停止します。'});
   const state = { selectionListUrls:new Set(), selectionListDownloading:false, selectionListStatus:'', ordinaryDownloadPending:false, zipBatches:null, zipPlanning:false, zipPlanError:null, modelLicenses:{phase:'idle',text:''}, faceJob:null, faceRevision:0, facePair:[null,null], faceResults:new Map(), faceSelected:[null,null], faceWhole:[false,false], faceMessage:'', similarity:null, similarityScope:null, similarityScopeDraft:null, similarityProposals:[], similarityMessage:'', qualityResults: new Map(), groups: [], groupFilter: '', analysis: null, inputRevision: 0, groupingRevision: 0, analysisMessage: '', photos: [], failures: [], queue: [], generation: 0, nextId: 1, load: null, exporting: null, pair: [null,null], active: 0, previewId: null, previewIds: [], fullUrls: new Map(), downloadUrls: new Set() };
   const outputFilename = $('#outputFilename');
   const defaultZipName = () => `best-shot-picker-${new Date().toLocaleDateString('sv-SE').replaceAll('-','')}`;
@@ -230,6 +232,7 @@
   }
   function zoomImage(img, viewport, photo, value) { viewport.classList.toggle('zoomed',value!=='fit');img.style.width=value==='fit'?'':`${photo.width*Number(value)}px`;img.style.height=value==='fit'?'':`${photo.height*Number(value)}px`;syncZoomKeyboard(); }
   function renderCompare() {
+    renderReviewNavigation();
     const candidates=comparisonPhotos();$('#compareGroupLabel').textContent=state.groupFilter?groupLabel(state.groups.find(g=>g.id===state.groupFilter)):translate('allPhotos');
     $('#compareEmpty').hidden=candidates.length>0;$('#compareWorkspace').hidden=!candidates.length;
     if(!candidates.length){state.pair=[null,null];syncFacePair();renderFaces();releaseUnusedFullUrls();return;}
@@ -464,13 +467,57 @@
     }catch(error){if(current())state.analysisMessage=error.name==='AbortError'?'analysisCancelled':'analysisFailed';}
     finally{if(state.analysis===job){state.analysis=null;$('#analysisProgress').hidden=true;render();}}
   }
+  function nextUnreviewedGroup(groups,currentId) {
+    const current=groups.findIndex(group=>group.id===currentId);
+    for(let offset=1;offset<=groups.length;offset++){
+      const group=groups[(current+offset)%groups.length];
+      if(group.id!==currentId&&!group.reviewed)return group;
+    }
+    return null;
+  }
+  function renderReviewNavigation() {
+    const groups=state.groups,current=groups.find(group=>group.id===state.groupFilter),reviewed=groups.filter(group=>group.reviewed).length;
+    const next=nextUnreviewedGroup(groups,state.groupFilter),busy=!!state.load||!!state.analysis;
+    $('#reviewNavigation').hidden=!groups.length;
+    setTextIfChanged($('#reviewProgress'),groups.length&&reviewed===groups.length?translate('reviewComplete'):`${reviewed} / ${groups.length} ${translate('reviewProgress')}`);
+    $('#reviewStart').hidden=!!current||!next;
+    $('#nextUnreviewedButton').disabled=busy||!next;
+    $('#reviewAndNextButton').disabled=busy||!current||current.reviewed;
+    setTextIfChanged($('#reviewAndNextButton'),translate(next?'reviewAndNext':'reviewLast'));
+  }
+  function goToNextUnreviewedGroup() {
+    if(state.load||state.analysis)return;
+    const next=nextUnreviewedGroup(state.groups,state.groupFilter);if(!next)return;
+    state.groupFilter=next.id;state.active=0;$('#compareZoom').value='fit';render();
+  }
+  function reviewCurrentGroup() {
+    const current=state.groups.find(group=>group.id===state.groupFilter);
+    if(state.load||state.analysis||!current||current.reviewed)return;
+    const generation=state.generation,sourceId=current.id;
+    const result=Groups.editGroups(state.groups,{type:'review',sourceId});
+    invalidateSimilarity();state.groupingRevision++;state.groups=result.groups;state.analysisMessage='';
+    state.groupFilter=nextUnreviewedGroup(state.groups,sourceId)?.id||sourceId;
+    state.active=0;$('#compareZoom').value='fit';render();
+    $('#compareReviewToastHost').append($('#appToast'));
+    const restore=()=>$('#selectA').focus({preventScroll:true});
+    showToast(translate('reviewChanged'),{messageKey:'reviewChanged',actionLabel:translate('undo'),duration:7000,onRestoreFocus:restore,onAction:()=>{
+      if(state.generation!==generation)return;
+      invalidateSimilarity();stopAnalysis();state.groupingRevision++;state.groups=Groups.undoEdit(state.groups,result.patch);
+      state.groupFilter=sourceId;state.active=0;$('#compareZoom').value='fit';render();restore();
+    }});
+    restore();revealToast();
+  }
+  $('#nextUnreviewedButton').addEventListener('click',goToNextUnreviewedGroup);
+  // A double-click must not review the next group before it has been inspected.
+  $('#reviewAndNextButton').addEventListener('click',event=>{if(event.detail<=1)reviewCurrentGroup();});
+  $('#reviewAndNextButton').addEventListener('keydown',event=>{if(event.repeat&&(event.key==='Enter'||event.key===' '))event.preventDefault();});
   function refreshGroupDialog(){
     const source=state.groups.find(g=>g.id===$('#sourceGroup').value)||state.groups[0];if(!source)return;
     setOptions($('#groupPhoto'),source.ids.map(id=>[id,byId(id)?.name||id]),$('#groupPhoto').value);
     setOptions($('#targetGroup'),state.groups.filter(g=>g.id!==source.id).map(g=>[g.id,groupLabel(g)]),$('#targetGroup').value);
     $('#splitGroupButton').disabled=source.ids.length<2;$('#moveGroupButton').disabled=state.groups.length<2;$('#mergeGroupButton').disabled=state.groups.length<2;$('#reviewGroupButton').textContent=translate('toggleReviewed')+' · '+translate(source.reviewed?'reviewed':'notReviewed');
   }
-  function organizeGroups(){if(state.analysis){stopAnalysis();state.analysisMessage='analysisCancelled';renderGroups();renderSimilarity();}setOptions($('#sourceGroup'),state.groups.map(g=>[g.id,groupLabel(g)]),state.groupFilter||state.groups[0]?.id);refreshGroupDialog();$('#groupDialog').showModal();}
+  function organizeGroups(){if(state.analysis){stopAnalysis();state.analysisMessage='analysisCancelled';renderGroups();renderSimilarity();renderCompare();}setOptions($('#sourceGroup'),state.groups.map(g=>[g.id,groupLabel(g)]),state.groupFilter||state.groups[0]?.id);refreshGroupDialog();$('#groupDialog').showModal();}
   function editGroup(type){
     invalidateSimilarity();stopAnalysis();const generation=state.generation;const result=Groups.editGroups(state.groups,{type,sourceId:$('#sourceGroup').value,targetId:$('#targetGroup').value,photoId:$('#groupPhoto').value});state.groupingRevision++;state.groups=result.groups;state.analysisMessage='';$('#groupDialog').close();$('#groupToastHost').append($('#appToast'));render();
     const restore=()=>$('#organizeButton').focus({preventScroll:true});showToast(translate('groupChanged'),{messageKey:'groupChanged',actionLabel:translate('undo'),duration:7000,onRestoreFocus:restore,onAction:()=>{if(state.generation!==generation)return;invalidateSimilarity();stopAnalysis();state.groupingRevision++;state.groups=Groups.undoEdit(state.groups,result.patch);render();restore();}});revealToast();
