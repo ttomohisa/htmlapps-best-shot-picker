@@ -8,6 +8,8 @@
   // All-ones fields are ZIP64 sentinels. Never write them or silently wrap a ZIP32 field.
   const ZIP32_MAX = 0xfffffffe;
   const ZIP32_MAX_FILES = 65534;
+  // Plans own only original File references and metadata. Completed archives are never cached.
+  const ZIP_BATCH_PLANS = new WeakMap();
   const MAX_IMAGE_PIXELS = 100000000;
   const MAX_IMAGE_AXIS = 32768;
   const RESERVED_NAME = /^(con|prn|aux|nul|com[1-9¹²³]|lpt[1-9¹²³])(?:\.|$)/i;
@@ -86,6 +88,18 @@
     return fitName(stem, '.zip', '');
   }
 
+  /** Safe editable output base with a stable, UTF-8-budgeted independent-part suffix. */
+  function zipBatchFilename(base, index, total) {
+    if (!Number.isSafeInteger(total) || total < 1 || !Number.isSafeInteger(index) || index < 0 || index >= total) {
+      throw failure('INVALID_ZIP_BATCH', 'Choose a valid ZIP part from the current export plan.');
+    }
+    const name = zipFilename(base);
+    if (total === 1) return name;
+    const width = Math.max(3, String(total).length);
+    const suffix = '-part-' + String(index + 1).padStart(width, '0') + '-of-' + String(total).padStart(width, '0');
+    return fitName(name.slice(0, -4), '.zip', suffix);
+  }
+
   function collisionKey(name) {
     // Conservative Unicode case folding also avoids sharp-s / sigma extraction collisions.
     return name.normalize('NFC').toUpperCase().toLowerCase().normalize('NFC');
@@ -114,7 +128,7 @@
   }
 
   function zipLimit() {
-    return failure('ZIP_LIMIT', 'This selection exceeds the ZIP32 limit. Export fewer photos in smaller groups. ZIP64 and split archives are not available in this version.');
+    return failure('ZIP_LIMIT', 'This selection exceeds the ZIP32 limit. Export fewer photos or use smaller independent ZIP batches. ZIP64 is not available.');
   }
 
   function dosDateTime(timestamp) {
@@ -148,6 +162,93 @@
   }
 
   /**
+   * Plan complete independent STORE ZIPs without reading original bytes. maxBytes is
+   * an explicit integer budget (22..0xfffffffe), including both UTF-8 filename copies,
+   * local headers, central directory and each part's 22-byte end record. Original
+   * files are never split. Greedy boundaries preserve the ordered File snapshot.
+   * Names are assigned once across the whole selection, so extracting every part
+   * into one folder cannot overwrite another selected entry.
+   *
+   * The frozen public plan/descriptors expose byte totals, names and input ranges;
+   * private entries retain fixed sizes/timestamps and original immutable File bytes.
+   * A plan is session-local and cannot be cloned/serialized to export later.
+   */
+  function planZipBatches(files, options) {
+    const maxBytes = options && typeof options === 'object' && !Array.isArray(options) ? options.maxBytes : null;
+    if (!Number.isSafeInteger(maxBytes) || maxBytes < 22 || maxBytes > ZIP32_MAX) {
+      throw failure('INVALID_ZIP_OPTIONS', 'Choose a whole-number ZIP byte budget between 22 and 4,294,967,294 bytes.');
+    }
+    const inputs = Array.from(files || []);
+    if (!inputs.length) throw failure('EMPTY_SELECTION', 'Choose at least one photo to export.');
+    const snapshots = inputs.map(file => {
+      const size = file && file.size;
+      if (!file || !Number.isSafeInteger(size) || size < 0 || typeof file.slice !== 'function') {
+        throw failure('INVALID_FILE', 'A selected original file is unavailable. Add the photo again and retry.');
+      }
+      return { file, size, name: file.name, ...dosDateTime(file.lastModified) };
+    });
+    const names = Object.freeze(uniqueNames(snapshots)), batches = [], privateBatches = [];
+    let entries = [], startIndex = 0, localSize = 0, centralSize = 0, batchBytes = 0;
+    let totalBytes = 0, estimatedBytes = 0;
+    function finishBatch() {
+      const archiveBytes = localSize + centralSize + 22;
+      batches.push(Object.freeze({
+        index: batches.length, startIndex, endIndex: startIndex + entries.length,
+        totalFiles: entries.length, totalBytes: batchBytes, estimatedBytes: archiveBytes,
+        names: Object.freeze(names.slice(startIndex, startIndex + entries.length))
+      }));
+      privateBatches.push({ entries, localSize, centralSize, totalBytes: batchBytes });
+      estimatedBytes += archiveBytes;
+      if (!Number.isSafeInteger(estimatedBytes)) throw zipLimit();
+      startIndex += entries.length;
+      entries = []; localSize = 0; centralSize = 0; batchBytes = 0;
+    }
+    snapshots.forEach((snapshot, index) => {
+      const encodedName = encoder.encode(names[index]);
+      const overhead = 76 + 2 * encodedName.length + 22;
+      // Compare by subtraction so even an excessively large safe-integer input
+      // cannot round into an accepted budget or produce misleading size metadata.
+      if (snapshot.size > maxBytes - overhead) {
+        const error = failure('ZIP_FILE_TOO_LARGE', 'An original photo cannot fit in one ZIP part. Choose a larger byte budget or save this photo separately; originals are never split.');
+        Object.assign(error, {
+          fileIndex: index, fileName: names[index], size: snapshot.size, maxBytes,
+          requiredBytes: snapshot.size <= Number.MAX_SAFE_INTEGER - overhead ? snapshot.size + overhead : null
+        });
+        throw error;
+      }
+      const localBytes = 30 + encodedName.length + snapshot.size, directoryBytes = 46 + encodedName.length;
+      if (entries.length && (entries.length === ZIP32_MAX_FILES || localSize + centralSize + localBytes + directoryBytes + 22 > maxBytes)) {
+        finishBatch();
+      }
+      entries.push(Object.freeze({ ...snapshot, name: names[index], encodedName, offset: localSize }));
+      localSize += localBytes; centralSize += directoryBytes; batchBytes += snapshot.size;
+      totalBytes += snapshot.size;
+      if (!Number.isSafeInteger(totalBytes)) throw zipLimit();
+    });
+    finishBatch();
+    const plan = Object.freeze({ maxBytes, totalFiles: inputs.length, totalBytes, estimatedBytes, names, batches: Object.freeze(batches) });
+    ZIP_BATCH_PLANS.set(plan, privateBatches);
+    return plan;
+  }
+
+  /**
+   * Materialize only the requested independent part. Progress uses the existing
+   * createZip contract, local to that part. Callers own/discard each returned Blob
+   * before starting another; no download, output queue or archive cache is created.
+   * The same plan can retry any failed/cancelled part with unchanged entry names.
+   */
+  async function createZipBatch(plan, index, options) {
+    options = options || {};
+    checkAbort(options.signal);
+    const batches = ZIP_BATCH_PLANS.get(plan);
+    if (!batches) throw failure('INVALID_ZIP_PLAN', 'Create a new ZIP export plan from the selected original photos.');
+    if (!Number.isSafeInteger(index) || index < 0 || index >= batches.length) {
+      throw failure('INVALID_ZIP_BATCH', 'Choose a valid ZIP part from the current export plan.');
+    }
+    return writeZip(batches[index], options);
+  }
+
+  /**
    * File[] -> Promise<Blob>. CRC reads are bounded to 1 MiB, then yield to the UI.
    * The archive retains the original immutable Blob parts, not whole-file ArrayBuffers.
    * This is memory-conscious Blob assembly, not a streaming-to-disk/ZIP64 implementation.
@@ -177,6 +278,14 @@
       if (localSize > ZIP32_MAX || centralSize > ZIP32_MAX || localSize + centralSize + 22 > ZIP32_MAX) throw zipLimit();
       return entry;
     });
+    return writeZip({ entries, localSize, centralSize, totalBytes }, options);
+  }
+
+  // Shared byte writer: single ZIP and independent batches use identical CRC,
+  // bounded reads, original Blob assembly, ZIP headers and cancellation behavior.
+  async function writeZip(prepared, options) {
+    const { entries, localSize, centralSize, totalBytes } = prepared;
+    const signal = options.signal;
     const parts = [], central = [];
     let processedBytes = 0, completedFiles = 0;
     const report = (phase, currentName) => {
@@ -544,7 +653,7 @@
     return { sets, statuses };
   }
 
-  const api = Object.freeze({ sanitizeFilename, zipFilename, uniqueNames, createZip, inspectImageHeader, findExactDuplicates });
+  const api = Object.freeze({ sanitizeFilename, zipFilename, zipBatchFilename, uniqueNames, planZipBatches, createZipBatch, createZip, inspectImageHeader, findExactDuplicates });
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.BestShotCore = api;
 })(typeof window !== 'undefined' ? window : null);

@@ -119,7 +119,7 @@ The template retains the generic embedded asset loader. `src/core.js` contains t
 
 Browser-decoded `naturalWidth` / `naturalHeight` are the oriented display dimensions. Canvas thumbnails use those same dimensions and the browser-oriented image. Zoom uses those dimensions in CSS pixels; original File bytes never pass through canvas for export.
 
-The exporter snapshots selected File references before processing. Later selection changes affect the next export only. Reset invalidates import/export generations and releases thumbnails and full-preview Blob URLs. Only active comparison and large-preview originals have full-size Blob URLs; thumbnails remain until reset. Download URLs are released after a delay so a download can start safely.
+The exporter snapshots selected File references before processing. Later selection changes affect the next export only. Reset invalidates import/export generations and releases thumbnails and full-preview Blob URLs. Only active comparison and large-preview originals have full-size Blob URLs; thumbnails remain until reset. Legacy single-ZIP download URLs are released after a delay; an independent pending-download acknowledgement survives that timer before a batch plan can start. The optional batch planner freezes names and File references across all parts, while only its current archive Blob/URL is materialized. Explicit saved confirmation releases it before advancing; abandoning a prepared/requested part or resetting warns first. Browser download completion and total process memory are not inferred from URL release.
 
 ## Best Shot Picker analysis
 
