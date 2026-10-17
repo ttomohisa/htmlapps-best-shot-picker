@@ -14,6 +14,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 - Distinguish JPEG EXIF capture/digitized timestamps from file-modified time
 - See group-relative technical comparison candidates and measured reasons; uncertain or tied cases have no recommendation
 - Browse thumbnails, open a large view, and compare two photos
+- Review groups directly in Compare, skip to the next unfinished group, or mark a group reviewed and continue with Undo
 - Optionally find faces in the comparison pair, choose a face to zoom, and return to the whole image
 - Switch A / B on phones; inspect 100%, 200%, or 400% views by scrolling
 - Keep any number of photos, with Undo for the latest selection change
@@ -26,6 +27,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 
 1. Choose **Add photos**, drag files into the drop area, or choose a folder when supported. You can add more photos without clearing existing Keep choices or manual groups.
 2. Review **Photo groups** or **All photos**. Use **Organize** to split, move, merge, or mark a group reviewed. Open a photo for a closer look. In **Compare**, choose photos A and B. Technical hints may highlight a comparison candidate, but never select it. **Keep** the ones you want.
+   In Compare, **Next unreviewed group** only navigates. **Mark reviewed and next** finishes the current group, even with zero Keep choices; Undo returns to it. The last group stays visible when all are reviewed. Import and analysis temporarily pause these controls.
 3. Optionally choose **Find similar-photo candidates**. It searches up to 36 eligible photos across at least two automatic, unreviewed groups whose normal analysis is complete. For larger sessions, choose whole groups to compare, totaling at most 36 photos per search. Open the candidate thumbnails to compare, then choose **Apply this grouping** only for a grouping you want. **Undo** reverses the latest group edit. Manual and reviewed groups are excluded.
 4. In **Compare**, optionally choose **Find faces**. Select a face separately in each photo to zoom, or return to **Whole image**. Missed or incorrect candidates can occur; manual zoom remains available.
 5. In **Save**, review your choices and filename, then choose **Save originals as ZIP** for the usual single archive. For smaller archives, choose the optional ZIP-batch mode and explicitly select 32, 64, 128, 256, or 512 MiB. No capacity is preselected because none has been validated as a safe physical-device default.
@@ -34,7 +36,7 @@ Compare photos, choose your favorites, and save their untouched originals togeth
 
 A cancelled or failed batch build can retry only its current part. Downloading that part again is an explicit action with a duplicate-copy warning. Closing or discarding a prepared/download-requested part asks for confirmation: releasing its download URL can affect an unfinished download. Starting over clears the export plan along with the session after the normal confirmation. Reloading or closing the page loses the plan, so finish saving first.
 
-Arrow keys browse the active comparison photo. Enter toggles Keep when focus is on the page or image; focused buttons keep their usual action. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
+Arrow keys browse the active comparison photo outside an enlarged image. Tab into an overflowing image to pan with arrow keys instead. Enter toggles Keep when focus is on the page; focused buttons keep their usual action. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
 
 ## Privacy
 

@@ -342,6 +342,63 @@ async function zoomKeyboard(run) {
   assert.equal(await page.locator('#selectA').inputValue(),pair,'Text-field arrows do not browse');
   run.record.keyboard={nativePan:true,edgeDoesNotBrowse:true,fitAndHiddenExcluded:true,formsPreserved:true};
 }
+async function reviewNavigation(run) {
+  const {page}=run, files=[1,1,2,3].map((index,i)=>({name:`review-${i+1}.png`,mimeType:'image/png',buffer:syntheticPNG(index,1024)}));
+  await importFiles(page,files);
+  assert.equal(await page.locator('.group-chip').count(),3);
+  assert.equal(await page.locator('#reviewAndNextButton').count(),1,'Compare exposes explicit review navigation');
+  assert(await page.locator('#reviewAndNextButton').isDisabled(),'All photos is not one review group');
+  assert.match(await page.locator('#reviewProgress').textContent(),/0 \/ 3/);
+  await page.locator('#nextUnreviewedButton').click();assert.equal(await page.locator('#groupFilter').inputValue(),'g-p1');
+  assert.equal(await page.locator('#selectA').inputValue(),'p1');assert.equal(await page.locator('#selectB').inputValue(),'p2');
+  await page.locator('#nextUnreviewedButton').click();assert.equal(await page.locator('#groupFilter').inputValue(),'g-p3');
+  assert.match(await page.locator('#reviewProgress').textContent(),/0 \/ 3/,'Next alone never marks reviewed');
+  await page.locator('#compareZoom').selectOption('4');
+  await page.locator('#reviewAndNextButton').focus();await page.keyboard.down('Enter');await page.keyboard.down('Enter');await page.keyboard.up('Enter');await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#groupFilter').inputValue(),'g-p4');assert.equal(await page.locator('#compareZoom').inputValue(),'fit');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'selectA');
+  assert.match(await page.locator('#reviewProgress').textContent(),/1 \/ 3/,'Held Enter reviews one visible group only');
+  assert.match(await page.locator('.group-chip[data-group-id="g-p3"]').textContent(),/Reviewed/);
+  await page.locator('#appToastAction').click();assert.equal(await page.locator('#groupFilter').inputValue(),'g-p3');
+  assert.match(await page.locator('#reviewProgress').textContent(),/0 \/ 3/);
+  await page.locator('#reviewAndNextButton').dblclick();
+  assert.match(await page.locator('#reviewProgress').textContent(),/1 \/ 3/,'Double click reviews only the group the user saw');
+  assert.equal(await page.locator('#groupFilter').inputValue(),'g-p4');
+  await page.locator('#reviewAndNextButton').click();assert.equal(await page.locator('#groupFilter').inputValue(),'g-p1','Review wraps past reviewed groups');
+  assert(await page.locator('#nextUnreviewedButton').isDisabled(),'Only current unreviewed group remains');
+  await page.locator('#reviewAndNextButton').click();
+  assert.match(await page.locator('#reviewProgress').textContent(),/All groups reviewed/);
+  assert.equal(await page.locator('#groupFilter').inputValue(),'g-p1');assert.equal(await page.locator('.photo-card.kept').count(),0,'Zero Keep can complete a group');
+  assert(await page.locator('#reviewAndNextButton').isDisabled());assert(await page.locator('#nextUnreviewedButton').isDisabled());
+  await page.locator('#appToastAction').click();assert.match(await page.locator('#reviewProgress').textContent(),/2 \/ 3/);
+  await page.locator('#keepA').click();await page.locator('#reviewAndNextButton').focus();await page.keyboard.down('Space');await page.keyboard.down('Space');await page.keyboard.up('Space');
+  assert.equal(await page.locator('.photo-card.kept').count(),1,'Review leaves Keep untouched');
+  await page.locator('#analyzeButton').click();await idle(page,4);
+  assert.match(await page.locator('#reviewProgress').textContent(),/All groups reviewed/,'Ordinary reanalysis preserves reviewed state');
+  await originals(page,[files[0]],'review-original');
+  await page.locator('#regroupButton').click();await page.locator('#appConfirmOk').click();await idle(page,4);
+  assert.match(await page.locator('#reviewProgress').textContent(),/0 \/ 3/);
+  await page.evaluate(()=>{window.__reviewHeld=[];const digest=crypto.subtle.digest.bind(crypto.subtle);crypto.subtle.digest=(...args)=>digest(...args).then(value=>window.__reviewHold?new Promise(resolve=>window.__reviewHeld.push(()=>resolve(value))):value);window.__reviewHold=true;});
+  await page.locator('#analyzeButton').click();await page.waitForFunction(()=>window.__reviewHeld.length>0);
+  assert(await page.locator('#nextUnreviewedButton').isDisabled());assert(await page.locator('#reviewAndNextButton').isDisabled());
+  await page.locator('#organizeButton').click();await page.locator('#groupDialog').press('Escape');
+  assert(await page.locator('#nextUnreviewedButton').isEnabled(),'Organize cancellation refreshes direct review controls');
+  assert(await page.locator('#reviewAndNextButton').isEnabled());
+  await page.evaluate(()=>{window.__reviewHold=false;window.__reviewHeld.splice(0).forEach(release=>release());});
+  await page.locator('#analysisProgress').waitFor({state:'hidden'});
+  await page.locator('#analyzeButton').click();await idle(page,4);
+  await page.setViewportSize({width:320,height:480});await page.locator('[data-mobile-key="compare"]').click();await page.locator('#languageButton').click();
+  assert.match(await page.locator('#nextUnreviewedButton').textContent(),/未確認/);assert.match(await page.locator('#reviewAndNextButton').textContent(),/確認済み/);
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Narrow Japanese review controls do not overflow');
+  await page.locator('#nextUnreviewedButton').click();assert.equal(await page.locator('#groupFilter').inputValue(),'g-p3');
+  await page.locator('#reviewAndNextButton').click();await page.locator('#appToastAction').click();
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'selectA');
+  await page.locator('#reviewProgress').scrollIntoViewIfNeeded();await shot(run,'review-navigation-ja-narrow');
+  await page.setViewportSize({width:1360,height:900});await page.locator('#languageButton').click();await page.locator('#reviewProgress').scrollIntoViewIfNeeded();await shot(run,'review-navigation-en-desktop');
+  await page.locator('#clearButton').click();await page.locator('#appConfirmOk').click();
+  assert(await page.locator('#reviewNavigation').isHidden());assert.equal(await page.locator('.photo-card').count(),0);
+  run.record.review={navigationOnly:true,zeroKeep:true,undo:true,lastGroup:true,reanalysis:true,doubleClick:true,heldEnter:true,heldSpace:true,organizeCancellation:true,narrowKeyboard:true};
+}
 function capabilityFault(mode) {
   window.__crossEngineFault = { mode, attempts: 0 };
   if (mode === 'missing-worker') {
@@ -422,6 +479,7 @@ async function selfTest() {
 async function main() {
   if (process.argv.includes('--self-test')) return selfTest();
   const engine = engineName(process.env.BSP_BROWSER_ENGINE), directory = path.join(ROOT, 'test-results', 'cross-engine', engine);
+  if(process.env.BSP_BROWSER_SCENARIO)assert(['core','batches','mobile-dialogs','zoom-keyboard','review-navigation','missing-worker','worker-failure'].includes(process.env.BSP_BROWSER_SCENARIO),'Unknown scenario');
   assert(!process.env.BSP_PREVIEW_URL, 'This bounded harness tests file:// artifacts only');
   await fs.mkdir(directory, { recursive: true });
   const report = { engine, version: null, playwrightVersion: require('playwright/package.json').version,
@@ -430,7 +488,8 @@ async function main() {
   try {
     browser = await require('playwright')[engine].launch({ headless: true }); report.version = browser.version();
     for (const variant of VARIANTS) for (const [name, execute] of [['core', core], ['batches', batches],
-      ['mobile-dialogs', mobileDialogs], ['zoom-keyboard',zoomKeyboard], ['missing-worker', optionalModel], ['worker-failure', optionalModel]]) {
+      ['mobile-dialogs', mobileDialogs], ['zoom-keyboard',zoomKeyboard], ['review-navigation',reviewNavigation], ['missing-worker', optionalModel], ['worker-failure', optionalModel]]) {
+      if(process.env.BSP_BROWSER_SCENARIO && process.env.BSP_BROWSER_SCENARIO!==name)continue;
       const result = await scenario(browser, directory, variant, name, execute); report.scenarios.push(result);
       await fs.writeFile(path.join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n');
       console.log(`${result.status.toUpperCase()} ${engine} ${variant} ${name}${result.error ? '\n' + result.error : ''}`);
