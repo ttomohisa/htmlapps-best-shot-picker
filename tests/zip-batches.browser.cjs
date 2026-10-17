@@ -280,16 +280,27 @@ async function narrowScreens(page, target, phase, controls) {
       await page.setViewportSize({ width, height: 640 });
       await page.locator('[data-mobile-key="save"]').click();
       for (const selector of controls) {
-        await page.locator(selector).scrollIntoViewIfNeeded();
-        const box = await page.locator(selector).boundingBox();
-        assert(box && box.x >= -1 && box.x + box.width <= width + 1, `${selector} fits narrow ${locale} layout`);
-        assert(await page.locator(selector).evaluate(node => {
-          const rect = node.getBoundingClientRect();
-          const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2);
-          return rect.top >= 0 && rect.bottom <= innerHeight && (hit === node || node.contains(hit));
-        }), `${selector} is reachable without fixed-bar obstruction`);
-        await page.locator(selector).focus();
-        assert(await page.locator(selector).evaluate(node => node === document.activeElement), 'Control remains keyboard reachable');
+        // Trial actionability settles scrolling and tries unobstructed alignment without clicking.
+        // One nearest scroll position can still sit beneath the fixed mobile bar.
+        try {
+          await page.locator(selector).click({ trial: true });
+          const box = await page.locator(selector).boundingBox();
+          assert(box && box.x >= -1 && box.x + box.width <= width + 1, `${selector} fits narrow ${locale} layout`);
+          await page.waitForFunction(selector => {
+            const node=document.querySelector(selector),rect=node.getBoundingClientRect();
+            const hit=document.elementFromPoint(rect.x+rect.width/2,rect.y+rect.height/2);
+            return rect.top>=0&&rect.bottom<=innerHeight&&(hit===node||node.contains(hit));
+          }, selector);
+          await page.locator(selector).focus();
+          assert(await page.locator(selector).evaluate(node => node === document.activeElement), 'Control remains keyboard reachable');
+        } catch (error) {
+          console.error('Narrow ZIP reachability', await page.locator(selector).evaluate(node => {
+            const rect=node.getBoundingClientRect(),hit=document.elementFromPoint(rect.x+rect.width/2,rect.y+rect.height/2);
+            return {rect:rect.toJSON(),hit:hit?.outerHTML?.slice(0,600),scrollY,viewport:{width:innerWidth,height:innerHeight},header:document.querySelector('header')?.getBoundingClientRect().toJSON(),bar:document.querySelector('#appMobileBottomBar')?.getBoundingClientRect().toJSON()};
+          }));
+          await page.screenshot({path:path.join(RESULTS,`zip-batches.${target.variant}.${phase}.${locale}.${width}.failure.png`)});
+          throw error;
+        }
       }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'No horizontal page overflow');
       await page.screenshot({ path: path.join(RESULTS, `zip-batches.${target.variant}.${phase}.${locale}.${width}.png`) });

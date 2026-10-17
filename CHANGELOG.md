@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add representative thumbnails to the group list using the current technical candidate or first available group photo. Reuse existing thumbnail URLs and keyed image/label nodes; preserve Keep, group/review edits, keyboard access and original-byte saving.
+
 - Review groups directly in Compare with Next unreviewed group, explicit Mark reviewed and next, progress, zero-Keep completion and Undo returning to the original group. Pause during import/analysis and ignore the second click of a double-click. Keep, originals and frozen export plans remain unchanged.
 
 - Allow keyboard-only inspection of overflowing enlarged images in A/B comparison and the large preview. Tab into the image to pan with arrow keys; existing photo browsing remains outside the image. Fit/hidden images add no Tab stop.

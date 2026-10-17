@@ -198,7 +198,7 @@ async function runCase(browser, target) {
       option('#groupFilter', ''), option('#groupFilter', 'g-p1'), option('#groupFilter', 'g-p3'),
       option('#selectA', 'p1'), option('#selectA', 'p3'), option('#selectB', 'p2'),
       '#selectedList li:first-child', '#selectedList li:first-child button:not(.remove-selection)', '#selectedList li:first-child .remove-selection'];
-    await remember(page, 'stable', stable, ['#photo-p3', '#selectedList li:first-child']);
+    await remember(page, 'stable', stable, ['#photo-p3', '#selectedList li:first-child', chip('g-p1'), chip('g-p3'), chip('g-p4')]);
 
     phase = 'Keep preserves unaffected identity, focus and writes';
     // A pointer click legitimately changes focus. Dispatch the real Keep handler
