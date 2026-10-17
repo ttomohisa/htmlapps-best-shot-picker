@@ -54,7 +54,7 @@ function uiFunction(name){
 function faceHarness(){
  const photos=[{id:'a',file:{name:'a.jpg'},width:800,height:600},{id:'b',file:{name:'b.jpg'},width:600,height:800}];
  const state={generation:2,inputRevision:3,faceRevision:1,pair:['a','b'],facePair:['a','b'],faceJob:null,faceResults:new Map(),faceSelected:[null,null],faceWhole:[false,false],faceMessage:'',fullUrls:new Map([['a','blob:a'],['b','blob:b']]),similarity:null};
- const nodes=new Map(),frames=[],calls={cancel:0,dispose:0,close:0,infer:[],renders:0};
+ const nodes=new Map(),frames=[],calls={cancel:0,dispose:0,close:0,infer:[],renders:0,keyboardSync:0};
  const $=selector=>{if(!nodes.has(selector))nodes.set(selector,{dataset:{},style:{},src:selector==='#imageA'?'blob:a':'blob:b',isConnected:true,clientWidth:300,clientHeight:240,open:false,classList:{add(){},remove(){}},scrollTo(left,top){this.left=left;this.top=top;}});return nodes.get(selector);};
  let pendingPixels=null,pixelFailure=null;
  class Client{
@@ -64,7 +64,7 @@ function faceHarness(){
   cancel(){calls.cancel++;}
   dispose(){calls.dispose++;}
  }
- const context={state,$,FaceGeometry:Geometry,byId:id=>photos.find(photo=>photo.id===id),assertCurrent:(generation,signal)=>{if(generation!==state.generation||signal.aborted)throw new DOMException('Cancelled','AbortError');},requestAnimationFrame:callback=>frames.push(callback),DOMException,AbortController,Map,Set,clearTimeout,setTimeout,renderCompare:()=>calls.renders++,renderSimilarity(){},renderFaces(){},invalidateSimilarity(){state.similarity=null;},facePixels:async photo=>{if(pendingPixels)await pendingPixels;if(pixelFailure)throw pixelFailure;return{rgb:new Uint8Array(200*200*3),width:200,height:200,originalWidth:photo.width,originalHeight:photo.height};},window:{Worker:function(){},DecompressionStream:function(){},FaceWorkerClient:Client,StandaloneAssets:{textAsync:async(id,key)=>key==='model'?'{}':'source',bytesAsync:async()=>new Uint8Array([1,2,3])}}};
+ const context={syncZoomKeyboard:()=>calls.keyboardSync++,state,$,FaceGeometry:Geometry,byId:id=>photos.find(photo=>photo.id===id),assertCurrent:(generation,signal)=>{if(generation!==state.generation||signal.aborted)throw new DOMException('Cancelled','AbortError');},requestAnimationFrame:callback=>frames.push(callback),DOMException,AbortController,Map,Set,clearTimeout,setTimeout,renderCompare:()=>calls.renders++,renderSimilarity(){},renderFaces(){},invalidateSimilarity(){state.similarity=null;},facePixels:async photo=>{if(pendingPixels)await pendingPixels;if(pixelFailure)throw pixelFailure;return{rgb:new Uint8Array(200*200*3),width:200,height:200,originalWidth:photo.width,originalHeight:photo.height};},window:{Worker:function(){},DecompressionStream:function(){},FaceWorkerClient:Client,StandaloneAssets:{textAsync:async(id,key)=>key==='model'?'{}':'source',bytesAsync:async()=>new Uint8Array([1,2,3])}}};
  const names=['canRunOptionalModels','invalidateFaces','syncFacePair','assertFaceCurrent','scheduleFaceView','findFaces'];
  const handlers=vm.runInNewContext(names.map(uiFunction).join('\n')+'\n({'+names.join(',')+'})',context);
  return{state,photos,$,frames,calls,...handlers,holdPixels(){let release;pendingPixels=new Promise(resolve=>{release=resolve;});return release;},failPixels(error){pixelFailure=error;}};
@@ -86,10 +86,10 @@ test('face async boundary binds generation, input, pair revision, pair IDs and o
 test('late face layout never touches a replacement pair and repeated Keep rendering preserves scroll',()=>{
  const h=faceHarness(),face=Geometry.normalizeFaces([box(40,30,100,100)],200,200)[0];
  h.state.faceResults.set('a',{faces:[face],width:800,height:600});h.state.faceSelected[0]=0;
- h.scheduleFaceView(0);h.state.pair[0]='b';h.frames.shift()();assert.equal(h.$('#imageA').style.width,undefined);
+ h.scheduleFaceView(0);h.state.pair[0]='b';h.frames.shift()();assert.equal(h.$('#imageA').style.width,undefined);assert.equal(h.calls.keyboardSync,0);
  h.state.pair[0]='a';h.scheduleFaceView(0);h.frames.shift()();assert(h.$('#imageA').style.width.endsWith('px'));
  h.$('#viewportA').left=123;h.scheduleFaceView(0);h.frames.shift()();assert.equal(h.$('#viewportA').left,123);
- h.$('#viewportA').clientWidth=200;h.scheduleFaceView(0);h.frames.shift()();assert.notEqual(h.$('#viewportA').left,123);
+ h.$('#viewportA').clientWidth=200;h.scheduleFaceView(0);h.frames.shift()();assert.notEqual(h.$('#viewportA').left,123);assert.equal(h.calls.keyboardSync,2,'Only applied layouts refresh keyboard eligibility');
 });
 test('explicit face search commits both current photos atomically and closes resources without changing files',async()=>{
  const h=faceHarness(),before=h.photos.map(photo=>photo.file);assert.equal(h.calls.infer.length,0);
