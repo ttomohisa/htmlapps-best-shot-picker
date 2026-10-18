@@ -1,10 +1,17 @@
 # Changelog
 
+## 1.0.0 — 2026-10-18
+
+- Release the existing manual photo-review and original-byte ZIP workflow within the owner-approved, documented scope. No new runtime feature, model, dependency or CI workload.
+- Align the application/package versions, bilingual user-first READMEs, release/acceptance records and actual screenshots.
+- Record the owner-confirmed Android Chrome result: device-saved photos worked with ordinary and independent smaller ZIPs, and extracted photos opened. Google Photos/provider-selected originals previously failed with NotReadableError; the underlying provider failure is not claimed fixed.
+- Keep Windows/iPhone physical operation, broad photographic accuracy, large real-device collections and peak memory explicitly unverified/deferred. ZIP32/memory limits, local-file guidance, temporary sessions and retained EXIF/GPS remain documented. This release does not assert that the original all-P0 plan passed.
+
 ## 0.8.0-beta.2 — prerelease (2026-10-17)
 
 - Distinguish unreadable originals, ZIP assembly failure and download-link preparation failure. Show only a safe error category and photo ordinal; provide local-file recovery guidance for cloud-backed originals without claiming that cloud storage caused every failure.
 - Release the current archive Blob if its download link cannot be created. Preserve the plan, Keep choices, originals and earlier downloaded parts.
-- Keep physical-device acceptance open: an owner reported a 12-photo, 32,681,303-byte Android batch failure; its underlying cause and local-file comparison are not yet confirmed. No byte-budget reduction, eager whole-collection copy or new benchmark is introduced.
+- Keep physical-device acceptance open: an owner reported a 12-photo, 32,681,303-byte Android batch failure; its underlying cause and local-file comparison were not yet confirmed at that release (see the 1.0.0 result above). No byte-budget reduction, eager whole-collection copy or new benchmark is introduced.
 
 ## 0.8.0-beta.1 — prerelease (2026-10-17)
 

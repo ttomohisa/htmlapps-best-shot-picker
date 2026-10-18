@@ -1,96 +1,110 @@
 # Best Shot Picker
 
-Compare photos, choose your favorites, and save their untouched originals together in a ZIP.
+[![GitHub Pages](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/workflows/deploy-pages.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Single HTML](https://img.shields.io/badge/distribution-single%20HTML-0ea5e9)](https://ttomohisa.github.io/htmlapps-best-shot-picker/)
 
-[日本語](README.ja.md) · [Open the app](https://ttomohisa.github.io/htmlapps-best-shot-picker/)
+[日本語版 README](README.ja.md)
 
-![Best Shot Picker showing photos, comparison, and selected originals](assets/screenshot.en.png)
+Compare similar photos, choose your favorites, and save their untouched originals together in a ZIP.
+
+## Live demo
+
+### [Open Best Shot Picker](https://ttomohisa.github.io/htmlapps-best-shot-picker/)
+
+No installation or account is required. The hosted page downloads the initial HTML; photos are then processed in your browser without being uploaded.
+
+[![Best Shot Picker showing photos, comparison, and selected originals](assets/screenshot.en.png)](https://ttomohisa.github.io/htmlapps-best-shot-picker/)
 
 ## Features
 
-- Add JPEG, PNG, and still WebP files, including more photos during a session
-- Find identical originals and conservative default similarity groups; split, merge, move, and undo group edits
-- Optionally find additional similar-photo candidates with an embedded local model, then review and apply each grouping yourself
-- Distinguish JPEG EXIF capture/digitized timestamps from file-modified time
-- See group-relative technical comparison candidates and measured reasons; uncertain or tied cases have no recommendation
-- Recognize groups by representative thumbnails, browse photos, open a large view, and compare two photos
-- Review groups directly in Compare, skip to the next unfinished group, or mark a group reviewed and continue with Undo
-- Optionally find faces in the comparison pair, choose a face to zoom, and return to the whole image
-- Switch A / B on phones; inspect 100%, 200%, or 400% views by scrolling
-- Keep any number of photos, with Undo for the latest selection change
-- Save original file bytes in a ZIP with an editable filename and collision-safe entry names
-- Optionally prepare independent ZIP batches, then download and confirm each one before continuing
-- Isolate unreadable files, cancel work, and retry unfinished photos
-- Japanese / English, keyboard controls, and narrow-screen page tabs
+- **Bring your photos together:** Add JPEG, PNG, and still WebP files, including more photos during a session.
+- **Organize similar shots:** Find duplicates and conservative similarity groups; split, merge, move, and undo group edits.
+- **Compare the details:** Use large previews, two-photo comparison, 100% / 200% / 400% zoom, and optional face-position zoom.
+- **Choose for yourself:** Keep any number of photos, undo the latest selection change, and move through unreviewed groups. Technical hints and optional local-model candidates never choose photos for you.
+- **Save the originals:** Export one ZIP or smaller independent ZIPs, with editable output names, collision-safe filenames, and optional JSON/CSV file lists.
+- **Work locally in one HTML file:** Japanese/English UI, keyboard controls, and phone-friendly tabs, with embedded code and models for offline use.
 
-## How to use
+## Quick start
 
-1. Choose **Add photos**, drag files into the drop area, or choose a folder when supported. You can add more photos without clearing existing Keep choices or manual groups.
-2. Review **Photo groups** or **All photos**. Each group shows its current technical candidate when available, otherwise its first available photo. This representative is not a Keep choice. Use **Organize** to split, move, merge, or mark a group reviewed. Open a photo for a closer look. In **Compare**, choose photos A and B. Technical hints may highlight a comparison candidate, but never select it. **Keep** the ones you want.
-   In Compare, **Next unreviewed group** only navigates. **Mark reviewed and next** finishes the current group, even with zero Keep choices; Undo returns to it. The last group stays visible when all are reviewed. Import and analysis temporarily pause these controls.
-3. Optionally choose **Find similar-photo candidates**. It searches up to 36 eligible photos across at least two automatic, unreviewed groups whose normal analysis is complete. For larger sessions, choose whole groups to compare, totaling at most 36 photos per search. Open the candidate thumbnails to compare, then choose **Apply this grouping** only for a grouping you want. **Undo** reverses the latest group edit. Manual and reviewed groups are excluded.
-4. In **Compare**, optionally choose **Find faces**. Select a face separately in each photo to zoom, or return to **Whole image**. Missed or incorrect candidates can occur; manual zoom remains available.
-5. In **Save**, review your choices and filename, then choose **Save originals as ZIP** for the usual single archive. For smaller archives, choose the optional ZIP-batch mode and explicitly select 32, 64, 128, 256, or 512 MiB. No capacity is preselected because none has been validated as a safe physical-device default.
-6. In batch mode, review the archive sizes and part count before starting. The plan freezes the selected originals, entry names, and output name at that point. Later Keep changes, Undo, group edits, or added photos affect your live collection and the next export, not this plan.
-7. Build only the current part, then explicitly download it. Check the browser's download status, then choose **Saved; next ZIP** (or **Saved; finish** for the last one) to acknowledge that it is saved. Prepare the next part separately. Nothing downloads or advances automatically. Each `.zip` opens independently; the files are not pieces of one spanning ZIP.
+### Use online
 
-A cancelled or failed batch build can retry only its current part. Downloading that part again is an explicit action with a duplicate-copy warning. Closing or discarding a prepared/download-requested part asks for confirmation: releasing its download URL can affect an unfinished download. Starting over clears the export plan along with the session after the normal confirmation. Reloading or closing the page loses the plan, so finish saving first.
+[Open the app](https://ttomohisa.github.io/htmlapps-best-shot-picker/) in a current Chrome or Edge browser.
 
-Arrow keys browse the active comparison photo outside an enlarged image. Tab into an overflowing image to pan with arrow keys instead. Enter toggles Keep when focus is on the page; focused buttons keep their usual action. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
+### Download and open
 
-If ZIP export reports **ZIP_READ_FAILED**, an original could not be read again. For a cloud-backed photo, download it to the device and select the local file in a separate tab; keep the current page open to preserve its choices. A thumbnail does not guarantee later access to original bytes. Other diagnostics distinguish archive assembly and link preparation; they do not prove a memory shortage. No photo upload is needed for troubleshooting.
+1. Download [best-shot-picker.html](https://github.com/ttomohisa/htmlapps-best-shot-picker/blob/main/best-shot-picker.html) using GitHub's **Download raw file** button.
+2. Open the saved HTML in your browser and choose **Add photos**.
+
+### Use offline
+
+The saved `best-shot-picker.html` works as a single file with the network disconnected. `dist/index.html` is the same readable app. No installation, local server, Node.js, or build is needed to use it.
+
+The alternative `dist/index.self-extract.html` restores the same app from a gzip wrapper, but requires `DecompressionStream` just to open. Use the readable HTML if it cannot start. To build your own copy, see [Development](#development).
+
+## Usage
+
+1. **Add photos.** Use the file picker, drag and drop, or folder selection where supported. Adding files preserves current Keep choices and manual groups. Unreadable files are listed separately; cancel or retry unfinished photos when needed.
+2. **Review and compare.** Open a group or **All photos**, then choose A and B in **Compare**. On a phone, switch A / B; at 100%, 200%, or 400%, scroll within the image. Group thumbnails and technical candidates are viewing aids, not Keep choices. Use **Organize** to adjust groups.
+3. **Keep your favorites.** Choose any number, including none in a group. **Next unreviewed group** only navigates; **Mark reviewed and next** records that you have finished the current group, and Undo returns to it. These controls pause during import and analysis.
+4. **Save.** Review the kept photos, edit the ZIP filename, and choose **Save originals as ZIP**. Check the browser's downloads and open the saved archive before leaving the page.
+
+### Optional comparison aids
+
+**Find similar-photo candidates** searches at least two automatic, unreviewed groups with completed analysis, totaling at most 36 photos per search. For larger sessions, select whole groups within that limit; a group larger than 36 cannot be searched. Review each proposal before **Apply this grouping**; Undo reverses the latest group edit. Manual/reviewed groups and unselected groups stay protected. Input or group changes, reanalysis, or applying a proposal clear pending candidates. Cancellation or failure leaves existing groups, choices, and originals unchanged.
+
+**Find faces** finds up to six candidate positions per comparison photo. Choose a face independently in each photo to zoom, or return to **Whole image**. Missed or incorrect detections are possible; manual zoom remains available.
+
+Keyboard: arrow keys browse the active comparison photo. Tab into an overflowing image to pan with the arrows instead. Enter toggles Keep when focus is on the page; focused controls keep their usual actions. Esc closes a dialog. Input fields and selectors do not trigger browsing shortcuts.
+
+### Smaller independent ZIPs and file lists
+
+- Choose the optional smaller-ZIP mode and explicitly select 32, 64, 128, 256, or 512 MiB. No capacity is preselected or established as a safe device default.
+- Review the sizes and part count. The plan freezes the starting selection, filenames, and output name; later edits affect your collection and the next export, not this plan.
+- Prepare only the current ZIP, download it, check the browser's save status, then choose **Saved; next ZIP** or **Saved; finish**. Nothing downloads or advances automatically. Each ZIP opens independently; originals are never cut into pieces.
+- Cancellation or failure retries only the current part. Downloading it again warns about duplicate copies. Discarding a prepared/requested part warns because releasing its download link may affect an unfinished download.
+- **Save a selected-file list** downloads JSON or CSV separately, never inside the ZIP. It records kept filenames, ZIP destinations, order, and sizes, without EXIF/GPS or model results. Single-ZIP mode uses current choices; batch mode uses the frozen plan. This is a planned-file list, not a download receipt or session backup. JSON preserves exact names; CSV is display-oriented. See the [field and CSV contract](docs/SELECTION_LIST.md).
+
+## Browsers and verification
+
+Designed for current Chrome and Edge on desktop and phones, with Japanese/English layouts at widths of 320px and above. Folder selection depends on browser support.
+
+The owner confirmed on **Android Chrome** that device-saved photos could be saved both as an ordinary ZIP and as smaller independent ZIPs, extracted, and opened. This confirms that reported workflow, not a safe maximum size or all Android devices.
+
+Physical Windows and iPhone operation, Android/iPhone 100/500-photo and PC 1,000-photo loads, peak memory, and real-photo throughput remain unverified or deferred. Automated desktop-engine and synthetic checks are recorded separately in [validation results](docs/VALIDATION.md).
+
+Both optional model features require Web Workers and `DecompressionStream`. The readable HTML retains manual comparison, Keep, and ZIP export without them. API availability alone does not guarantee model startup or completion on every device.
 
 ## Privacy
 
-Processing stays inside the browser. Optional similarity search and face detection use models embedded in the HTML and start only when you choose them. There are no image uploads, runtime APIs, external fonts, analytics, or remote model downloads. Hosted use downloads the initial HTML. Content Security Policy blocks runtime connections with `connect-src 'none'`.
+All photo processing stays in the browser. Models start only when requested and are embedded in the HTML; there are no image uploads, runtime APIs, external fonts, analytics, or remote model downloads. The app's Content Security Policy blocks runtime connections with `connect-src 'none'`.
 
-ZIP entries use the original bytes: EXIF, GPS location, color profiles, and other metadata remain. Check metadata before sharing. Original files on your device are never overwritten, moved, or deleted.
+ZIPs preserve original bytes, including **EXIF, GPS location, color profiles, and other metadata**. Check these before sharing. File lists can contain personal information in filenames. The app never overwrites, moves, or deletes your originals.
 
-Photos and choices are temporary. Reloading, closing the page, or starting over clears the session. Only language preference may be stored.
+**Photos, choices, and export plans are temporary.** Reloading, closing the page, or starting over clears them; there is no session restoration. Only language preference may be stored. Finish saving before leaving.
 
-## Browsers and devices
+## Limitations and troubleshooting
 
-Designed for modern Chrome and Edge on desktop and phones. Japanese / English layouts target widths of 320px and above. Folder selection appears only when the browser supports it.
+**v1.0.0 is a scope-limited release of the existing capabilities.** It does not certify every original roadmap target. General photographic accuracy and physical large-load/memory acceptance remain deferred. See the current release scope in [APP_SPEC.md](APP_SPEC.md), [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md), and [ACCEPTANCE_MATRIX.md](ACCEPTANCE_MATRIX.md).
 
-Both optional model features, **Find similar-photo candidates** and **Find faces**, require Web Workers and `DecompressionStream`. When either API is absent, the app explains why those features are unavailable. In the readable HTML, manual comparison, Keep, and original-byte ZIP export remain available. Having these APIs does not guarantee that a model can start or finish on every device.
+- **File formats:** JPEG, PNG, and still WebP only. HEIC/HEIF, AVIF, RAW, TIFF, animated images, and videos are unsupported. Images above 100 megapixels or 32,768 pixels on either side are skipped; this is not a guarantee against every malformed file or low-memory failure.
+- **Grouping and hints:** Default grouping is non-ML; optional local-model search is experimental. Either can miss related photos or group unrelated ones. Technical hints use reduced-preview measurements, not aesthetic or subject judgment; agreement with human preferences is unmeasured. Face detection is a navigation aid, without eye-state estimation, face ranking, or person matching. See [grouping](docs/GROUPING.md) and [technical-hint limits](docs/QUALITY.md).
+- **Duplicate checks:** Hashing requires Web Crypto and is limited to 64 MiB per original. A skipped check does not prevent manual selection or export.
+- **ZIP size and memory:** Each archive must stay below 65,535 entries and 4 GiB including ZIP overhead. Batch preflight stops if one original plus overhead cannot fit: choose a higher capacity, change the selection, or use single-ZIP mode. The selected capacity limits one archive, not total browser memory. ZIP64, disk streaming, and spanning ZIPs are not included. Download initiation or your saved confirmation does not verify a completed disk write.
 
-See [validation results](docs/VALIDATION.md) for the environments and checks covered. Physical Android/iPhone 100/500-photo tests, PC 1,000-photo tests, peak memory, and real-photo throughput remain unverified.
+### If an original cannot be read during ZIP export
 
-## Optional selected-file list
+`ZIP_READ_FAILED` means an original could not be read again; a visible thumbnail does not guarantee later access to its original bytes. Download cloud-backed photos to the device, then select those local files in a **separate tab**. Keep the original tab open to preserve its choices; choices do not transfer or restore automatically.
 
-In Save, open **Save a selected-file list** and choose JSON or CSV. The list downloads separately and is never added to a ZIP. It contains only kept files: original name, assigned ZIP entry/archive name, part number, order and byte size. Names may contain personal information. No EXIF/GPS, folder metadata, timestamps or model results are added.
-
-Single-ZIP mode records current Keep at the list click. During smaller-ZIP saving, it uses that plan's starting selection even if Keep changes. It records planned files, not proof of completed downloads. JSON retains exact names; CSV uses `file: ` display prefixes and visible control-character escapes for spreadsheet viewing. This does not restore a selection session. See [the field and CSV contract](docs/SELECTION_LIST.md).
-
-## Limitations
-
-This is v0.8.0-beta.2. Independent ZIP batches and optional JSON/CSV lists are implemented; this prerelease adds distinct ZIP failure guidance and releases failed archive references. Physical-device acceptance remains open, so this is not final v0.8 or v1.0 acceptance. The [remaining release gates](DEVELOPMENT_PLAN.md#18-v08-betaへの版整理と残る出荷条件2026-10-17) are fixed separately from feature development. Default grouping remains non-ML; the optional local-model search is experimental. Both can miss related photos or suggest unrelated ones. Review every proposed grouping before applying it. Neither selects photos for you, and general photo-grouping accuracy is not guaranteed.
-
-The 36-photo limit applies to each optional search, not the whole session. Choose the groups you want to compare; unselected groups stay unchanged. A group containing more than 36 photos cannot be selected for this search. No photos are silently truncated and existing groups are never split. Adding photos, editing groups, or starting a new analysis clears pending candidates. Applying one proposal clears the others, so search again for current candidates. Cancel or failure leaves existing groups, Keep choices, and originals unchanged. Processing may be slow on some devices; normal comparison and saving remain available.
-
-Technical hints use reduced-preview measurements, not aesthetic or subject judgment. Their agreement with human preferences has not been measured. Noise, intentional blur, line art, and lighting can mislead them; a dark photo is not automatically worse. Face detection is an optional navigation aid for the comparison pair, with up to six candidates per photo. Small, turned or occluded faces may be missed, and candidates can be incorrect. Processing can be slow on some devices. Eye-state estimation, face-based ranking and person matching are not included. HEIC, RAW, TIFF, animated images, and videos are unsupported.
-
-Duplicate hashing is limited to 64 MiB per original and requires Web Crypto. A skipped or unavailable duplicate check does not prevent manual selection or export. Manual groups are preserved on additional imports; Reset manual grouping explicitly rebuilds them.
-
-Images above 100 megapixels or 32,768 pixels on either side are skipped before decoding when the header supplies dimensions, and checked again after decoding. This does not guarantee protection against every malformed image or low-memory device.
-
-The ZIP writer reads bounded chunks for CRC and stores original Blob parts, but each finished archive still uses browser-managed memory. Batch preflight includes the exact ZIP headers, UTF-8 names, and directory overhead, and assigns safe names that remain unique across the whole plan. A file that cannot fit by itself with ZIP overhead stops the plan before any export read; the message names the file and suggests a higher capacity, a different selection, or the single-ZIP mode. Originals are never cut into pieces.
-
-The chosen capacity bounds one archive, not total browser memory, garbage-collection timing, or smartphone safety. Only the current batch archive and its download URL are retained by the batch workflow; original files, previews, and browser-managed download buffers may still consume memory. Each archive must stay within ZIP32 limits (under 65,535 entries and 4 GiB including ZIP overhead). Disk streaming, ZIP64 and spanning ZIP files are not included; optional CSV/JSON lists are separate metadata downloads. Download initiation and your saved confirmation are not an application-verified disk-write result.
-
-## Single HTML / offline use
-
-Save and open the readable `best-shot-picker.html` or `dist/index.html` directly. All application code, icons, model weights, worker code, and license notices are embedded in both forms. Optional similarity and face-model assets are decompressed only when needed; both features share the browser requirements above.
-
-`dist/index.self-extract.html` is a gzip-wrapped alternative that restores the same app. It cannot open without `DecompressionStream`; use the readable HTML instead. Once the readable app is open, missing model capabilities do not prevent manual comparison, Keep, or original-byte ZIP export.
+In the reported Android case, originals selected through a cloud provider failed during ZIP reading with `NotReadableError`, while device-saved files succeeded. The exact underlying cause remains unknown. Archive-assembly and download-link failures have separate diagnostics and do not by themselves establish a memory shortage. No photo upload is needed for troubleshooting.
 
 ## Development
 
-Read `AGENTS.md`, `APP_SPEC.md`, `DEVELOPMENT_PLAN.md`, and `ACCEPTANCE_MATRIX.md`. Edit `src/index.template.html`, `src/app.js`, `src/core.js`, `src/grouping.js`, `src/quality.js`, `src/similarity.js`, `src/embedding-worker-client.js`, `src/embedding-worker.js`, `src/face-geometry.js`, `src/face-worker-client.js`, and `src/face-worker.js`; do not edit generated HTML. Pinned model assets and their hash manifests are in `assets/embedding/` and `assets/face-detection/`.
+Read [AGENTS.md](AGENTS.md), [APP_SPEC.md](APP_SPEC.md), and the [architecture guide](docs/ARCHITECTURE.md). Edit `src/` and configuration, never the generated HTML. Pinned models and hash manifests live under `assets/embedding/` and `assets/face-detection/`.
 
-On Windows, run `build-standalone.bat`. The canonical PowerShell builder generates both variants and the exact root HTML copy. Run PowerShell syntax preflight and `scripts/check-repository.ps1` before completion.
+On Windows, run `build-standalone.bat`. It runs PowerShell syntax preflight and builds both HTML variants plus the identical root copy; the first build may download pinned dependencies. Run `scripts/check-repository.ps1` for repository verification. Node/npm are not required for the standard Windows build or app use.
 
-Test tooling requires Node.js 22 or later:
+Existing test tooling requires Node.js 22 or later:
 
 ```sh
 npm ci
@@ -100,16 +114,8 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-Browser tests use synthetic, non-personal images and open both generated HTML files with `file://`. Test fixtures are project-owned; regenerate them with `python tests/fixtures/generate.py` or `python tests/fixtures/generate-quality.py` and Pillow. No Node/npm tooling is required to use or build the standard Windows app.
+Browser tests use project-owned synthetic images and both generated HTML forms through `file://`. See [validation records](docs/VALIDATION.md) for evidence boundaries, and the separate [embedding research](experiments/embedding/README.md) and [manual resource diagnostic](experiments/resource-probe/README.md) for their limited scope.
 
 ## License
 
-The app is MIT-licensed. The optional model features share TensorFlow.js 4.22.0 and bundle Google MobileNet V1 0.25 224 feature vector v2, @tensorflow-models/face-detection 1.0.3, and MediaPipe face-detection short TFJS v1 under Apache-2.0, with preserved third-party notices. The help dialog includes the embedded software and model notices. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-
-See [grouping design and evaluation limits](docs/GROUPING.md).
-
-See [technical-hint design and evidence limits](docs/QUALITY.md) and the [isolated embedding feasibility experiment](experiments/embedding/README.md).
-
-The frozen-protocol HDR+ holdout is research evidence for this bounded, optional feature, not an accuracy guarantee. Research photographs and evaluation tools are excluded from the distributed app; see [experiment scope and limits](experiments/embedding/README.md#independent-hdr-burst-holdout).
-
-Manual developer diagnostic: [synthetic 12MP resource probe](experiments/resource-probe/README.md), separate from normal PR CI and physical-device acceptance.
+The app is [MIT-licensed](LICENSE). Embedded TensorFlow.js, MobileNet, and MediaPipe face-detection components carry Apache-2.0 licenses and preserved notices. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md); the in-app help also includes software and model notices.
