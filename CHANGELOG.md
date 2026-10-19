@@ -4,6 +4,7 @@
 
 - Release the existing manual photo-review and original-byte ZIP workflow within the owner-approved, documented scope. No new runtime feature, model, dependency or CI workload.
 - Align the application/package versions, bilingual user-first READMEs, release/acceptance records and actual screenshots.
+- Shorten the in-app help and both READMEs, keeping essential operating steps and data-protection notes; simplify the Japanese headline.
 - Record the owner-confirmed Android Chrome result: device-saved photos worked with ordinary and independent smaller ZIPs, and extracted photos opened. Google Photos/provider-selected originals previously failed with NotReadableError; the underlying provider failure is not claimed fixed.
 - Keep Windows/iPhone physical operation, broad photographic accuracy, large real-device collections and peak memory explicitly unverified/deferred. ZIP32/memory limits, local-file guidance, temporary sessions and retained EXIF/GPS remain documented. This release does not assert that the original all-P0 plan passed.
 

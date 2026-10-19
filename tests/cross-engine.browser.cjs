@@ -240,6 +240,7 @@ async function mobileDialogs(run) {
       const rect = await page.locator(dialog).boundingBox();
       assert(rect && rect.x >= -1 && rect.x + rect.width <= 321, 'Dialog fits 320px width');
       if (dialog === '#helpDialog') {
+        await shot(run, `${language}.helpDialog-top`);
         await page.locator('#helpDialog .dialog-body').evaluate(node => { node.scrollTop = node.scrollHeight; });
         assert(await page.locator('#helpDialog .dialog-body').evaluate(node => node.scrollHeight - node.scrollTop - node.clientHeight < 2));
       }
