@@ -123,8 +123,21 @@ async function idle(page, count) {
 }
 async function importFiles(page, files) { await page.locator('#fileInput').setInputFiles(files); await idle(page, files.length); }
 async function download(page, selector, expectedName) {
+  const target = page.locator(selector);
+  // WebKit can keep smooth-scrolling between pointer down/up. Position the
+  // target immediately and wait for stable geometry before a normal click.
+  await target.evaluate(node => node.scrollIntoView({ behavior: 'instant', block: 'center', inline: 'nearest' }));
+  await page.waitForFunction(async selector => {
+    const node = document.querySelector(selector);
+    if (!node?.isConnected) return false;
+    const before = node.getBoundingClientRect(), x = scrollX, y = scrollY;
+    await new Promise(requestAnimationFrame);
+    const after = node.getBoundingClientRect();
+    return node.isConnected && x === scrollX && y === scrollY &&
+      ['x', 'y', 'width', 'height'].every(key => before[key] === after[key]);
+  }, selector);
   const pending = page.waitForEvent('download');
-  await page.locator(selector).click(); const item = await pending;
+  await target.click(); const item = await pending;
   assert.equal(item.suggestedFilename(), expectedName);
   assert.equal(await item.failure(), null);
   return fs.readFile(await item.path());
