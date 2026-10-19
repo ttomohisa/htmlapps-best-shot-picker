@@ -267,7 +267,7 @@ async function missingCapability(browser, target, missing) {
 async function shortHelpScreenshots(page, target, language) {
   await page.locator('#retryModelLicensesButton').waitFor();
   const help = await page.locator('#helpDialog').textContent();
-  assert.match(help, /Worker/); assert.match(help, /DecompressionStream/);
+  assert.match(help, /readable HTML|通常版/); assert.match(help, /memory|メモリ/);
   for (const width of [320, 390]) {
     await page.setViewportSize({ width, height: 360 });
     await page.locator('#retryModelLicensesButton').scrollIntoViewIfNeeded();
@@ -290,6 +290,8 @@ async function shortHelpScreenshots(page, target, language) {
     await page.screenshot({ path: path.join(results, `compatibility.help.${target.variant}.${language}.${width}.png`) });
   }
   await page.setViewportSize({ width: 1360, height: 900 });
+  await page.locator('#helpDialog .dialog-body').evaluate(node => { node.scrollTop = 0; });
+  await page.screenshot({ path: path.join(results, `compatibility.help-overview.${target.variant}.${language}.png`) });
 }
 async function expectedLicenseText() {
   const texts = [];

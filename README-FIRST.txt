@@ -1,18 +1,29 @@
-Single HTML App Template
-========================
+Best Shot Picker / ベストショット選び v1.0.0
+===========================================
 
-1. Read README.ja.md.
-2. Rewrite APP_SPEC.md for the new application.
-3. Update app.config.json and replace `assets\favicon.svg` with the application icon. The build uses that one file for both the browser favicon and upper-left app icon.
-4. Inspect components/ and reuse generic patterns where they fit: Undo toast for reversible actions, confirmation dialog for irreversible/high-risk actions, compact popover menus, preset/custom numeric settings, async source guards, the mobile bottom bar for persistent smartphone navigation/actions, and webrtc-qr-pairing.html for fully serverless same-LAN browser pairing. For the WebRTC component, also copy the pinned assets from examples/dependencies.webrtc-qr.json. For long 3-5 group smartphone tools, prefer mobile page tabs over one long stacked page.
-5. Give the repository to the coding LLM and tell it to read AGENTS.md first.
-6. If you add or change dependencies, sync dependencies.lock.json with scripts\sync-dependency-lock.ps1; use scripts\update-dependency.ps1 for reviewed upgrades.
-7. If the app exports files, make the output filename user-editable before export.
-8. Run build-standalone.bat on Windows. It runs scripts\check-powershell-syntax.ps1 before the build; fix parser or encoding failures instead of bypassing them.
-9. Review dist\build-size-report.json, then open dist\index.html and dist\index.self-extract.html directly and test both with the network disabled. On smartphones, also verify the help dialog can scroll to its final item.
+写真を見比べて選び、元ファイルのままZIPで保存します。
+Compare photos, choose your favorites, and save the untouched originals in a ZIP.
 
-Do not edit either generated HTML in dist\ manually.
+すぐに使う / Quick start
 
-WebRTC readiness
+1. Webで開く / Open online:
+   https://ttomohisa.github.io/htmlapps-best-shot-picker/
+   または、同梱の best-shot-picker.html をブラウザーで開きます。
+   Or open the included best-shot-picker.html in your browser.
+   通常版HTMLは単体でオフライン利用できます。
+   The readable HTML works as a single file offline.
+2. JPEG・PNG・静止画WebPを追加し、比較して「残す」を選びます。
+   Add JPEG, PNG, or still WebP photos, compare them, and choose Keep.
+3. 「保存」でZIP名を確認して保存し、ダウンロードと中身を確認します。
+   In Save, review the ZIP name, save, then check the download and its contents.
 
-For custom WebRTC DataChannel layouts, set readyChannelLabel to a reliable control channel and wait for onConnected rather than raw PeerConnection connected.
+写真はアップロードされず、端末の原本は変更しません。
+Photos are not uploaded, and your original files are not changed.
+ZIPには位置情報などの元のメタデータも残ります。共有前に確認してください。
+ZIPs retain original metadata, including location. Check it before sharing.
+ページを閉じる・再読み込みすると写真と選択は消えます。作業の復元はできません。
+Closing or reloading clears photos and choices. Sessions cannot be restored.
+
+使い方・対応環境・制限: README.ja.md
+Usage, browsers, and limitations: README.md
+開発する方へ / For developers: AGENTS.md, APP_SPEC.md, docs/ARCHITECTURE.md

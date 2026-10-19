@@ -56,3 +56,13 @@ The frozen short-model evaluation completed on Node 24.19.0:
 - Live tensors remained at the loaded baseline; normal disposal returned to zero. No network attempts were observed.
 
 Independent review rechecked source/label hashes, original eye points, deterministic sampling and scoring arithmetic. This does not replace expert labels or expand the small controlled evaluation's scope. Actual browser and end-to-end product gates are still required.
+
+## Routine checks and explicit photographic evaluation
+
+Routine PR validation runs all nine existing browser scripts, including synthetic face UI checks and the separately pinned official MediaPipe portrait with the real embedded model. It does not acquire the London corpus. Its report marks the London evaluation `not-requested`, not passed.
+
+Run **Validate standalone HTML → photographic** for face-model/weight/runtime changes; face worker, client or geometry changes; image decoding/resizing, face-coordinate or face-view changes in `src/app.js`; frozen sample/label/criterion or evaluation-harness changes; or an explicitly agreed photographic-evaluation milestone. Reviewers must request this profile when these changes affect the evaluation path. Copy-only help/README edits do not require new photographic evidence.
+
+The profile reuses the canonical build and runs `node tests/face.browser.cjs --london-only` after the same `photo-acquire.py --acquire`. Local use can first run `photo-acquire.py --acquire --offline` with already verified archives. The three archive pins, 24 selected-photo hashes, 12-frontal-photo browser criterion and evaluation functions are unchanged. The existing `BSP_FACE_LONDON_PARITY=1` opt-in still adds this evaluation to the full face suite.
+
+Acquisition errors fail the photographic job; they are not skipped or converted to a pass. Acquisition/evaluation outcomes and numeric results are artifacts, never the photographs. The profile requires an explicit run and is not part of every PR. A previous result applies only to its recorded revision; carrying evidence forward requires an explicit unchanged-processing comparison.

@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       profile:
-        description: 'Manual validation profile (resource is synthetic and Linux-only)'
+        description: 'validation: routine checks; resource: synthetic load; photographic: fixed face evaluation'
         type: choice
-        options: [validation, resource]
+        options: [validation, resource, photographic]
         default: validation
       max_count:
         description: 'Resource profile only; 100 always requires both 4-photo cases first'
@@ -69,7 +69,7 @@ jobs:
           retention-days: 14
 
   browser:
-    if: github.event_name != 'workflow_dispatch' || inputs.profile != 'resource'
+    if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -90,11 +90,10 @@ jobs:
           export PATH="$RUNNER_TEMP/bsp-bin:$PATH"
           pwsh -NoLogo -NoProfile -File scripts/check-powershell-syntax.ps1
           pwsh -NoLogo -NoProfile -File scripts/check-repository.ps1
-      - name: Acquire the fixed consented adult-photo corpus for local-file parity only
-        run: python experiments/face-detection/photo-acquire.py --acquire
       - run: npm run test:browser
-        env:
-          BSP_FACE_LONDON_PARITY: '1'
+      - name: Record routine validation scope
+        if: always()
+        run: echo 'London photographic evaluation was not run. Use the photographic profile for face-processing changes or an explicit evaluation milestone.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -103,7 +102,7 @@ jobs:
           retention-days: 14
 
   cross-engine-core:
-    if: github.event_name != 'workflow_dispatch' || inputs.profile != 'resource'
+    if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -136,7 +135,7 @@ jobs:
           retention-days: 14
 
   embedding-experiment:
-    if: github.event_name != 'workflow_dispatch' || inputs.profile != 'resource'
+    if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -166,7 +165,7 @@ jobs:
           retention-days: 14
 
   tfjs-alternative:
-    if: github.event_name != 'workflow_dispatch' || inputs.profile != 'resource'
+    if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -199,7 +198,7 @@ jobs:
           retention-days: 14
 
   external-burst-holdout:
-    if: github.event_name != 'workflow_dispatch' || inputs.profile != 'resource'
+    if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -242,6 +241,61 @@ jobs:
           path: |
             test-results/embedding-burst/*.json
             test-results/embedding-worker/*.json
+          retention-days: 14
+
+  photographic-evaluation:
+    if: github.event_name == 'workflow_dispatch' && inputs.profile == 'photographic'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v8
+        with:
+          name: standalone-html-${{ github.sha }}
+          path: .
+      - run: npx playwright install --with-deps chromium
+      - name: Acquire the unchanged pinned adult-photo corpus
+        id: acquire
+        run: python experiments/face-detection/photo-acquire.py --acquire
+      - name: Run the unchanged frozen photographic criterion
+        id: evaluate
+        run: node tests/face.browser.cjs --london-only
+      - name: Record acquisition and evaluation outcomes, including failures
+        if: always()
+        env:
+          ACQUISITION_OUTCOME: ${{ steps.acquire.outcome }}
+          EVALUATION_OUTCOME: ${{ steps.evaluate.outcome }}
+        run: |
+          python - <<'PYREPORT'
+          import json, os
+          from pathlib import Path
+          report = {'scope': 'Fixed London browser-canvas face-position evaluation',
+                    'acquisition': os.environ['ACQUISITION_OUTCOME'],
+                    'evaluation': os.environ['EVALUATION_OUTCOME']}
+          Path('test-results').mkdir(exist_ok=True)
+          Path('test-results/face-photographic-status.json').write_text(json.dumps(report, indent=2) + '\n')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Photographic acquisition: ' + report['acquisition'] + '\n\n')
+              summary.write('Photographic evaluation: ' + report['evaluation'] + '. Skipped is not a pass.\n')
+          PYREPORT
+      - name: Upload numeric evidence only, never fixture photos
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: face-photographic-${{ github.sha }}
+          path: |
+            test-results/face-photographic-status.json
+            test-results/face-canvas-parity.json
+            test-results/face-product.json
+          if-no-files-found: warn
           retention-days: 14
 
   manual-resource-probe:
