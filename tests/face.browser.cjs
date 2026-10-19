@@ -22,7 +22,9 @@ if (preview) {
   assert.equal(preview.pathname, '/'); assert.equal(preview.search, '');
   assert.equal(preview.username, ''); assert.equal(preview.password, '');
 }
-const londonParityRequested = process.env.BSP_FACE_LONDON_PARITY === '1';
+assert(process.argv.slice(2).every(argument => argument === '--london-only'), 'Unknown face-test argument');
+const londonOnly = process.argv.includes('--london-only');
+const londonParityRequested = londonOnly || process.env.BSP_FACE_LONDON_PARITY === '1';
 const portraitSource = 'https://storage.googleapis.com/mediapipe-assets/tasks/testdata/vision/portrait.jpg?generation=1782185108020964';
 const portraitSha256 = 'a6f11efaa834706db23f275b6115058fa87fc7f14362681e6abe14e82749de3e';
 const digest = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
@@ -515,18 +517,18 @@ async function londonCanvasAcceptance(browser, frozen) {
 
 async function main() {
   assert(!(preview && londonParityRequested), 'London photographs are file:// only, never HTTPS previews');
-  const portrait = preview ? null : await portraitFixture();
+  const portrait = preview || londonOnly ? null : await portraitFixture();
   const london = londonParityRequested ? await londonFixtures() : null;
   await fs.mkdir(path.join(root, 'test-results'), { recursive: true });
   const browser = await chromium.launch({ headless: true });
-  const report = { synthetic: [], realModel: [], londonCanvas: { status: 'not-requested', instruction: 'Requires explicit BSP_FACE_LONDON_PARITY=1 and previously acquired pinned fixtures' } };
+  const report = { synthetic: [], realModel: [], londonCanvas: { status: 'not-requested', instruction: 'Not run in routine validation. Use the photographic workflow profile for face-processing changes or an explicit evaluation milestone; prior results are not a current-run pass.' } };
   try {
-    for (const variant of (preview ? ['https-preview'] : variants)) report.synthetic.push(await syntheticAcceptance(browser, variant));
-    if (preview) report.realModel.push(await realSyntheticAcceptance(browser));
-    else {
-      for (const variant of variants) report.realModel.push(await realModelAcceptance(browser, variant, portrait));
-      if (london) report.londonCanvas = await londonCanvasAcceptance(browser, london);
+    if (!londonOnly) {
+      for (const variant of (preview ? ['https-preview'] : variants)) report.synthetic.push(await syntheticAcceptance(browser, variant));
+      if (preview) report.realModel.push(await realSyntheticAcceptance(browser));
+      else for (const variant of variants) report.realModel.push(await realModelAcceptance(browser, variant, portrait));
     }
+    if (london) report.londonCanvas = await londonCanvasAcceptance(browser, london);
   } finally { await browser.close(); }
   await fs.writeFile(path.join(root, 'test-results', 'face-product.json'), JSON.stringify(report, null, 2) + '\n');
 }

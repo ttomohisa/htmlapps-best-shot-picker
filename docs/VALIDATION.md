@@ -4,6 +4,12 @@
 
 Candidate: **v1.0.0**, a release-only alignment of the existing product. The owner approved a limited release with explicit supported scope and unverified conditions; this changes the release contract, not the recorded results. See [APP_SPEC §27](../APP_SPEC.md) and [DEVELOPMENT_PLAN §19](../DEVELOPMENT_PLAN.md). No new runtime feature, model, dependency or standard CI workload is added.
 
+### Routine browser / photographic evaluation separation — 2026-10-19
+
+The owner approved keeping the nine routine browser scripts independent of London photo acquisition. The explicit `photographic` validation profile retains the same original hashes, evaluation functions and ≥11/12 useful-frontal-crop criterion; run it for face-processing changes or a photographic-evaluation milestone as described in [the probe guide](../experiments/face-detection/README.md#routine-checks-and-explicit-photographic-evaluation). A failed acquisition remains a failed photographic job, not a pass.
+
+**This PR revision: London photographic evaluation not run.** The earlier [successful run 39172590923](https://github.com/ttomohisa/htmlapps-best-shot-picker/actions/runs/39172590923), head `c1d391d68748af3ca799cb70f7da4a38cb4b8239`, recorded 12/12 useful frontal crops and zero extra candidates in artifact `12152524036`. Face model/geometry/evaluation sources are unchanged since that run; `src/app.js` from its state definition onward is byte-identical (SHA-256 `e5910e4dca3b2128627fcb7312c2901eed19ca4a6a2bff32015d1807143518e1`). This is revision-specific prior evidence, not a new photographic pass or a broad accuracy claim. The later acquisition HTTP 500 prevented fresh evaluation and was not a product-test result.
+
 ### Owner ZIP confirmation and provider limitation
 
 On 2026-10-17 the owner reported Android batch 1/2 failing during preparation: 12 photos, estimated ZIP size 32,681,303 bytes. On 2026-10-18, after beta.2 exposed the diagnostic, the owner reported **ZIP_READ_FAILED / NotReadableError (photo 1/9)** and confirmed selection through Google Photos or a similar provider. The owner then confirmed that **device-saved photos worked on Android Chrome in both ordinary and independent smaller ZIP modes, and extracted photos opened**. Only OS/browser and the confirmed flow are recorded; no device model, version or private photograph is needed.
