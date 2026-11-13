@@ -10,6 +10,7 @@
  * not timing thresholds. Browser execution belongs to CI, not the self-test.
  */
 'use strict';
+const { readCanonicalPreviewHtml, previewBuildDigest } = require('./preview-canonical.cjs');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -186,7 +187,7 @@ async function runCase(browser, target) {
       assert(response, 'Preview must return a response');
       assert.equal(response.status(), 200);
       assert.equal(response.url(), target.url, 'Preview must not redirect');
-      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'dist/index.html'))), 'Preview must serve the exact canonical readable build before synthetic files are selected');
+      assert.equal(previewBuildDigest(await response.body()), previewBuildDigest(await readCanonicalPreviewHtml(ROOT)), 'Preview must serve the exact canonical readable build before synthetic files are selected');
     }
     await page.locator('#addButton').waitFor();
     const inputs = fixtures(4), names = inputs.map(input => input.name);

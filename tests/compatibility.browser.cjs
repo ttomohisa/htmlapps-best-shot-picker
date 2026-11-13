@@ -6,6 +6,7 @@
  * starting a browser. This is not a physical-device or model-accuracy benchmark.
  */
 'use strict';
+const { readCanonicalPreviewHtml, previewBuildDigest } = require('./preview-canonical.cjs');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -164,7 +165,7 @@ async function session(browser, target, missing, loaderOnly = false) {
   if (target.preview) {
     assert(response && response.ok(), 'Owned preview must load successfully');
     assert.equal(page.url(), target.url, 'No preview redirect');
-    assert.equal(digest(await response.body()), digest(await fs.readFile(path.join(root, 'dist/index.html'))),
+    assert.equal(previewBuildDigest(await response.body()), previewBuildDigest(await readCanonicalPreviewHtml(root)),
       'Verify canonical preview bytes before loading any synthetic fixture');
   }
   await context.setOffline(true);

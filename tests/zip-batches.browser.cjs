@@ -12,6 +12,7 @@
  * This is not evidence of physical-device memory limits or disk-write completion.
  */
 'use strict';
+const { readCanonicalPreviewHtml, previewBuildDigest } = require('./preview-canonical.cjs');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -217,7 +218,7 @@ async function session(browser, target) {
       assert(response && response.ok(), 'Owned preview must load successfully');
       assert.equal(response.url(), target.url, 'Preview must not redirect');
       assert.equal(page.url(), target.url);
-      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'dist/index.html'))),
+      assert.equal(previewBuildDigest(await response.body()), previewBuildDigest(await readCanonicalPreviewHtml(ROOT)),
         'Verify exact canonical preview bytes before providing synthetic inputs');
     }
     await context.setOffline(true);

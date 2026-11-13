@@ -70,7 +70,7 @@ jobs:
 
   browser:
     if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
@@ -104,7 +104,7 @@ jobs:
   cross-engine-core:
     if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -136,7 +136,7 @@ jobs:
 
   embedding-experiment:
     if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
@@ -166,7 +166,7 @@ jobs:
 
   tfjs-alternative:
     if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
@@ -199,7 +199,7 @@ jobs:
 
   external-burst-holdout:
     if: github.event_name != 'workflow_dispatch' || inputs.profile == 'validation'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
@@ -246,7 +246,7 @@ jobs:
   photographic-evaluation:
     if: github.event_name == 'workflow_dispatch' && inputs.profile == 'photographic'
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
@@ -301,7 +301,7 @@ jobs:
   manual-resource-probe:
     # Never part of pull_request CI. Choosing resource also skips unrelated suites.
     if: github.event_name == 'workflow_dispatch' && inputs.profile == 'resource'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6

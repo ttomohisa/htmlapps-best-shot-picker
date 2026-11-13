@@ -14,12 +14,28 @@ async function download(url, name, hash, expectedBytes) {
   try { bytes = await fs.readFile(file); }
   catch (error) {
     if (error.code !== 'ENOENT') throw error;
-    const response = await fetch(url,{signal:AbortSignal.timeout(90000)});
-    if (!response.ok) throw new Error(`Download failed (${response.status}): ${url}`);
-    bytes = Buffer.from(await response.arrayBuffer());
-    verify(bytes,hash,name);
-    if (expectedBytes && bytes.length !== expectedBytes) throw new Error('Size mismatch: '+name);
-    await fs.writeFile(file,bytes);
+    // The external, hash-pinned photo pilot may briefly fail to connect.
+    // Retry transport failures only; never retry or accept a changed digest/size.
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      let response;
+      try {
+        response = await fetch(url,{signal:AbortSignal.timeout(90000)});
+        if (response.status === 429 || response.status >= 500) {
+          throw new TypeError(`Temporary upstream HTTP ${response.status}`);
+        }
+        if (!response.ok) throw new Error(`Download failed (${response.status}): ${url}`);
+        bytes = Buffer.from(await response.arrayBuffer());
+      } catch (error) {
+        if (attempt === 3 || !(error instanceof TypeError || error.name === 'TimeoutError')) throw error;
+        console.warn(`Transient download failure for ${name}; retrying (${attempt}/3): ${error.message}`);
+        await new Promise(resolve => setTimeout(resolve, attempt * 1500));
+        continue;
+      }
+      verify(bytes,hash,name);
+      if (expectedBytes && bytes.length !== expectedBytes) throw new Error('Size mismatch: '+name);
+      await fs.writeFile(file,bytes);
+      break;
+    }
   }
   verify(bytes,hash,name);
   if (expectedBytes && bytes.length !== expectedBytes) throw new Error('Size mismatch: '+name);
