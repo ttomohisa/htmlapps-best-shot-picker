@@ -217,7 +217,7 @@ async function session(browser, target) {
       assert(response && response.ok(), 'Owned preview must load successfully');
       assert.equal(response.url(), target.url, 'Preview must not redirect');
       assert.equal(page.url(), target.url);
-      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'dist/index.html'))),
+      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'best-shot-picker.html'))),
         'Verify exact canonical preview bytes before providing synthetic inputs');
     }
     await context.setOffline(true);

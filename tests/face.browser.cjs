@@ -159,7 +159,7 @@ async function session(browser, variant, fake) {
   page.on('pageerror', error => errors.push(error.message));
   page.setDefaultTimeout(30000);
   const navigation = await page.goto(preview?.href || pathToFileURL(path.join(root, 'dist', variant)).href);
-  if (preview) assert.equal(digest(await navigation.body()), digest(await fs.readFile(path.join(root, 'dist', 'index.html'))), 'Owned preview must serve this exact built artifact');
+  if (preview) assert.equal(digest(await navigation.body()), digest(await fs.readFile(path.join(root, 'best-shot-picker.html'))), 'Owned preview must serve this exact built artifact');
   await page.locator('#addButton').waitFor();
   await context.setOffline(true);
   assert.equal(expectedNavigations, 0);

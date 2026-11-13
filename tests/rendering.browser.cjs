@@ -186,7 +186,7 @@ async function runCase(browser, target) {
       assert(response, 'Preview must return a response');
       assert.equal(response.status(), 200);
       assert.equal(response.url(), target.url, 'Preview must not redirect');
-      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'dist/index.html'))), 'Preview must serve the exact canonical readable build before synthetic files are selected');
+      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'best-shot-picker.html'))), 'Preview must serve the exact canonical readable build before synthetic files are selected');
     }
     await page.locator('#addButton').waitFor();
     const inputs = fixtures(4), names = inputs.map(input => input.name);

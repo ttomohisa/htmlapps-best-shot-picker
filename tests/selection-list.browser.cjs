@@ -220,7 +220,7 @@ async function session(browser, target) {
     const response = await page.goto(target.url);
     if (target.preview) {
       assert(response && response.ok()); assert.equal(response.url(), target.url); assert.equal(page.url(), target.url);
-      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'dist/index.html'))),
+      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'best-shot-picker.html'))),
         'Verify exact canonical preview bytes before supplying synthetic inputs');
     }
     await context.setOffline(true); assert.equal(allowedNavigation, 0);
