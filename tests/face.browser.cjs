@@ -7,7 +7,7 @@
  * traces, videos, data URLs, image bytes or downloaded photo ZIPs are artifacts.
  */
 'use strict';
-const { readCanonicalPreviewHtml } = require('./preview-canonical.cjs');
+const { readCanonicalPreviewHtml, previewBuildDigest } = require('./preview-canonical.cjs');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -160,7 +160,7 @@ async function session(browser, variant, fake) {
   page.on('pageerror', error => errors.push(error.message));
   page.setDefaultTimeout(30000);
   const navigation = await page.goto(preview?.href || pathToFileURL(path.join(root, 'dist', variant)).href);
-  if (preview) assert.equal(digest(await navigation.body()), digest(await readCanonicalPreviewHtml(root)), 'Owned preview must serve this exact built artifact');
+  if (preview) assert.equal(previewBuildDigest(await navigation.body()), previewBuildDigest(await readCanonicalPreviewHtml(root)), 'Owned preview must serve this exact built artifact');
   await page.locator('#addButton').waitFor();
   await context.setOffline(true);
   assert.equal(expectedNavigations, 0);

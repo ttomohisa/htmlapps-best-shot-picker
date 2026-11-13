@@ -4,6 +4,8 @@
  */
 'use strict';
 const fs = require('node:fs/promises');
+const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
@@ -33,4 +35,21 @@ async function readCanonicalPreviewHtml(root) {
   return fs.readFile(output);
 }
 
-module.exports = { readCanonicalPreviewHtml };
+/* The embedded build manifest includes a wall-clock generatedAtUtc timestamp.
+ * Normalize ONLY that validated field, keeping every other byte in the digest.
+ */
+function previewBuildDigest(bytes) {
+  const input = Buffer.from(bytes).toString('utf8');
+  let timestamps = 0;
+  const comparable = input.replace(
+    /("generatedAtUtc"\s*:\s*")\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+(?:Z|[+-]\d{2}:\d{2})(")/g,
+    (_match, before, after) => {
+      timestamps++;
+      return before + '<build-time>' + after;
+    }
+  );
+  assert.equal(timestamps, 1, 'Exactly one valid generatedAtUtc is expected in the canonical HTML');
+  return crypto.createHash('sha256').update(comparable, 'utf8').digest('hex');
+}
+module.exports = { readCanonicalPreviewHtml, previewBuildDigest };
+

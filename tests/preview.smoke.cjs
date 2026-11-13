@@ -1,11 +1,11 @@
 /* User-owned normal PR preview only. Input is project-owned synthetic fixture data. */
-const { readCanonicalPreviewHtml } = require('./preview-canonical.cjs');
+const { readCanonicalPreviewHtml, previewBuildDigest } = require('./preview-canonical.cjs');
 const assert=require('node:assert/strict'),fs=require('node:fs/promises'),path=require('node:path'),crypto=require('node:crypto');
 const {chromium}=require('playwright');const root=path.resolve(__dirname,'..');
 const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 (async()=>{
  const url=new URL(process.env.BSP_PREVIEW_URL);assert.equal(url.protocol,'https:');assert.match(url.hostname,/^r\d+-pr-\d+-bk-previews\.ttomohisa\.workers\.dev$/);assert.equal(url.pathname,'/');
- const built=await readCanonicalPreviewHtml(root),response=await fetch(url);assert.equal(response.status,200);assert.equal(new URL(response.url).origin,url.origin);const served=Buffer.from(await response.arrayBuffer());assert.equal(sha(served),sha(built),'Normal preview must serve the artifact built in this workflow');
+ const built=await readCanonicalPreviewHtml(root),response=await fetch(url);assert.equal(response.status,200);assert.equal(new URL(response.url).origin,url.origin);const served=Buffer.from(await response.arrayBuffer());assert.equal(previewBuildDigest(served),previewBuildDigest(built),'Normal preview must match the canonical HTML except its generatedAtUtc timestamp');
  const browser=await chromium.launch({headless:true});try{
  const context=await browser.newContext({viewport:{width:1360,height:900},locale:'en-US',acceptDownloads:true}),page=await context.newPage(),requests=[],errors=[];page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url());});page.on('pageerror',e=>errors.push(e.message));page.on('dialog',d=>d.accept());await fs.mkdir(path.join(root,'test-results'),{recursive:true});
  const navigation=await page.goto(url.href);assert(navigation);assert.equal(sha(await navigation.body()),sha(built),'The browser must operate the same built HTML');await page.locator('#addButton').waitFor();assert.equal(await page.locator('#versionBadge').textContent(),'v'+require('../app.config.json').version);
