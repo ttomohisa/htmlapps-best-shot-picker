@@ -13,6 +13,7 @@
  * These observations do not establish device memory limits or disk completion.
  */
 'use strict';
+const { readCanonicalPreviewHtml } = require('./preview-canonical.cjs');
 const assert = require('node:assert/strict');
 const fs = require('node:fs/promises');
 const path = require('node:path');
@@ -220,7 +221,7 @@ async function session(browser, target) {
     const response = await page.goto(target.url);
     if (target.preview) {
       assert(response && response.ok()); assert.equal(response.url(), target.url); assert.equal(page.url(), target.url);
-      assert.equal(sha(await response.body()), sha(await fs.readFile(path.join(ROOT, 'best-shot-picker.html'))),
+      assert.equal(sha(await response.body()), sha(await readCanonicalPreviewHtml(ROOT)),
         'Verify exact canonical preview bytes before supplying synthetic inputs');
     }
     await context.setOffline(true); assert.equal(allowedNavigation, 0);
